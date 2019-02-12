@@ -25,13 +25,13 @@ ___Specification:___
 ***
 
 ## Run the Front:  
-[![Challouatte Cyril](https://img.shields.io/badge/Front-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/cyril-challouatte-824021160/)  
+[![Run the Front](https://img.shields.io/badge/ReadMe-Front-success.svg)]()  
 
 ## Run the Back: 
-[![Ligony Charles](https://img.shields.io/badge/Back-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/charles-ligony-893177134/)
+[![Run the Back](https://img.shields.io/badge/ReadMe-Back-yellow.svg)]()
 
 ## Difficulties: 
-[![Ligony Charles](https://img.shields.io/badge/Difficulties-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/charles-ligony-893177134/)
+[![Difficulties](https://img.shields.io/badge/ReadMe-Difficulties-important.svg)]()
 
 ***
 
