@@ -21,6 +21,9 @@ ___Specification:___
  - Back:  `GoLang`
  - Front: `Dart` (Flutter) 
  - Building Tool: `Gradle`
+ 
+[![Golang](https://img.icons8.com/color/60/000000/golang.png)](https://golang.org/)  
+[![Dart (Flutter)](https://flutter.io/assets/flutter-lockup-4cb0ee072ab312e59784d9fbf4fb7ad42688a7fdaea1270ccf6bbf4f34b7e03f.svg)](https://flutter.io/)
 
 ***
 
