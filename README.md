@@ -24,13 +24,14 @@ ___Specification:___
 
 ***
 
-___Run the Front:___  
-[![Challouatte Cyril](https://img.shields.io/badge/Cyril-LinkedIn-1E90E7.svg)](https://www.linkedin.com/in/cyril-challouatte-824021160/)  
+## Run the Front:  
+[![Challouatte Cyril](https://img.shields.io/badge/Front-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/cyril-challouatte-824021160/)  
 
-***
+## Run the Back: 
+[![Ligony Charles](https://img.shields.io/badge/Back-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/charles-ligony-893177134/)
 
-___Run the Back:___   
-[![Ligony Charles](https://img.shields.io/badge/Charles-LinkedIn-1E90E7.svg)](https://www.linkedin.com/in/charles-ligony-893177134/)
+## Difficulties: 
+[![Ligony Charles](https://img.shields.io/badge/Difficulties-ReadMe-1E90E7.svg)](https://www.linkedin.com/in/charles-ligony-893177134/)
 
 ***
 
