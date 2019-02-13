@@ -5,8 +5,6 @@
 
 Backend part of a project made for Licence Pro GL (_3rd year University_)  
 
-[![Golang]()](https://golang.org/)  
-
 ### _Prerequisites:_
 
  - Golang : [1.11.15](https://golang.org/)
@@ -15,4 +13,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
 
 ### _Run the Front:_  
 [![Run the Front](https://img.shields.io/badge/ReadMe-Front-5BC7F8.svg)]()  
+
+
+[![Golang](./icons8-golang-480.png)](https://golang.org/)  
 
