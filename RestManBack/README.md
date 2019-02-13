@@ -5,6 +5,8 @@
 
 Backend part of a project made for Licence Pro GL (_3rd year University_)  
 
+[![Golang]()](https://golang.org/)  
+
 ### _Prerequisites:_
 
  - Golang : [1.11.15](https://golang.org/)
