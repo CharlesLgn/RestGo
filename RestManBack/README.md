@@ -13,9 +13,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
 
 ***
 
-### _Run the Back:_
-
-___Run using only the CMD:___
+### _Run using only the CMD:_
  - Open a cmd and go to you directory `:/user/go/src`
      * if you have a C driver : `cd C:/user/go/src`
  - clone the project :
@@ -29,7 +27,7 @@ ___Run using only the CMD:___
 
 ***
 
-___Run using an IDE:___
+### _Run using an IDE:_
  - install goland
      * [intall](https://www.jetbrains.com/go/)
  - Open a cmd and go to you directory `:/user/go/src`
