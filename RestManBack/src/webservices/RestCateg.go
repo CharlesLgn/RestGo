@@ -1,62 +1,94 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/ant0ine/go-json-rest/rest"
+	"log"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
-var categories []Categorie
+var categories map[int]*Categorie
+var lockCategorie = sync.RWMutex{}
+var idCategorie = 0
 
 func InitCateg() {
-	categories = append(categories, Categorie{ID: 1, lbelle:"Food"})
-	categories = append(categories, Categorie{ID: 1, lbelle:"Clothes"})
-	categories = append(categories, Categorie{ID: 1, lbelle:"Video Games"})
+	categories = make(map[int]*Categorie)
+	categ1 := Categorie{ID: 1, Libelle: "Food",}
+	categ2 := Categorie{ID: 2, Libelle: "Clothe",}
+	categ3 := Categorie{ID: 3, Libelle: "Drink",}
+
+	categories[1] = &categ1
+	categories[2] = &categ2
+	categories[3] = &categ3
+	idCategorie = 4
 }
 
-func GetCategogies(w http.ResponseWriter, r *http.Request) {
-	_ = json.NewEncoder(w).Encode(categories)
-	fmt.Println("get all")
-}
-
-func GetCategogie(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	i, err := strconv.ParseInt(params["id"], 10, 64)
-	var isJsonSend = false
-	for _, item := range categories {
-		if item.ID == i {
-			_ = json.NewEncoder(w).Encode(item)
-			isJsonSend = true
-			fmt.Println("get ", mux.Vars(r), " : ", err)
-		}
+func GetCategogies(w rest.ResponseWriter, r *rest.Request) {
+	lockCategorie.RLock()
+	log.Println("get  all category")
+	stock := make([]Categorie, len(categories))
+	i := 0
+	for _, categ := range categories {
+		stock[i] = *categ
+		i++
 	}
-	if !isJsonSend {
-		GetArticles(w, r)
-	}
+	lockCategorie.RUnlock()
+	w.WriteJson(&stock)
 }
 
-func CreateCategogie(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var categorie Categorie
-	_ = json.NewDecoder(r.Body).Decode(&categorie)
-	i, err := strconv.ParseInt(params["id"], 10, 64)
-	categorie.ID = i
-	categories = append(categories, categorie)
-	_ = json.NewEncoder(w).Encode(articles)
-	fmt.Println("create : ", err)
+func GetCategogie(w rest.ResponseWriter, r *rest.Request) {
+	id, _ := strconv.Atoi(r.PathParam("id"))
+	log.Println("get  category : ", id)
+	lockCategorie.RLock()
+	var categ *Categorie
+	if articles[id] != nil {
+		categ = &Categorie{}
+		*categ = *categories[id]
+	}
+	lockCategorie.RUnlock()
+
+	if categ == nil {
+		rest.NotFound(w, r)
+		return
+	}
+	log.Println(categ)
+	w.WriteJson(categ)
 }
 
-func DeleteCategogie(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	for index, item := range categories {
-		i, err := strconv.ParseInt(params["id"], 10, 64)
-		if item.ID == i {
-			categories = append(categories[:index], categories[index+1])
-			fmt.Println("delete : ", err)
-			break
-		}
+func CreateCategogie(w rest.ResponseWriter, r *rest.Request) {
+	categ := Categorie{}
+	err := r.DecodeJsonPayload(&categ)
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	json.NewEncoder(w).Encode(articles)
+	if categ.Libelle == "" {
+		rest.Error(w, "We need a Name", 400)
+		return
+	}
+	lockCategorie.Lock()
+	categ.ID = idCategorie
+	idArticle++
+	categories[categ.ID] = &categ
+	lockCategorie.Unlock()
+	log.Println("category created")
+	w.WriteJson(&categ)
+}
+
+func DeleteCategogie(w rest.ResponseWriter, r *rest.Request) {
+	code, err := strconv.Atoi(r.PathParam("id"))
+	if err != nil {
+		rest.Error(w, "Id use to be an int", 400)
+		return
+	}
+	lockCategorie.Lock()
+	if categories[code] == nil {
+		rest.Error(w, "no data to delete found", 400)
+		return
+	}
+	delete(categories, code)
+	lockCategorie.Unlock()
+	log.Println("category deleted : ", code)
+	w.WriteHeader(http.StatusOK)
 }

@@ -1,33 +1,31 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/ant0ine/go-json-rest/rest"
 	"log"
 	"net/http"
 )
 
 func main() {
-	fmt.Println("Server started...")
-	router := mux.NewRouter()
-	fmt.Println("  Article:")
+	log.Println("RestMan is starting")
 	InitArticle()
-	router.HandleFunc("/article", GetArticles).Methods("GET")
-	router.HandleFunc("/article/{id}", GetArticle).Methods("GET")
-	fmt.Println("    GET")
-	router.HandleFunc("/article/{id}", CreateArticle).Methods("POST")
-	fmt.Println("    POST")
-	router.HandleFunc("/article/{id}", DeleteArticle).Methods("DELETE")
-	fmt.Println("    DELETE")
-	fmt.Println("  Categorie:")
 	InitCateg()
-	router.HandleFunc("/categ", GetCategogies).Methods("GET")
-	router.HandleFunc("/categ/{id}", GetCategogie).Methods("GET")
-	fmt.Println("    GET")
-	router.HandleFunc("/categ/{id}", CreateCategogie).Methods("POST")
-	fmt.Println("    POST")
-	router.HandleFunc("/categ/{id}", DeleteCategogie).Methods("DELETE")
-	fmt.Println("    DELETE")
-	fmt.Println("...Server start")
-	log.Fatal(http.ListenAndServe(":8000", router))
+	api := rest.NewApi()
+	api.Use(rest.DefaultDevStack...)
+	router, err := rest.MakeRouter(
+		rest.Get("/articles", GetArticles),
+		rest.Get("/article/:id", GetArticle),
+		rest.Post("/article", CreateArticle),
+		rest.Delete("/article/:id", DeleteArticle),
+		rest.Get("/categories", GetCategogies),
+		rest.Get("/categorie/:id", GetCategogie),
+		rest.Post("/categorie", CreateCategogie),
+		rest.Delete("/categorie/:id", DeleteCategogie),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	api.SetApp(router)
+	log.Println("Server start !")
+	log.Fatal(http.ListenAndServe(":8000", api.MakeHandler()))
 }

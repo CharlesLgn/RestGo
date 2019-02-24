@@ -20,10 +20,13 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
      * `git clone https://github.com/CharlesLgn/RestMan.git`
  - go in the back part :
      * `cd ./RestMan/RestManBack`
- - add all library usingg vendor :
-     * 
+ - add all library usingg :
+     * `go get github.com/ant0ine/go-json-rest/rest` 
+     * `go get -u github.com/gorilla/mux`
  - build all :
-     * 
+     * `go build -i -o ./RestManBack.exe .`
+ - run project :
+    * `./RestManBack.exe`
 
 ***
 
@@ -35,8 +38,8 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  - clone the project :
      * `git clone https://github.com/CharlesLgn/RestMan.git`
  - open the project on goland
- - create your configuration :
-     * 
+ - create your configuration :  
+     [![go](./Capture.PNG)](./Capture.PNG)
  - run the project
 
 ***

@@ -1,62 +1,97 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/ant0ine/go-json-rest/rest"
+	"log"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
-var articles []Article
+
+var articles map[int]*Article
+var lockArticle = sync.RWMutex{}
+var idArticle = 0
 
 func InitArticle() {
-	articles = append(articles, Article{ID: 1, Libelle: "Cookies", Prix: 2.99, Categorie: &Categorie{ID: 1, lbelle:"Food"}})
-	articles = append(articles, Article{ID: 2, Libelle: "Brownies", Prix: 1.99, Categorie: &Categorie{ID: 1, lbelle:"Food"}})
-	articles = append(articles, Article{ID: 3, Libelle: "Cake", Prix: 4.99, Categorie: &Categorie{ID: 1, lbelle:"Food"}})
+	articles = make(map[int]*Article)
+	article1 := Article{ID: 1, Libelle: "Cookies", Prix: 2.99, IdCategorie: 1,}
+	article2 := Article{ID: 2, Libelle: "Brownies", Prix: 1.99, IdCategorie: 1,}
+	article3 := Article{ID: 3, Libelle: "Cake", Prix: 4.99, IdCategorie: 1,}
+
+	articles[1] = &article1
+	articles[2] = &article2
+	articles[3] = &article3
+	idArticle = 4
 }
 
-func GetArticles(w http.ResponseWriter, r *http.Request) {
-	_ = json.NewEncoder(w).Encode(articles)
-	fmt.Println("get all")
-}
-
-func GetArticle(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	i, _ := strconv.ParseInt(params["id"], 10, 64)
-	var isJsonSend = false
-	for _, item := range articles {
-		if item.ID == i {
-			_ = json.NewEncoder(w).Encode(item)
-			isJsonSend = true
-			fmt.Println("get ", mux.Vars(r),)
-		}
+func GetArticle(w rest.ResponseWriter, r *rest.Request) {
+	id, _ := strconv.Atoi(r.PathParam("id"))
+	log.Println("get  article : ", id)
+	lockArticle.RLock()
+	var article *Article
+	if articles[id] != nil {
+		article = &Article{}
+		*article = *articles[id]
 	}
-	if !isJsonSend {
-		GetArticles(w, r)
+	lockArticle.RUnlock()
+
+	if article == nil {
+		rest.NotFound(w, r)
+		return
 	}
+	log.Println(article)
+	w.WriteJson(article)
 }
 
-func CreateArticle(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var article Article
-	_ = json.NewDecoder(r.Body).Decode(&article)
-	i, _ := strconv.ParseInt(params["id"], 10, 64)
-	article.ID = i
-	articles = append(articles, article)
-	_ = json.NewEncoder(w).Encode(articles)
-	fmt.Println("created !")
+func GetArticles(w rest.ResponseWriter, r *rest.Request) {
+	lockArticle.RLock()
+	log.Println("get  all articles")
+	stock := make([]Article, len(articles))
+	i := 0
+	for _, article := range articles {
+		stock[i] = *article
+		i++
+	}
+	lockArticle.RUnlock()
+	w.WriteJson(&stock)
 }
 
-func DeleteArticle(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	for index, item := range articles {
-		i, _ := strconv.ParseInt(params["id"], 10, 64)
-		if item.ID == i {
-			articles = append(articles[:index], articles[index+1])
-			fmt.Println("deleted ! ")
-			break
-		}
+func CreateArticle(w rest.ResponseWriter, r *rest.Request) {
+	article := Article{}
+	err := r.DecodeJsonPayload(&article)
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	_ = json.NewEncoder(w).Encode(articles)
+	if article.Libelle == "" {
+		rest.Error(w, "We need a Name", 400)
+		return
+	}
+	if article.Prix < 0 {
+		rest.Error(w, "Price can't be negative", 400)
+		return
+	}
+	lockArticle.Lock()
+	article.ID = idArticle
+	idArticle++
+	articles[article.ID] = &article
+	lockArticle.Unlock()
+	w.WriteJson(&article)
+}
+
+func DeleteArticle(w rest.ResponseWriter, r *rest.Request) {
+	code, err := strconv.Atoi(r.PathParam("id"))
+	if err != nil {
+		rest.Error(w, "Id use to be an int", 400)
+		return
+	}
+	lockArticle.Lock()
+	if articles[code] == nil {
+		rest.Error(w, "no data to delete found", 400)
+		return
+	}
+	delete(articles, code)
+	lockArticle.Unlock()
+	w.WriteHeader(http.StatusOK)
 }

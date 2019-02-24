@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/ant0ine/go-json-rest/rest"
 	"io/ioutil"
@@ -9,44 +11,44 @@ import (
 )
 
 func GetData(w rest.ResponseWriter, r *rest.Request) {
-	var dataIn DataIn
+	dataIn := DataIn{}
 	//var dataOut DataOut
+	r.DecodeJsonPayload(&dataIn)
 
-	dataIn.url    = r.FormValue("url")
-	dataIn.method = r.FormValue("method")
+	/*err := json.Unmarshal([]byte(s), data)
+	log.Println(err)
+	fmt.Println(data.Votes)
+	s2, _ := json.Marshal(data)
+	fmt.Println(string(s2))*/
+
+
 	w.WriteJson(&dataIn)
 
-	if dataIn.url == "" {
+	if dataIn.Url == "" {
 		rest.Error(w, "url required", 400)
 		return
 	}
-	if dataIn.method == "" {
-		rest.Error(w, "method required", 400)
-		return
+	if dataIn.Method == "" {
+		dataIn.Method = "GET"
 	}
+
 	w.WriteJson(&dataIn)
 
 
-	log.Println(dataIn.method)
-	log.Println(dataIn.url)
+	log.Println(dataIn.Method)
+	log.Println(dataIn.Url)
 
-	if dataIn.method == "GET" {
-		fmt.Println("Starting the application...")
-		response, err := http.Get(dataIn.method)
-		if err != nil {
-			fmt.Printf("The HTTP request failed with error %s\n", err)
-		} else {
-			data, _ := ioutil.ReadAll(response.Body)
-			fmt.Println(string(data))
-		}
-	} else if dataIn.method == "POST" {
-		/*jsonValue, _ := json.Marshal(dataIn)
-		response, err := http.Post("http://localhost:8000/article/4", "application/json", bytes.NewBuffer(jsonValue))
-		if err != nil {
-			fmt.Printf("The HTTP request failed with error %s\n", err)
-		} else {
-			data, _ := ioutil.ReadAll(response.Body)
-			fmt.Println(string(data))
-		}*/
-	} else if dataIn.method == "Delete" {}
+	jsonData := map[string]string{"url": "http://localhost:8000/categories",  "method": "GET"}
+	jsonValue, _ := json.Marshal(jsonData)
+	request, _ := http.NewRequest("POST", "http://localhost:8001/Data", bytes.NewBuffer(jsonValue))
+	//request, _ := http.NewRequest("DELETE", "http://localhost:8000/categorie/4", bytes.NewBuffer(jsonValue))
+	request.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		fmt.Printf("The HTTP request failed with error %s\n", err)
+	} else {
+		data, _ := ioutil.ReadAll(response.Body)
+		fmt.Println(string(data))
+	}
 }

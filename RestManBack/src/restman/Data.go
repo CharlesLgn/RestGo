@@ -1,16 +1,16 @@
 package main
 
 type DataIn struct {
-	url       string     `json:"url"`
-	content   string     `json:"content-type"`
-	method 	  string     `json:"method"`
-	lang	  string     `json:"lang"`
-	param 	  string     `json:"param"`
+	Url       string     `json:"url"`
+	Content   string     `json:"content-type,omitempty"`
+	Method 	  string     `json:"method"`
+	Lang	  string     `json:"lang,omitempty"`
+	Param 	  string     `json:"param,omitempty"`
 }
 
 type DataOut struct {
-	url       string     `json:"url,omitempty"`
-	content   string     `json:"content-type,omitempty"`
-	http 	  string     `json:"http,omitempty"`
-	data 	  string     `json:"data,omitempty"`
+	Url       string     `json:"url,omitempty"`
+	Content   string     `json:"content-type,omitempty"`
+	Http 	  string     `json:"http,omitempty"`
+	Data 	  string     `json:"data,omitempty"`
 }
