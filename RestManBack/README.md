@@ -20,7 +20,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
      * `git clone https://github.com/CharlesLgn/RestMan.git`
  - go in the back part :
      * `cd ./RestMan/RestManBack`
- - add all library usingg :
+ - add all library using :
      * `go get github.com/ant0ine/go-json-rest/rest` 
      * `go get -u github.com/gorilla/mux`
  - build all :
@@ -37,6 +37,10 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
      * if you have a C driver : `cd C:/user/go/src`
  - clone the project :
      * `git clone https://github.com/CharlesLgn/RestMan.git`
+ * add all library using :
+     - `go get github.com/ant0ine/go-json-rest/rest`
+     - `go get -u github.com/gorilla/mux`
+
  - open the project on goland
  - create your configuration :  
      [![go](./Capture.PNG)](./Capture.PNG)
