@@ -24,9 +24,9 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
      * `go get github.com/ant0ine/go-json-rest/rest` 
      * `go get -u github.com/gorilla/mux`
  - build all :
-     * `go build -i -o ./RestManBack.exe .`
+     * `go build -i -o ./RestMan/RestManBack\out\RestManBack.exe ./RestMan/RestManBack/src/webservices/`
  - run project :
-    * `./RestManBack.exe`
+    * `./RestMan/RestManBack/out/RestManBack.exe`
 
 ***
 
