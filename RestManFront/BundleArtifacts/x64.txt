@@ -1,2 +1,0 @@
-MainPackage=C:\Users\cyril\source\repos\RestMan\RestMan\bin\x64\Debug\RestMan_1.0.4.0_x64_Debug.appx
-SymbolPackage=C:\Users\cyril\source\repos\RestMan\RestMan\AppPackages\RestMan_1.0.4.0_Debug_Test\RestMan_1.0.4.0_x64_Debug.appxsym

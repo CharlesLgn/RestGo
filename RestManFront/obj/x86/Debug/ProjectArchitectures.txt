@@ -1,1 +1,0 @@
-C:\Users\cyril\source\repos\RestMan\RestMan\RestMan.csproj;x86
