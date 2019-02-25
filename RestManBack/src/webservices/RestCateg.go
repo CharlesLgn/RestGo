@@ -87,6 +87,7 @@ func DeleteCategogie(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, "no data to delete found", 400)
 		return
 	}
+	deleteArticles(code)
 	delete(categories, code)
 	lockCategorie.Unlock()
 	log.Println("category deleted : ", code)

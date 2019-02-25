@@ -26,7 +26,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  - build all :
      * `go build -i -o ./RestMan/RestManBack\out\RestManBack.exe ./RestMan/RestManBack/src/webservices/`
  - run project :
-    * `./RestMan/RestManBack/out/RestManBack.exe`
+    * `./RestMan/RestManBackoutRestManBack.exe`
 
 ***
 
