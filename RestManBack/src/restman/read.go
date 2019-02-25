@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("RestMan started...")
+	fmt.Println("RestManFront started...")
 		api := rest.NewApi()
 		api.Use(rest.DefaultDevStack...)
 		router, err := rest.MakeRouter(rest.Post("/Data", GetData))

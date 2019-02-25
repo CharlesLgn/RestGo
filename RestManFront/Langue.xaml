@@ -1,0 +1,82 @@
+﻿<Page
+    x:Class="RestMan.Langue"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:RestMan"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="Principal">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="Wide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1000" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="First.(Grid.Row)" Value="0" />
+                        <Setter Target="First.(Grid.Column)" Value="0" />
+                        <Setter Target="Second.(Grid.Row)" Value="0" />
+                        <Setter Target="Second.(Grid.Column)" Value="1" />
+
+                        <Setter Target="First.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="Second.(Grid.ColumnSpan)" Value="1" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Narrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="First.(Grid.Row)" Value="0" />
+                        <Setter Target="First.(Grid.Column)" Value="0" />
+                        <Setter Target="Second.(Grid.Row)" Value="1" />
+                        <Setter Target="Second.(Grid.Column)" Value="0" />
+
+
+                        <Setter Target="First.(Grid.ColumnSpan)" Value="2" />
+                        <Setter Target="Second.(Grid.ColumnSpan)" Value="2" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="1" FontFamily="Segoe UI">
+            <Grid Margin="0,0,0,0" Padding="0,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Name="First" Margin="0,200,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,0,50">
+                    <Button Name="FrImage" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="250" PointerEntered="FrImage_PointerEntered" PointerExited="FrImage_PointerExited" Click="FrImage_Click">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Image Source="Assets/france.png" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0,0,0,0" Margin="0,0,0,0">Français</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Name="Second" Grid.Row="1" Margin="0,200,0,0" Padding="0,0,0,50" Width="400" Height="300">
+                    <Button Name="EnglImage" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="250" PointerEntered="EnglImage_PointerEntered" PointerExited="EnglImage_PointerExited" Click="EnglImage_Click">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Image Source="Assets/uk.png" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Height="253" Margin="0,0,0,0" Width="379.5"/>
+                            <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0,0,0,0" Margin="0,0,0,0">English</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>
