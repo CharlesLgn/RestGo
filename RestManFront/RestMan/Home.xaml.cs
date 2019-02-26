@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using Windows.Media.Core;
@@ -37,62 +38,78 @@ namespace RestMan
 
         private void Reponse_Click(object sender, RoutedEventArgs e)
         {
-            Response.Visibility = Visibility.Collapsed;
-            ResponseImage.Visibility = Visibility.Collapsed;
-            ResponseVideo.Visibility = Visibility.Collapsed;
-            if (String.IsNullOrEmpty(receivedHeaders) || String.IsNullOrEmpty(receivedResponse))
+            if (((TextBlock)Methode.SelectedItem).Text == "GET")
             {
-                Lancer_Click(sender, e);
-            }
+                Response.Visibility = Visibility.Collapsed;
+                ResponseImage.Visibility = Visibility.Collapsed;
+                ResponseVideo.Visibility = Visibility.Collapsed;
+                if (String.IsNullOrEmpty(receivedHeaders) || String.IsNullOrEmpty(receivedResponse))
+                {
+                    Lancer_Click(sender, e);
+                }
 
-            if (contentype.Contains("application"))
-            {
-                Response.Visibility = Visibility.Visible;
-                if (this.ReponseName.Text == "Réponse")
+                if (contentype.Contains("application"))
                 {
-                    ReponseName.Text = "Entête";
-                    Response.Text = receivedResponse;
+                    Response.Visibility = Visibility.Visible;
+                    if (this.ReponseName.Text == "Réponse")
+                    {
+                        ReponseName.Text = "Entête";
+                        Response.Text = receivedResponse;
+                    }
+                    else
+                    {
+                        this.ReponseName.Text = "Réponse";
+                        Response.Text = receivedHeaders;
+                    }
                 }
-                else
+                else if (contentype.Contains("image"))
                 {
-                    this.ReponseName.Text = "Réponse";
-                    Response.Text = receivedHeaders;
+                    if (this.ReponseName.Text == "Réponse")
+                    {
+                        ReponseName.Text = "Entête";
+                        Response.Visibility = Visibility.Collapsed;
+                        ImageDescription.Visibility = Visibility.Visible;
+                        ResponseImage.Visibility = Visibility.Visible;
+                        Response.Text = receivedResponse;
+                    }
+                    else
+                    {
+                        this.ReponseName.Text = "Réponse";
+                        Response.Text = receivedHeaders;
+                        Response.Visibility = Visibility.Visible;
+                        ResponseImage.Visibility = Visibility.Collapsed;
+                        ImageDescription.Visibility = Visibility.Collapsed;
+                    }
+                }
+                else if (contentype.Contains("video"))
+                {
+                    if (this.ReponseName.Text == "Réponse")
+                    {
+                        ReponseName.Text = "Entête";
+                        Response.Visibility = Visibility.Collapsed;
+                        ResponseVideo.Visibility = Visibility.Visible;
+                        Response.Text = receivedResponse;
+                    }
+                    else
+                    {
+                        this.ReponseName.Text = "Réponse";
+                        Response.Text = receivedHeaders;
+                        Response.Visibility = Visibility.Visible;
+                        ResponseVideo.Visibility = Visibility.Collapsed;
+                    }
                 }
             }
-            else if (contentype.Contains("image"))
+            else
             {
                 if (this.ReponseName.Text == "Réponse")
                 {
                     ReponseName.Text = "Entête";
-                    Response.Visibility = Visibility.Collapsed;
-                    ImageDescription.Visibility = Visibility.Visible;
-                    ResponseImage.Visibility = Visibility.Visible;
                     Response.Text = receivedResponse;
                 }
                 else
                 {
                     this.ReponseName.Text = "Réponse";
                     Response.Text = receivedHeaders;
-                    Response.Visibility = Visibility.Visible;
-                    ResponseImage.Visibility = Visibility.Collapsed;
-                    ImageDescription.Visibility = Visibility.Collapsed;
-                }
-            }
-            else if (contentype.Contains("video"))
-            {
-                if (this.ReponseName.Text == "Réponse")
-                {
-                    ReponseName.Text = "Entête";
-                    Response.Visibility = Visibility.Collapsed;
-                    ResponseVideo.Visibility = Visibility.Visible;
-                    Response.Text = receivedResponse;
-                }
-                else
-                {
-                    this.ReponseName.Text = "Réponse";
-                    Response.Text = receivedHeaders;
-                    Response.Visibility = Visibility.Visible;
-                    ResponseVideo.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -125,6 +142,7 @@ namespace RestMan
                             {
                                 Response.Visibility = Visibility.Visible;
                                 receivedResponse += await content.ReadAsStringAsync();
+                                getHeaders(response);
                                 if (this.ReponseName.Text == "Réponse")
                                 {
                                     ReponseName.Text = "Entête";
@@ -133,16 +151,17 @@ namespace RestMan
                                 else
                                 {
                                     this.ReponseName.Text = "Réponse";
-                                    getHeaders(response);
                                     Response.Text = receivedHeaders;
                                 }
-                            }else if (contentype.Contains("image"))
+                            }
+                            else if (contentype.Contains("image"))
                             {
                                 BitmapImage bitmapImage = new BitmapImage();
                                 Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
                                 bitmapImage.UriSource = uri;
                                 ResponseImage.Source = bitmapImage;
                                 receivedResponse += "Voir image ci-dessous";
+                                getHeaders(response);
                                 if (this.ReponseName.Text == "Réponse")
                                 {
                                     ReponseName.Text = "Entête";
@@ -154,7 +173,6 @@ namespace RestMan
                                 else
                                 {
                                     this.ReponseName.Text = "Réponse";
-                                    getHeaders(response);
                                     Response.Text = receivedHeaders;
                                     Response.Visibility = Visibility.Visible;
                                     ResponseImage.Visibility = Visibility.Collapsed;
@@ -171,11 +189,13 @@ namespace RestMan
                                     ImageDescription.Text = "Nom du fichier : " + fileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
                                 }
 
-                            }else if (contentype.Contains("video"))
+                            }
+                            else if (contentype.Contains("video"))
                             {
                                 Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
                                 ResponseVideo.Source = MediaSource.CreateFromUri(uri);
                                 receivedResponse += "Voir vidéo ci-dessous";
+                                getHeaders(response);
                                 if (this.ReponseName.Text == "Réponse")
                                 {
                                     ReponseName.Text = "Entête";
@@ -186,7 +206,6 @@ namespace RestMan
                                 else
                                 {
                                     this.ReponseName.Text = "Réponse";
-                                    getHeaders(response);
                                     Response.Text = receivedHeaders;
                                     Response.Visibility = Visibility.Visible;
                                     ResponseVideo.Visibility = Visibility.Collapsed;
@@ -207,10 +226,12 @@ namespace RestMan
                         using (HttpClient client = new HttpClient())
                         {
                             string json = Body.Text;
-                            // Envoyer le contenu de la combobox à la place de application/json
-                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            //var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            string selectedContentType = ((TextBlock)ContentType.SelectedItem).Text;
+                            var content = new StringContent(json, Encoding.UTF8, selectedContentType);
                             HttpResponseMessage response = await client.PostAsync(this.Query.Text, content);
                             getHeaders(response);
+                            Response.Visibility = Visibility.Visible;
                             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                             {
                                 receivedResponse = "Echec";
@@ -232,7 +253,6 @@ namespace RestMan
                                 this.ReponseName.Text = "Réponse";
                                 Response.Text = receivedHeaders;
                             }
-
                         }
                         break;
                     case "DELETE":
@@ -241,6 +261,7 @@ namespace RestMan
                             HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
                             HttpContent content = response.Content;
                             getHeaders(response);
+                            Response.Visibility = Visibility.Visible;
                             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                             {
                                 receivedResponse = "Echec";
@@ -276,7 +297,7 @@ namespace RestMan
 
         }
 
-        private void getHeaders (HttpResponseMessage response)
+        private void getHeaders(HttpResponseMessage response)
         {
             string charset = string.Empty;
             string mediatype = string.Empty;
@@ -288,11 +309,11 @@ namespace RestMan
 
             try { charset = response.Content.Headers.ContentType.CharSet; } catch { }
             try { mediatype = response.Content.Headers.ContentType.MediaType; } catch { }
-            try{Date = response.Headers.Date.Value.ToString();} catch { }
-            try{StatusCode = response.StatusCode.ToString();} catch { }
-            try{Method = response.RequestMessage.Method.Method;} catch { }
-            try{URI = response.RequestMessage.RequestUri.ToString();} catch { }
-            try{Version = response.RequestMessage.Version.ToString(); } catch { }
+            try { Date = response.Headers.Date.Value.ToString(); } catch { }
+            try { StatusCode = response.StatusCode.ToString(); } catch { }
+            try { Method = response.RequestMessage.Method.Method; } catch { }
+            try { URI = response.RequestMessage.RequestUri.ToString(); } catch { }
+            try { Version = response.RequestMessage.Version.ToString(); } catch { }
 
             receivedHeaders += "Encodage : " + charset + "\n";
             receivedHeaders += "Type : " + mediatype + "\n";
@@ -300,7 +321,7 @@ namespace RestMan
             receivedHeaders += "Code status : " + StatusCode + "\n";
             receivedHeaders += "Méthode : " + Method + "\n";
             receivedHeaders += "Requête : " + URI + "\n";
-            receivedHeaders += "Version : " + Version + "\n"; 
+            receivedHeaders += "Version : " + Version + "\n";
         }
 
         private void Methode_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -310,6 +331,11 @@ namespace RestMan
             Response.ClearValue(TextBox.BorderBrushProperty);
             receivedHeaders = string.Empty;
             receivedResponse = string.Empty;
+            Response.Visibility = Visibility.Visible;
+            ResponseImage.Visibility = Visibility.Collapsed;
+            ImageDescription.Text = string.Empty;
+            ResponseVideo.Visibility = Visibility.Collapsed;
+
             switch (((TextBlock)Methode.SelectedItem).Text)
             {
                 case "GET":
