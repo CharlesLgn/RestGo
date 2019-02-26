@@ -22,6 +22,8 @@ namespace RestMan
     /// </summary>
     public sealed partial class Langue : Page
     {
+        MainPage mp = new MainPage();
+
         public Langue()
         {
             this.InitializeComponent();
@@ -49,12 +51,10 @@ namespace RestMan
 
         private void FrImage_Click(object sender, RoutedEventArgs e)
         {
-            
         }
 
         private void EnglImage_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

@@ -179,6 +179,11 @@
                         <TextBlock>application/xml</TextBlock>
                         <TextBlock>application/png</TextBlock>
                     </ComboBox>
+                    <TextBlock Height="20"></TextBlock>
+                    <ComboBox Name="PrefLang" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock>Fr</TextBlock>
+                        <TextBlock>En</TextBlock>
+                    </ComboBox>
                 </StackPanel>
                 <StackPanel Name="Second" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0">
                     <StackPanel.ChildrenTransitions>
@@ -198,7 +203,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE945;</TextBlock>
                             <TextBlock Width="10"></TextBlock>
-                            <TextBlock Height="25">Lancer la requête</TextBlock>
+                            <TextBlock Name="LancerName" Height="25">Lancer la requête</TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>

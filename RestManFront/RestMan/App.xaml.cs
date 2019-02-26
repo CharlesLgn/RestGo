@@ -96,7 +96,5 @@ namespace RestMan
             //TODO: enregistrez l'état de l'application et arrêtez toute activité en arrière-plan
             deferral.Complete();
         }
-
-        public string Langue { get; set; }
     }
 }

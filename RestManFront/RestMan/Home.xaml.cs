@@ -28,6 +28,7 @@ namespace RestMan
         {
             Methode.SelectedIndex = 0;
             ContentType.SelectedIndex = 0;
+            PrefLang.SelectedIndex = 0;
         }
 
         private void Reponse_Click(object sender, RoutedEventArgs e)
