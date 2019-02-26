@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI">
+    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI">
 
     <Grid Padding="0,0,0,0">
         <VisualStateManager.VisualStateGroups>
@@ -193,7 +193,7 @@
                     </StackPanel.ChildrenTransitions>
                     <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1200"/>
                 </StackPanel>
-                <StackPanel Name="Third" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0">
+                <StackPanel Name="Third" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0" Orientation="Horizontal">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EdgeUIThemeTransition/>
@@ -243,7 +243,17 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
+                    <ProgressRing IsActive="True" Foreground="Red" Visibility="Collapsed" Name="Loader" Width="150" Height="150" />
+                    <TextBlock Height="20"/>
                     <TextBox TextWrapping="Wrap" Name="Response" Height="168" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True"/>
+                    <TextBlock Height="20"></TextBlock>
+                    <Image Name="ResponseImage" HorizontalAlignment="Stretch" MaxWidth="400" MaxHeight="400"/>
+                    <TextBlock Height="20"></TextBlock>
+                    <TextBlock Name="ImageDescription" HorizontalAlignment="Center" FontFamily="Arial Narrow"/>
+                    <TextBlock Height="20"></TextBlock>
+                    <MediaPlayerElement Name="ResponseVideo" AutoPlay="True" AreTransportControlsEnabled="True" Visibility="Collapsed">
+                        
+                    </MediaPlayerElement>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

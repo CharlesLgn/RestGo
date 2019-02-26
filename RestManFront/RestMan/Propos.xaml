@@ -6,14 +6,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource AppBarBackgroundThemeBrush}">
 
     <Grid Loaded="Grid_Loaded">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Wide">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="800" />
+                        <AdaptiveTrigger MinWindowWidth="1100" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="First.(Grid.Row)" Value="0" />
@@ -22,6 +22,8 @@
                         <Setter Target="Second.(Grid.Column)" Value="1" />
                         <Setter Target="Third.(Grid.Row)" Value="0" />
                         <Setter Target="Third.(Grid.Column)" Value="2" />
+
+                        <Setter Target="Third.(Margin)" Value="0,75,100,0"/>
 
                         <Setter Target="First.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="Second.(Grid.ColumnSpan)" Value="1" />
@@ -39,6 +41,8 @@
                         <Setter Target="Second.(Grid.Column)" Value="0" />
                         <Setter Target="Third.(Grid.Row)" Value="2" />
                         <Setter Target="Third.(Grid.Column)" Value="0" />
+
+                        <Setter Target="Third.(Margin)" Value="0,75,0,0"/>
 
                         <Setter Target="First.(Grid.ColumnSpan)" Value="3" />
                         <Setter Target="Second.(Grid.ColumnSpan)" Value="3" />
@@ -111,7 +115,7 @@
                         </Button>
                     </StackPanel>
                 </StackPanel>
-                <StackPanel Name="Third" Grid.Row="2" Margin="0,0,0,50" HorizontalAlignment="Stretch" Padding="0,75,0,0">
+                <StackPanel Name="Third" Grid.Row="2" Margin="0,75,149,0" HorizontalAlignment="Stretch" Padding="0,0,0,0">
                     <ScrollViewer HorizontalAlignment="Stretch">
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">Projet gestion avancée HTTP</TextBlock>

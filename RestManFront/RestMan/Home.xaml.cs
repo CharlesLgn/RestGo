@@ -1,11 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Text;
+using Windows.Media.Core;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -18,6 +21,7 @@ namespace RestMan
     {
         private string receivedResponse = string.Empty;
         private string receivedHeaders = string.Empty;
+        private string contentype = string.Empty;
 
         public Home()
         {
@@ -33,47 +37,160 @@ namespace RestMan
 
         private void Reponse_Click(object sender, RoutedEventArgs e)
         {
+            Response.Visibility = Visibility.Collapsed;
+            ResponseImage.Visibility = Visibility.Collapsed;
+            ResponseVideo.Visibility = Visibility.Collapsed;
             if (String.IsNullOrEmpty(receivedHeaders) || String.IsNullOrEmpty(receivedResponse))
             {
                 Lancer_Click(sender, e);
             }
 
-            if (this.ReponseName.Text == "Réponse")
+            if (contentype.Contains("application"))
             {
-                ReponseName.Text = "Entête";
-                Response.Text = receivedResponse;
+                Response.Visibility = Visibility.Visible;
+                if (this.ReponseName.Text == "Réponse")
+                {
+                    ReponseName.Text = "Entête";
+                    Response.Text = receivedResponse;
+                }
+                else
+                {
+                    this.ReponseName.Text = "Réponse";
+                    Response.Text = receivedHeaders;
+                }
             }
-            else
+            else if (contentype.Contains("image"))
             {
-                this.ReponseName.Text = "Réponse";
-                Response.Text = receivedHeaders;
+                if (this.ReponseName.Text == "Réponse")
+                {
+                    ReponseName.Text = "Entête";
+                    Response.Visibility = Visibility.Collapsed;
+                    ImageDescription.Visibility = Visibility.Visible;
+                    ResponseImage.Visibility = Visibility.Visible;
+                    Response.Text = receivedResponse;
+                }
+                else
+                {
+                    this.ReponseName.Text = "Réponse";
+                    Response.Text = receivedHeaders;
+                    Response.Visibility = Visibility.Visible;
+                    ResponseImage.Visibility = Visibility.Collapsed;
+                    ImageDescription.Visibility = Visibility.Collapsed;
+                }
+            }
+            else if (contentype.Contains("video"))
+            {
+                if (this.ReponseName.Text == "Réponse")
+                {
+                    ReponseName.Text = "Entête";
+                    Response.Visibility = Visibility.Collapsed;
+                    ResponseVideo.Visibility = Visibility.Visible;
+                    Response.Text = receivedResponse;
+                }
+                else
+                {
+                    this.ReponseName.Text = "Réponse";
+                    Response.Text = receivedHeaders;
+                    Response.Visibility = Visibility.Visible;
+                    ResponseVideo.Visibility = Visibility.Collapsed;
+                }
             }
         }
 
-        private void Lancer_Click(object sender, RoutedEventArgs e)
+        private async void Lancer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                contentype = string.Empty;
                 receivedHeaders = string.Empty;
                 receivedResponse = string.Empty;
+                ResponseImage.Source = null;
+                ResponseVideo.Source = null;
+                Response.Visibility = Visibility.Collapsed;
+                ResponseImage.Visibility = Visibility.Collapsed;
+                ResponseVideo.Visibility = Visibility.Collapsed;
+                ImageDescription.Text = string.Empty;
                 switch (((TextBlock)Methode.SelectedItem).Text)
                 {
                     case "GET":
                         using (HttpClient client = new HttpClient())
                         {
-                            HttpResponseMessage response = client.GetAsync(this.Query.Text).Result;
+                            Loader.Visibility = Visibility.Visible;
+                            HttpResponseMessage response = await client.GetAsync(this.Query.Text);
+                            Loader.Visibility = Visibility.Collapsed;
                             HttpContent content = response.Content;
-                            receivedResponse += content.ReadAsStringAsync().Result;
-                            getHeaders(response);
-                            if (this.ReponseName.Text == "Réponse")
+                            contentype = response.Content.Headers.ContentType.MediaType;
+
+                            if (contentype.Contains("application"))
                             {
-                                ReponseName.Text = "Entête";
-                                Response.Text = receivedResponse;
-                            }
-                            else
+                                Response.Visibility = Visibility.Visible;
+                                receivedResponse += await content.ReadAsStringAsync();
+                                if (this.ReponseName.Text == "Réponse")
+                                {
+                                    ReponseName.Text = "Entête";
+                                    Response.Text = receivedResponse;
+                                }
+                                else
+                                {
+                                    this.ReponseName.Text = "Réponse";
+                                    getHeaders(response);
+                                    Response.Text = receivedHeaders;
+                                }
+                            }else if (contentype.Contains("image"))
                             {
-                                this.ReponseName.Text = "Réponse";
-                                Response.Text = receivedHeaders;
+                                BitmapImage bitmapImage = new BitmapImage();
+                                Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
+                                bitmapImage.UriSource = uri;
+                                ResponseImage.Source = bitmapImage;
+                                receivedResponse += "Voir image ci-dessous";
+                                if (this.ReponseName.Text == "Réponse")
+                                {
+                                    ReponseName.Text = "Entête";
+                                    Response.Text = receivedResponse;
+                                    Response.Visibility = Visibility.Collapsed;
+                                    ResponseImage.Visibility = Visibility.Visible;
+                                    ImageDescription.Visibility = Visibility.Visible;
+                                }
+                                else
+                                {
+                                    this.ReponseName.Text = "Réponse";
+                                    getHeaders(response);
+                                    Response.Text = receivedHeaders;
+                                    Response.Visibility = Visibility.Visible;
+                                    ResponseImage.Visibility = Visibility.Collapsed;
+                                    ImageDescription.Visibility = Visibility.Collapsed;
+                                }
+
+                                try
+                                {
+                                    ImageDescription.Text = "Nom du fichier : " + response.Content.Headers.ContentDisposition.FileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
+                                }
+                                catch
+                                {
+                                    string fileName = response.RequestMessage.RequestUri.AbsolutePath.Substring(response.RequestMessage.RequestUri.AbsolutePath.LastIndexOf('/') + 1);
+                                    ImageDescription.Text = "Nom du fichier : " + fileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
+                                }
+
+                            }else if (contentype.Contains("video"))
+                            {
+                                Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
+                                ResponseVideo.Source = MediaSource.CreateFromUri(uri);
+                                receivedResponse += "Voir vidéo ci-dessous";
+                                if (this.ReponseName.Text == "Réponse")
+                                {
+                                    ReponseName.Text = "Entête";
+                                    Response.Text = receivedResponse;
+                                    Response.Visibility = Visibility.Collapsed;
+                                    ResponseVideo.Visibility = Visibility.Visible;
+                                }
+                                else
+                                {
+                                    this.ReponseName.Text = "Réponse";
+                                    getHeaders(response);
+                                    Response.Text = receivedHeaders;
+                                    Response.Visibility = Visibility.Visible;
+                                    ResponseVideo.Visibility = Visibility.Collapsed;
+                                }
                             }
 
                             if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -90,8 +207,9 @@ namespace RestMan
                         using (HttpClient client = new HttpClient())
                         {
                             string json = Body.Text;
+                            // Envoyer le contenu de la combobox à la place de application/json
                             var content = new StringContent(json, Encoding.UTF8, "application/json");
-                            HttpResponseMessage response = client.PostAsync(this.Query.Text, content).Result;
+                            HttpResponseMessage response = await client.PostAsync(this.Query.Text, content);
                             getHeaders(response);
                             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                             {
@@ -120,7 +238,7 @@ namespace RestMan
                     case "DELETE":
                         using (HttpClient client = new HttpClient())
                         {
-                            HttpResponseMessage response = client.DeleteAsync(this.Query.Text).Result;
+                            HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
                             HttpContent content = response.Content;
                             getHeaders(response);
                             if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -160,13 +278,22 @@ namespace RestMan
 
         private void getHeaders (HttpResponseMessage response)
         {
-            string charset = response.Content.Headers.ContentType.CharSet;
-            string mediatype = response.Content.Headers.ContentType.MediaType;
-            string Date = response.Headers.Date.Value.ToString();
-            string StatusCode = response.StatusCode.ToString();
-            string Method = response.RequestMessage.Method.Method;
-            string URI = response.RequestMessage.RequestUri.ToString();
-            string Version = response.RequestMessage.Version.ToString();
+            string charset = string.Empty;
+            string mediatype = string.Empty;
+            string Date = string.Empty;
+            string StatusCode = string.Empty;
+            string Method = string.Empty;
+            string URI = string.Empty;
+            string Version = string.Empty;
+
+            try { charset = response.Content.Headers.ContentType.CharSet; } catch { }
+            try { mediatype = response.Content.Headers.ContentType.MediaType; } catch { }
+            try{Date = response.Headers.Date.Value.ToString();} catch { }
+            try{StatusCode = response.StatusCode.ToString();} catch { }
+            try{Method = response.RequestMessage.Method.Method;} catch { }
+            try{URI = response.RequestMessage.RequestUri.ToString();} catch { }
+            try{Version = response.RequestMessage.Version.ToString(); } catch { }
+
             receivedHeaders += "Encodage : " + charset + "\n";
             receivedHeaders += "Type : " + mediatype + "\n";
             receivedHeaders += "Date : " + Date + "\n";
