@@ -349,5 +349,46 @@ namespace RestMan
                     break;
             }
         }
+
+        private void allCateg(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 0;
+            Query.Text = "http://localhost:8000/categories";
+            Lancer_Click(sender, e);
+        }
+
+        private void allArticles(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 0;
+            Query.Text = "http://localhost:8000/articles";
+            Lancer_Click(sender, e);
+        }
+
+        private void addCateg(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 1;
+            Query.Text = "http://localhost:8000/categorie";
+            Body.Text = "{ \"lib\":\"nomdelacatégorie\"}";
+
+        }
+
+        private void addArticle(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 1;
+            Query.Text = "http://localhost:8000/article";
+            Body.Text = "{\"lib\":\"nomdelarticle\",\"price\":\"3.99\"}";
+        }
+
+        private void delCateg(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 2;
+            Query.Text = "http://localhost:8000/categorie/1";
+        }
+
+        private void delArticle(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 2;
+            Query.Text = "http://localhost:8000/article/1";
+        }
     }
 }

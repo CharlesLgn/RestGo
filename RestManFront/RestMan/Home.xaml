@@ -142,9 +142,6 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-
-
-
         <ScrollViewer Grid.Row="1" FontFamily="Segoe MDL2 Assets">
             <Grid Margin="0,0,0,0" Padding="0,0,0,0">
                 <Grid.RowDefinitions>
@@ -185,13 +182,38 @@
                         <TextBlock>En</TextBlock>
                     </ComboBox>
                 </StackPanel>
-                <StackPanel Name="Second" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0">
+                <StackPanel Name="Second" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0" Orientation="Horizontal">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1200"/>
+                    <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1168"/>
+                    <Button Height="32" Width="32" FontFamily="Segoe MDL2 Assets" Content="&#xE122;">
+                            <Button.Flyout>
+                                <Flyout>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="https://img.icons8.com/ios/24/000000/rocket.png" Height="30" Width="30"/>
+                                        <TextBlock Width="10"></TextBlock>
+                                        <TextBlock Text="Exemples de requêtes" HorizontalAlignment="Center" FontSize="20"/>
+                                    </StackPanel>
+                                    <TextBlock Height="20"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les catégories" Click="allCateg"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les articles" Click="allArticles"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter une catégorie" Click="addCateg"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter un article" Click="addArticle"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer une catégorie" Click="delCateg"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer un article" Click="delArticle"/>
+                                </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                    </Button>
                 </StackPanel>
                 <StackPanel Name="Third" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0" Orientation="Horizontal">
                     <StackPanel.ChildrenTransitions>
