@@ -54,11 +54,7 @@ func CreateArticle(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, "Price can't be negative", 400)
 		return
 	}
-	lockArticle.Lock()
-	article.ID = idArticle
-	idArticle += 1
-	articles[article.ID] = &article
-	lockArticle.Unlock()
+	addArticle(article)
 	w.WriteJson(&article)
 }
 

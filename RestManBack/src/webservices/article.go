@@ -24,5 +24,13 @@ func InitArticle() {
 	articles[2] = &article2
 	articles[3] = &article3
 	articles[4] = &article4
-	idArticle = 4
+	idArticle = 5
+}
+
+func addArticle(article Article)  {
+	lockArticle.Lock()
+	article.ID = idArticle
+	idArticle += 1
+	articles[article.ID] = &article
+	lockArticle.Unlock()
 }

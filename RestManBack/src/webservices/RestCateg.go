@@ -5,24 +5,8 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"sync"
 )
 
-var categories map[int]*Categorie
-var lockCategorie = sync.RWMutex{}
-var idCategorie = 0
-
-func InitCateg() {
-	categories = make(map[int]*Categorie)
-	categ1 := Categorie{ID: 1, Libelle: "Food",}
-	categ2 := Categorie{ID: 2, Libelle: "Clothe",}
-	categ3 := Categorie{ID: 3, Libelle: "Drink",}
-
-	categories[1] = &categ1
-	categories[2] = &categ2
-	categories[3] = &categ3
-	idCategorie = 4
-}
 
 func GetCategogies(w rest.ResponseWriter, r *rest.Request) {
 	lockCategorie.RLock()
@@ -42,7 +26,7 @@ func GetCategogie(w rest.ResponseWriter, r *rest.Request) {
 	log.Println("get  category : ", id)
 	lockCategorie.RLock()
 	var categ *Categorie
-	if articles[id] != nil {
+	if categories[id] != nil {
 		categ = &Categorie{}
 		*categ = *categories[id]
 	}
@@ -67,11 +51,7 @@ func CreateCategogie(w rest.ResponseWriter, r *rest.Request) {
 		rest.Error(w, "We need a Name", 400)
 		return
 	}
-	lockCategorie.Lock()
-	categ.ID = idCategorie
-	idArticle++
-	categories[categ.ID] = &categ
-	lockCategorie.Unlock()
+	addCateg(categ)
 	log.Println("category created")
 	w.WriteJson(&categ)
 }
