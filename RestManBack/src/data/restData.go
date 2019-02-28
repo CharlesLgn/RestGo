@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ant0ine/go-json-rest/rest"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -36,14 +37,15 @@ func GetData(w rest.ResponseWriter, r *rest.Request) {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
 		rest.NotFound(w, r)
 		return
-	} else {
-		dataOut := DataOut{}
-		data, _ := ioutil.ReadAll(response.Body)
-		dataOut.Data = string(data)
-		dataOut.Url = dataIn.Url
-		dataOut.Status = response.Status
-		dataOut.Content = response.Proto
-		fmt.Println("data send")
-		w.WriteJson(dataOut)
 	}
+	dataOut := DataOut{}
+	data, _ := ioutil.ReadAll(response.Body)
+	var str = string(data)
+	log.Println(str)
+	dataOut.Data = str
+	dataOut.Url = dataIn.Url
+	dataOut.Status = response.Status
+	dataOut.Content = response.Proto
+	fmt.Println("data send")
+	w.WriteJson(dataOut)
 }

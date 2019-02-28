@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/CharlesLgn/RestMan/RestManBack/src/data"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/webservices"
+	"github.com/CharlesLgn/RestMan/RestManBack/src/wikipedia"
 	"github.com/ant0ine/go-json-rest/rest"
 	"log"
 	"net/http"
@@ -38,6 +39,7 @@ func main() {
 
 	//Fun
 		rest.Post	("/fun/Data", 				data.GetData),
+		rest.Get	("/fun/wiki/:title", 		wikipedia.GetPage),
 	)
 	if err != nil {
 		log.Fatal(err)
