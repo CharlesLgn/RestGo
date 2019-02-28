@@ -1,4 +1,4 @@
-package main
+package webservices
 
 import (
 	"github.com/ant0ine/go-json-rest/rest"
