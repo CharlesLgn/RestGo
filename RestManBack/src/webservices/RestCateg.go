@@ -100,3 +100,28 @@ func UpdateCategogie(w rest.ResponseWriter, r *rest.Request) {
 	log.Println("category updated")
 	w.WriteJson(&categ)
 }
+
+func PatchCategogie(w rest.ResponseWriter, r *rest.Request) {
+	code, err1 := strconv.Atoi(r.PathParam("id"))
+	if err1 != nil {
+		rest.Error(w, "Id use to be an int", 400)
+		return
+	}
+	categ := Categorie{}
+	err := r.DecodeJsonPayload(&categ)
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if categories[code] == nil {
+		rest.Error(w, "not fount to update", 400)
+		return
+	}
+	lockCategorie.Lock()
+	if categ.Libelle != "" {
+		categories[code].Libelle = categ.Libelle
+	}
+	lockCategorie.Unlock()
+	log.Println("category patch")
+	w.WriteJson(&categ)
+}

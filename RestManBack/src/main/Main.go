@@ -4,6 +4,7 @@ import (
 	"github.com/CharlesLgn/RestMan/RestManBack/src/data"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/webservices"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/wikipedia"
+	"github.com/CharlesLgn/RestMan/RestManBack/src/yesnomaybe"
 	"github.com/ant0ine/go-json-rest/rest"
 	"log"
 	"net/http"
@@ -27,10 +28,10 @@ func main() {
 		rest.Post	("/categorie", 				webservices.CreateCategogie),
 	//Update
 		rest.Put	("/article/:id", 			webservices.UpdateArticle),
-		rest.Patch	("/article/:id", 			webservices.UpdateArticle),
+		rest.Patch	("/article/:id", 			webservices.PatchArticle),
 		rest.Post	("/article/:id", 			webservices.UpdateArticle),
 		rest.Put	("/categorie/:id", 			webservices.UpdateCategogie),
-		rest.Patch	("/categorie/:id", 			webservices.UpdateCategogie),
+		rest.Patch	("/categorie/:id", 			webservices.PatchCategogie),
 		rest.Post	("/categorie/:id", 			webservices.UpdateCategogie),
 	//Delete
 		rest.Delete	("/article/:id", 			webservices.DeleteArticle),
@@ -40,6 +41,7 @@ func main() {
 	//Fun
 		rest.Post	("/fun/Data", 				data.GetData),
 		rest.Get	("/fun/wiki/:title", 		wikipedia.GetPage),
+		rest.Get	("/fun/yes", 				yesnomaybe.YesNoMaybe),
 	)
 	if err != nil {
 		log.Fatal(err)
