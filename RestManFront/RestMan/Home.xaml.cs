@@ -204,16 +204,21 @@ namespace RestMan
                 string selectedContentType = ((TextBlock)ContentType.SelectedItem).Text;
                 var content = new StringContent(json, Encoding.UTF8, selectedContentType);
                 HttpResponseMessage response = null;
+                HttpContent contentres = null;
+
                 switch (Method)
                 {
                     case sendMethods.POST:
                         response = await client.PostAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
                         break;
                     case sendMethods.PATCH:
                         response = await client.PatchAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
                         break;
                     case sendMethods.PUT:
                         response = await client.PutAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
                         break;
                 }
 
@@ -226,7 +231,14 @@ namespace RestMan
                 }
                 else
                 {
-                    receivedResponse = "Succès";
+                    if (contentres != null)
+                    {
+                        receivedResponse = await contentres.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        receivedResponse = "Succès";
+                    }
                     Response.BorderBrush = new SolidColorBrush(Colors.Green);
                 }
 
@@ -380,13 +392,13 @@ namespace RestMan
             switch (((TextBlock)Methode.SelectedItem).Text)
             {
                 case "GET":
+                case "DELETE":
                     Body.IsEnabled = false;
                     break;
                 case "POST":
+                case "PATCH":
+                case "PUT":
                     Body.IsEnabled = true;
-                    break;
-                case "DELETE":
-                    Body.IsEnabled = false;
                     break;
             }
         }
@@ -417,7 +429,7 @@ namespace RestMan
         {
             Methode.SelectedIndex = 1;
             Query.Text = "http://localhost:8000/article";
-            Body.Text = "{\"lib\":\"nomdelarticle\",\"price\":\"3.99\"}";
+            Body.Text = "{\"lib\": \"nomArtcile\",\"price\": 4.99,\"idCateg\": 1}";
         }
 
         private void delCateg(object sender, RoutedEventArgs e)
@@ -444,6 +456,34 @@ namespace RestMan
             Methode.SelectedIndex = 0;
             Query.Text = "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_Lorraine_%28logo%29.png/200px-University_of_Lorraine_%28logo%29.png";
             Lancer_Click(sender, e);
+        }
+
+        private void updateCateg(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 2;
+            Query.Text = "http://localhost:8000/categorie/idCategAModifier";
+            Body.Text = "{\"lib\":\"nouveauNom\"}";
+        }
+
+        private void updateArticle(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 2;
+            Query.Text = "http://localhost:8000/article/idArticleAModifier";
+            Body.Text = "{\"lib\": \"nouveauNom\",\"price\": 4.99,\"idCateg\": 1}";
+        }
+
+        private void putCateg(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 3;
+            Query.Text = "http://localhost:8000/categorie/idCategARemplacer";
+            Body.Text = "{\"lib\":\"nouveauNom\"}";
+        }
+
+        private void putArticle(object sender, RoutedEventArgs e)
+        {
+            Methode.SelectedIndex = 3;
+            Query.Text = "http://localhost:8000/article/idArticleARemplacer";
+            Body.Text = "{\"lib\": \"nomArticle\",\"price\": 4.99,\"idCateg\": 1}";
         }
     }
 }

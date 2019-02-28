@@ -109,7 +109,7 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="Query.Width" Value="400"/>
+                        <Setter Target="Query.Width" Value="360"/>
                         <Setter Target="First.HorizontalAlignment" Value="Left"/>
                         <Setter Target="Fourth.HorizontalAlignment" Value="Left"/>
                         <Setter Target="Sixth.HorizontalAlignment" Value="Left"/>
@@ -213,6 +213,14 @@
                                     <TextBlock Height="2"/>
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter un article" Click="addArticle"/>
                                     <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier une catégorie" Click="updateCateg"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier un article" Click="updateArticle"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer une catégorie" Click="putCateg"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer un article" Click="putArticle"/>
+                                    <TextBlock Height="2"/>
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer une catégorie" Click="delCateg"/>
                                     <TextBlock Height="2"/>
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer un article" Click="delArticle"/>
@@ -249,7 +257,7 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <TextBox TextWrapping="Wrap" Name="Body" Height="168" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="150" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Name="Sixth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Padding="0,100,0,0">
                     <StackPanel.ChildrenTransitions>
@@ -273,7 +281,7 @@
                     </StackPanel.ChildrenTransitions>
                     <ProgressRing IsActive="True" Foreground="Red" Visibility="Collapsed" Name="Loader" Width="150" Height="150" />
                     <TextBlock Height="20"/>
-                    <TextBox TextWrapping="Wrap" Name="Response" Height="168" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True"/>
+                    <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Response" Height="228" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True"/>
                     <TextBlock Height="20"></TextBlock>
                     <Image Name="ResponseImage" HorizontalAlignment="Stretch" MaxWidth="400" MaxHeight="400"/>
                     <TextBlock Height="20"></TextBlock>
