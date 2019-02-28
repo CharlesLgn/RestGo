@@ -7,7 +7,6 @@ import (
 	"strconv"
 )
 
-
 func GetCategogies(w rest.ResponseWriter, r *rest.Request) {
 	lockCategorie.RLock()
 	log.Println("get  all category")
@@ -72,4 +71,32 @@ func DeleteCategogie(w rest.ResponseWriter, r *rest.Request) {
 	lockCategorie.Unlock()
 	log.Println("category deleted : ", code)
 	w.WriteHeader(http.StatusOK)
+}
+
+func UpdateCategogie(w rest.ResponseWriter, r *rest.Request) {
+	code, err1 := strconv.Atoi(r.PathParam("id"))
+	if err1 != nil {
+		rest.Error(w, "Id use to be an int", 400)
+		return
+	}
+	categ := Categorie{}
+	err := r.DecodeJsonPayload(&categ)
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if categ.Libelle == "" {
+		rest.Error(w, "We need a Name", 400)
+		return
+	}
+	if categories[code] == nil {
+		rest.Error(w, "not fount to update", 400)
+		return
+	}
+	lockCategorie.Lock()
+	categ.ID=code
+	categories[code] = &categ
+	lockCategorie.Unlock()
+	log.Println("category updated")
+	w.WriteJson(&categ)
 }
