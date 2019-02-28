@@ -168,6 +168,8 @@
                     <ComboBox Name="Methode" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" SelectionChanged="Methode_SelectionChanged">
                         <TextBlock Text="GET"/>
                         <TextBlock Text="POST"/>
+                        <TextBlock Text="PATCH"/>
+                        <TextBlock Text="PUT"/>
                         <TextBlock Text="DELETE"/>
                     </ComboBox>
                     <TextBlock Height="20"></TextBlock>
@@ -202,6 +204,10 @@
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les catégories" Click="allCateg"/>
                                     <TextBlock Height="2"/>
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les articles" Click="allArticles"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une image" Click="getImage"/>
+                                    <TextBlock Height="2"/>
+                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une vidéo" Click="getVideo"/>
                                     <TextBlock Height="2"/>
                                     <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter une catégorie" Click="addCateg"/>
                                     <TextBlock Height="2"/>
