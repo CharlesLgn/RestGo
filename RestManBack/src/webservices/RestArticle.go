@@ -106,3 +106,35 @@ func UpdateArticle(w rest.ResponseWriter, r *rest.Request) {
 	addArticle(article)
 	w.WriteJson(&article)
 }
+
+func PatchArticle(w rest.ResponseWriter, r *rest.Request) {
+	code, err1 := strconv.Atoi(r.PathParam("id"))
+	if err1 != nil {
+		rest.Error(w, "Id use to be an int", 400)
+		return
+	}
+	article := Article{}
+	err := r.DecodeJsonPayload(&article)
+	if articles[code] == nil {
+		rest.Error(w, "not fount to update", 400)
+		return
+	}
+	lockCategorie.Lock()
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if categories[article.IdCategorie] != nil {
+		articles[code].IdCategorie = article.IdCategorie
+	}
+	if article.Libelle != "" {
+		articles[code].Libelle = article.Libelle
+	}
+	if article.Prix >= 0 {
+		articles[code].Prix = article.Prix
+	}
+	lockCategorie.Unlock()
+	log.Println("article patch")
+	w.WriteJson(&article)
+}
