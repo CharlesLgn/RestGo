@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/CharlesLgn/RestMan/RestManBack/src/color"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/data"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/webservices"
 	"github.com/CharlesLgn/RestMan/RestManBack/src/wikipedia"
@@ -42,6 +43,7 @@ func main() {
 		rest.Post	("/fun/Data", 				data.GetData),
 		rest.Get	("/fun/wiki/:title", 		wikipedia.GetPage),
 		rest.Get	("/fun/yes", 				yesnomaybe.YesNoMaybe),
+		rest.Get	("/fun/color", 				color.RandomColor),
 	)
 	if err != nil {
 		log.Fatal(err)
