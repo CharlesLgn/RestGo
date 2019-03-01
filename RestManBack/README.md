@@ -23,6 +23,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  - add all library using :
      * `go get github.com/ant0ine/go-json-rest/rest` 
      * `go get -u github.com/gorilla/mux`
+     * `go get github.com/antchfx/xmlquery`
  - build all :
      * `go build -i -o ./RestMan/RestManBack/out/RestManBack.exe ./RestMan/RestManBack/src/main/`
  - run project :
