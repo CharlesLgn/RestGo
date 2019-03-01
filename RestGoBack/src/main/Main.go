@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/CharlesLgn/RestMan/RestManBack/src/color"
-	"github.com/CharlesLgn/RestMan/RestManBack/src/crypto"
-	"github.com/CharlesLgn/RestMan/RestManBack/src/data"
-	"github.com/CharlesLgn/RestMan/RestManBack/src/webservices"
-	"github.com/CharlesLgn/RestMan/RestManBack/src/wikipedia"
-	"github.com/CharlesLgn/RestMan/RestManBack/src/yesnomaybe"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/color"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/crypto"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/data"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/webservices"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/wikipedia"
+	"github.com/CharlesLgn/RestMan/RestGoBack/src/yesnomaybe"
 	"github.com/ant0ine/go-json-rest/rest"
 	"log"
 	"net/http"
