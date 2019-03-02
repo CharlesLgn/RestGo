@@ -23,7 +23,7 @@ ___Specification:___
  - Building Tool: `Gradle`
  
 [![Golang](https://img.icons8.com/color/60/000000/golang.png)](https://golang.org/)  
-[![UWP](https://img.icons8.com/color/60/000000/windows-logo.png)](https://flutter.io/)
+[![UWP](https://img.icons8.com/color/60/000000/windows-10.png)](https://flutter.io/)
 
 ***
 
