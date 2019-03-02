@@ -19,11 +19,11 @@ ___The goal is to develop a application which can:___
 ___Specification:___
 
  - Back:  `GoLang`
- - Front: `Dart` (Flutter) 
- - Building Tool: `Gradle`
+ - Front: `C#` (UWP) 
+ - Building Tool: `PowerShell`
  
 [![Golang](https://img.icons8.com/color/60/000000/golang.png)](https://golang.org/)  
-[![Dart (Flutter)](https://flutter.io/assets/flutter-lockup-4cb0ee072ab312e59784d9fbf4fb7ad42688a7fdaea1270ccf6bbf4f34b7e03f.svg)](https://flutter.io/)
+[![UWP](https://img.icons8.com/color/60/000000/windows-10.png)](https://flutter.io/)
 
 ***
 
@@ -38,4 +38,4 @@ ___Specification:___
 
 ***
 
-Score:   ![Challouatte Cyril](https://img.shields.io/badge/%3f-20-00A100.svg)
+Score:   ![?/20](https://img.shields.io/badge/%3f-20-00A100.svg)
