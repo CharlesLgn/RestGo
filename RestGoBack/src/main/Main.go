@@ -18,6 +18,7 @@ func main() {
 	webservices.InitCateg()
 	api := rest.NewApi()
 	api.Use(rest.DefaultDevStack...)
+
 	router, err := rest.MakeRouter(
 	//Select
 		rest.Get	("/articles", 				webservices.GetArticles),

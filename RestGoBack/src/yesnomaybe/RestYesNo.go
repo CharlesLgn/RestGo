@@ -7,13 +7,11 @@ import (
 
 func YesNoMaybe(w rest.ResponseWriter, r *rest.Request) {
 	x := rand.Intn(100)
-	awnser := Awnser{}
 	if x%3 == 0 {
-		awnser.Awnser = "Yes !"
+		w.WriteJson(map[string]string{"awnser": "Yes !"})
 	} else if x%3 == 1 {
-		awnser.Awnser = "No !"
+		w.WriteJson(map[string]string{"awnser": "No !"})
 	} else {
-		awnser.Awnser = "Maybe !"
+		w.WriteJson(map[string]string{"awnser": "Maybe !"})
 	}
-	w.WriteJson(awnser)
 }
