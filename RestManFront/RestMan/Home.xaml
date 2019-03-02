@@ -5,6 +5,7 @@
     xmlns:local="using:RestMan"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI">
 
@@ -166,6 +167,14 @@
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
                     <ComboBox Name="Methode" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" SelectionChanged="Methode_SelectionChanged">
+                        <ComboBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EdgeUIThemeTransition/>
+                            </TransitionCollection>
+                        </ComboBox.ItemContainerTransitions>
+                        <ComboBox.Transitions>
+                            <TransitionCollection/>
+                        </ComboBox.Transitions>
                         <TextBlock Text="GET"/>
                         <TextBlock Text="POST"/>
                         <TextBlock Text="PATCH"/>
@@ -174,12 +183,22 @@
                     </ComboBox>
                     <TextBlock Height="20"></TextBlock>
                     <ComboBox Name="ContentType" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EdgeUIThemeTransition/>
+                            </TransitionCollection>
+                        </ComboBox.ItemContainerTransitions>
                         <TextBlock>application/json</TextBlock>
                         <TextBlock>application/xml</TextBlock>
                         <TextBlock>application/png</TextBlock>
                     </ComboBox>
                     <TextBlock Height="20"></TextBlock>
                     <ComboBox Name="PrefLang" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ComboBox.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <EdgeUIThemeTransition/>
+                            </TransitionCollection>
+                        </ComboBox.ItemContainerTransitions>
                         <TextBlock>Fr</TextBlock>
                         <TextBlock>En</TextBlock>
                     </ComboBox>
@@ -191,42 +210,69 @@
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
                     <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1168"/>
-                    <Button Height="32" Width="32" FontFamily="Segoe MDL2 Assets" Content="&#xE122;">
-                            <Button.Flyout>
-                                <Flyout>
+                    <Button Name="QuerySample" Height="32" Width="32" FontFamily="Segoe MDL2 Assets" Content="&#xE122;" RenderTransformOrigin="0.5,0.5">
+                        <Button.RenderTransform>
+                            <CompositeTransform x:Name="QuerySampleRotate" Rotation="0"/>
+                        </Button.RenderTransform>
+                        <Button.Flyout>
+                            <Flyout Opened="QuerySampleOpened" Closed="QuerySampleClosed">
                                 <StackPanel>
+                                    <StackPanel.Transitions>
+                                        <TransitionCollection>
+                                            <EdgeUIThemeTransition/>
+                                        </TransitionCollection>
+                                    </StackPanel.Transitions>
+                                    <StackPanel.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <EdgeUIThemeTransition/>
+                                        </TransitionCollection>
+                                    </StackPanel.ChildrenTransitions>
                                     <StackPanel Orientation="Horizontal">
                                         <Image Source="https://img.icons8.com/ios/24/000000/rocket.png" Height="30" Width="30"/>
                                         <TextBlock Width="10"></TextBlock>
                                         <TextBlock Text="Exemples de requêtes" HorizontalAlignment="Center" FontSize="20"/>
                                     </StackPanel>
-                                    <TextBlock Height="20"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les catégories" Click="allCateg"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les articles" Click="allArticles"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une image" Click="getImage"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une vidéo" Click="getVideo"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter une catégorie" Click="addCateg"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter un article" Click="addArticle"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier une catégorie" Click="updateCateg"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier un article" Click="updateArticle"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer une catégorie" Click="putCateg"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer un article" Click="putArticle"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer une catégorie" Click="delCateg"/>
-                                    <TextBlock Height="2"/>
-                                    <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer un article" Click="delArticle"/>
+                                    <ScrollViewer Height="250" Margin="0,20,0,0">
+                                        <StackPanel>
+                                            <TextBlock Height="20"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les catégories" Click="allCateg"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Chercher les articles" Click="allArticles"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une image" Click="getImage"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une vidéo" Click="getVideo"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une réponse" Click="getReponse"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir une couleur" Click="getCouleur"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Obtenir un article Wikipédia" Click="getWiki"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Traduire en Leet" Click="TranslateLeet"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Traduire en Morse" Click="TranslateMorse"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter une catégorie" Click="addCateg"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Ajouter un article" Click="addArticle"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier une catégorie" Click="updateCateg"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Modifier un article" Click="updateArticle"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer une catégorie" Click="putCateg"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Remplacer un article" Click="putArticle"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer une catégorie" Click="delCateg"/>
+                                            <TextBlock Height="2"/>
+                                            <Button Height="32" Width="250" FontFamily="Segoe UI" Content="Supprimer un article" Click="delArticle"/>
+                                        </StackPanel>
+                                    </ScrollViewer>
                                 </StackPanel>
-                                </Flyout>
-                            </Button.Flyout>
+                            </Flyout>
+                        </Button.Flyout>
                     </Button>
                 </StackPanel>
                 <StackPanel Name="Third" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,100,0,0" Orientation="Horizontal">
@@ -282,13 +328,22 @@
                     <ProgressRing IsActive="True" Foreground="Red" Visibility="Collapsed" Name="Loader" Width="150" Height="150" />
                     <TextBlock Height="20"/>
                     <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Response" Height="228" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True"/>
+                    
+                    <!--<controls:DataGrid x:Name="ResponseGrid" Width="1200" Height="150">
+
+                    </controls:DataGrid>-->
+
+                    <GridView>
+                        
+                    </GridView>
+
                     <TextBlock Height="20"></TextBlock>
                     <Image Name="ResponseImage" HorizontalAlignment="Stretch" MaxWidth="400" MaxHeight="400"/>
                     <TextBlock Height="20"></TextBlock>
                     <TextBlock Name="ImageDescription" HorizontalAlignment="Center" FontFamily="Arial Narrow"/>
                     <TextBlock Height="20"></TextBlock>
                     <MediaPlayerElement Name="ResponseVideo" AutoPlay="True" AreTransportControlsEnabled="True" Visibility="Collapsed">
-                        
+
                     </MediaPlayerElement>
                 </StackPanel>
             </Grid>

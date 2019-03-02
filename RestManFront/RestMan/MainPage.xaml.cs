@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -25,6 +26,28 @@ namespace RestMan
         public MainPage()
         {
             this.InitializeComponent();
+            //Process back = new Process();
+            //back.StartInfo.UseShellExecute = false;
+            //back.StartInfo.RedirectStandardOutput = true;
+            //back.StartInfo.FileName = @"C:\Users\Cyril Challouatte\GolandProjects\RestMan\RestManFront\RestMan\Assets\test.exe";
+            //back.Start();
+            // Do not wait for the child process to exit before
+            // reading to the end of its redirected stream.
+            // p.WaitForExit();
+            // Read the output stream first and then wait.
+            //string output = back.StandardOutput.ReadToEnd();
+            //back.WaitForExit();
+            hideRec();
+        }
+
+        private void hideRec()
+        {
+            Accueil.Padding = new Thickness(5, 5, 0, 5);
+            Langue.Padding = new Thickness(5, 5, 0, 5);
+            Propos.Padding = new Thickness(5, 5, 0, 5);
+            RecAccueil.Visibility = Visibility.Collapsed;
+            RecLangue.Visibility = Visibility.Collapsed;
+            RecPropos.Visibility = Visibility.Collapsed;
         }
 
         private void Hamburger_Click(object sender, RoutedEventArgs e)
@@ -34,16 +57,29 @@ namespace RestMan
 
         private void Sousmenus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            hideRec();
             if (Accueil.IsSelected)
             {
+                Accueil.Padding = new Thickness(0, 5, 0, 5);
+                Langue.Padding = new Thickness(5, 5, 0, 5);
+                Propos.Padding = new Thickness(5, 5, 0, 5);
+                RecAccueil.Visibility = Visibility.Visible;
                 MyFrame.Navigate(typeof(Home));
             }
             if (Langue.IsSelected)
             {
+                Accueil.Padding = new Thickness(5, 5, 0, 5);
+                Langue.Padding = new Thickness(0, 5, 0, 5);
+                Propos.Padding = new Thickness(5, 5, 0, 5);
+                RecLangue.Visibility = Visibility.Visible;
                 MyFrame.Navigate(typeof(Langue));
             }
             if (Propos.IsSelected)
             {
+                Accueil.Padding = new Thickness(5, 5, 0, 5);
+                Langue.Padding = new Thickness(5, 5, 0, 5);
+                Propos.Padding = new Thickness(0, 5, 0, 5);
+                RecPropos.Visibility = Visibility.Visible;
                 MyFrame.Navigate(typeof(Propos));
             }
         }
