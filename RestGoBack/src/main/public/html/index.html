@@ -1,0 +1,48 @@
+<!doctype html><meta charset=utf-8>
+<html>
+    <head>
+        <style>
+            body {
+                background-color: black;
+                padding: 0;
+                margin: 0;
+            }
+
+            #titre{
+                position: fixed;
+                top: 0;
+                text-align: center;
+                background-color: #2d3436;
+                color: #00b894;
+                width: 100%;
+            }
+            #terminal{
+                padding-top: 70px;
+                padding-left: 10px;
+                color: #78e08f;
+            }
+        </style>
+        <script src="/public/js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript">
+            $("body,html").keydown(function(event) {
+                document.getElementById("terminal").innerHTML = "New text!";
+            });
+            setInterval(function() {
+                $.get('/terminal', function(data) {
+                    document.getElementById("terminal").innerHTML = "";
+                    text = data.split('☻');
+                    for (i = 0; i < text.length; i++) {
+                        document.getElementById("terminal").innerHTML += "<p>"+text[i]+"</p>";
+                    }
+                    document.getElementById("terminal").innerHTML += "<p id =\"index\">></p>";
+                });
+            });
+        </script>
+    </head>
+<body>
+<div id="titre">
+    <h1>RestGoBack</h1>
+</div>
+<div id="terminal"></div>
+</body>
+</html>
