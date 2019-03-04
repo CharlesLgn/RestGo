@@ -21,6 +21,7 @@ var dir string                           // current directory
 var windowWidth, windowHeight = 720, 480 // width and height of the window
 
 var logg  = ""
+var prefixChannel = make(chan string)
 
 func init() {
 	// getting the current directory to access resources
@@ -33,22 +34,14 @@ func init() {
 
 // main function
 func main() {
-	f, err := os.OpenFile("./tmp/orders.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
-
-	// channel to get the web prefix
-	prefixChannel := make(chan string)
 	// run the web server in a separate goroutine
 	go app(prefixChannel)
 	go get8000()
 	go get8001()
 	prefix := <- prefixChannel
 	// create a web view
-	err = webview.Open("RestGoBack", prefix + "/public/html/index.html",
-		windowWidth, windowHeight, false)
+	err := webview.Open("RestGoBack", prefix + "/public/html/index.html",
+		windowWidth, windowHeight, true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -59,6 +52,7 @@ func app(prefixChannel chan string) {
 	mux := http.NewServeMux()
 	mux.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir(dir+"/public"))))
 	mux.HandleFunc("/terminal", getLog)
+	mux.HandleFunc("/link", getLink)
 
 	// get an ephemeral port, so we're guaranteed not to conflict with anything else
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
@@ -73,6 +67,17 @@ func app(prefixChannel chan string) {
 		Handler: mux,
 	}
 	_ = server.ListenAndServe()
+}
+
+func getLink(writer http.ResponseWriter, request *http.Request) {
+	println("info")
+	prefix := <- prefixChannel
+	// create a web view
+	err := webview.Open("info", prefix + "/public/html/info.html",
+		400, 400, false)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // get the game frames
