@@ -12,6 +12,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -37,6 +38,24 @@ namespace RestMan
             // Read the output stream first and then wait.
             //string output = back.StandardOutput.ReadToEnd();
             //back.WaitForExit();
+
+            /*var uiSettings = new Windows.UI.ViewManagement.UISettings();
+            var color = uiSettings.GetColorValue(
+                                    Windows.UI.ViewManagement.UIColorType.Background
+                                   );*/
+
+            var isDark = Application.Current.RequestedTheme == ApplicationTheme.Dark;
+
+            if (isDark)
+            {
+                Logo.Source = new BitmapImage(new Uri("ms-appx:///Assets/RestGo_logo_white_text.png"));
+            }
+            else
+            {
+                Logo.Source = new BitmapImage(new Uri("ms-appx:///Assets/RestGo_logo_black_text.png")); 
+            }
+
+
             hideRec();
         }
 

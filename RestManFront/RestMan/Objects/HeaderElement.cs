@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RestMan.Objects
 {
-    class HeaderElement
+    public class HeaderElement
     {
+        public string Entête { get; set; }
+        public string Valeur { get; set; }
     }
 }

@@ -150,6 +150,8 @@
     <Content Include="Assets\france.png" />
     <Content Include="Assets\kya-logo-bw.png" />
     <Content Include="Assets\kya-logo.png" />
+    <Content Include="Assets\RestGo_logo_black_text.png" />
+    <Content Include="Assets\RestGo_logo_white_text.png" />
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
@@ -180,7 +182,6 @@
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
-    <Content Include="Assets\test.exe" />
     <Content Include="Assets\uk.png" />
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
