@@ -148,9 +148,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  <tr>
   <td>CreateCategory</td>
   <td>POST</td>
-  <td><p>{<br>
-   'lib':string,<br>
-   }</p></td>
+  <td><p>{'lib':string}</p></td>
   <td>localhost:8000/categorie</td>
   <td>Create a category<br>
       If categ doesn't exist, it return an error</td>
@@ -158,9 +156,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  <tr>
   <td>UpdateCategory</td>
   <td>POST/PUT</td>
-  <td><p>{<br>
-   'lib':string,<br>
-   }</p></td>
+  <td><p>{'lib':string}</p></td>
   <td>localhost:8000/categorie/:id</td>
   <td>Update a category<br>
       If id doesn't exist, it return an error</td>
@@ -168,9 +164,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  <tr>
   <td>OverwriteCategory</td>
   <td>PATCH</td>
-  <td><p>{<br>
-   'lib':string,<br>
-   }</p></td>
+  <td><p>{'lib':string}</p></td>
   <td>localhost:8000/categorie/:id</td>
   <td>overwrite a category<br>
       If id doesn't exist, it return an error</td>
