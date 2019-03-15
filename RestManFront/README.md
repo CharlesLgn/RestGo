@@ -10,7 +10,8 @@ Frontend part of a project made for Licence Pro GL (_3rd year University_)
 [![Difficulties](https://img.shields.io/badge/ReadMe-Difficulties-important.svg)](https://github.com/CharlesLgn/RestGo/blob/master/dificulties/README.md#dificulties-in-the-front-)
 
 ***
-## Run the Back:  [![Run the Back](https://img.shields.io/badge/ReadMe-Back-5BC7F8.svg)]()  
+### Run the Back:  
+[![Run the Back](https://img.shields.io/badge/ReadMe-Back-5BC7F8.svg)]()  
 
 ***
 
