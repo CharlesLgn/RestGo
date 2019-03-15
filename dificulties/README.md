@@ -7,6 +7,17 @@ Project made for Licence Pro GL (_3rd year University_)
 It use the Framework Front Flutter developped by Google
 
 ***
+### OUTLINE
+ 1. [Dificulties in the Front]()  
+ 2. [Dificulties in the Back](./README.md#dificulties-in-the-back-)  
+ 	2.1. [What is Go ?](./README.md#what-is-go-)  
+	2.2. [Make a Rest-API in Go](./README.md#make-a-rest-api-in-go)  
+	2.3. [Particalarity of Golang Structure type](./README.md#particalarity-of-golang-structure-type)  
+	2.4. [Why there is no database connection ?](./README.md#why-there-is-no-database-connection-)  
+	2.5. [Graphic interface in Go](./README.md#graphic-interface-in-go)  
+	2.6. [Resume](./README.md#resume)  
+	
+***
 ### _Dificulties in the Front :_
 
 ***
