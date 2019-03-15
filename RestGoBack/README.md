@@ -14,7 +14,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
 
 ### _Prerequisites:_
 
- - Golang : [1.11.15](https://golang.org/)
+ - Golang : [1.11.15 or higher](https://golang.org/)
  - You need to check that you have `$GOROOT` in your environement variable
  - a directory in `:/user/go/src`
 
