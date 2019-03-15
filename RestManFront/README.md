@@ -24,6 +24,3 @@ Frontend part of a project made for Licence Pro GL (_3rd year University_)
  
  
 ***
-
-
-[![Run the Back](https://img.shields.io/badge/ReadMe-Back-75CEDE.svg)](https://github.com/CharlesLgn/RestGo/blob/master/RestGoBack/README.md)
