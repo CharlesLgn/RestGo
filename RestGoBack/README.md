@@ -230,8 +230,6 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
  </tr>
 </table>
 
-lissajous : [![gif](./lissa.gif)](./lissa.gif)
-
-***
-
+lissajous :  
+[![gif](./lissa.gif)](./lissa.gif)
 
