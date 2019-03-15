@@ -20,11 +20,14 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
 
 ***
 
+The project is built so you just need to run __./RestGo/RestGoBack/out/RestGoBack.exe__  
+but if you make some change, here is the process to rebuild it
+
 ### _Build the project:_
  - Open a cmd and go to you directory `:/user/go/src`
      * if you have a C driver : `cd C:/user/go/src`
  - clone the project :
-     * `git clone https://github.com/CharlesLgn/RestMan.git`
+     * `git clone https://github.com/CharlesLgn/RestGo.git`
  - go in the back part :
      * `cd ./RestMan/RestGoBack`
  - add all library using :
@@ -37,6 +40,8 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
      * `go build -ldflags="-H windowsgui" -o ./out/RestGoBack.exe`
  - run project :
     * `./out/RestGoBack.exe`
+
+___NB___: you will need internet until the application is not build 
 
 ***
 ### _API :_
