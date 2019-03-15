@@ -16,12 +16,37 @@ Frontend part of a project made for Licence Pro GL (_3rd year University_)
 ***
 
 ### _Prerequisites:_
-
+ - Windows 10 : Fall Creators Update (Build 16299) or higher
  
 ***
 
 
 ### _Build the project:_
  
+ - Enable Developers mode
+    * Right click on the windows logo, select settings
+    * Click on "Update and security"
+    * Click on "For developers"
+    * Select Developer mode
+    * Reboot
+    
+  - Clone the project :
+      * `git clone https://github.com/CharlesLgn/RestGo.git`
+      
+  - Install Visual Studio :
+    * https://visualstudio.microsoft.com/fr/vs/community/
+  - Create package
+    * Open your cloned project with Visual Studio
+    * Select Project, Store, create app package
+    * Visual studio will ask you to upload your app to the Microsoft store, select no
+    * Select a path and click on Create
+  - Install the app
+    * Go to your package folder.
+    * Launch the APPXBUNDLE file
+    * Click on install
+    * Launch the app like any other windows application
+    
+___NB___: Make sure to run the back otherwise most of features won't work
+    
  
 ***
