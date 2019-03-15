@@ -7,7 +7,7 @@ Backend part of a project made for Licence Pro GL (_3rd year University_)
 
 ***
 ## Difficulties: 
-[![Difficulties](https://img.shields.io/badge/ReadMe-Difficulties-important.svg)](https://github.com/CharlesLgn/RestGo/blob/master/dificulties/README.md##dificulties-in-the-back-)
+[![Difficulties](https://img.shields.io/badge/ReadMe-Difficulties-important.svg)](https://github.com/CharlesLgn/RestGo/blob/master/dificulties/README.md#dificulties-in-the-back-)
 
 ***
 ### _Run the Front:_  
