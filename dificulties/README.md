@@ -7,6 +7,10 @@ Project made for Licence Pro GL (_3rd year University_)
 It use the Framework Front Flutter developped by Google
 
 ***
+### _Dificulties in the Front :_
+
+***
+### _Dificulties in the Back :_
 
 ***
 
