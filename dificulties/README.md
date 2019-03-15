@@ -100,7 +100,7 @@ So what happen when you run it :
   - It display a little screen that write all the log
   - If you close it, the server are closed.
 
-[![restGo Back GUI](../RestGoBack/restGoBackGUI.png)]()
+[![restGo Back GUI](./restGoBackGUI.png)]()
 
 #### Resume
 
