@@ -3,13 +3,17 @@ package crypto
 import (
 	"fmt"
 	"github.com/antchfx/xmlquery"
+	"io/ioutil"
+	"os"
 	"strings"
 )
 
 var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><codes><code id=\" \"><morse>   </morse><l33t> </l33t></code><code id=\"a\"><morse>.-</morse><l33t>@</l33t></code><code id=\"b\"><morse>-...</morse><l33t>8</l33t></code><code id=\"c\"><morse>-.-.</morse><l33t>(</l33t></code><code id=\"d\"><morse>-..</morse><l33t>[)</l33t></code><code id=\"e\"><morse>.</morse><l33t>3</l33t></code><code id=\"f\"><morse>..-.</morse><l33t>|=</l33t></code><code id=\"g\"><morse>--.</morse><l33t>6</l33t></code><code id=\"h\"><morse>....</morse><l33t>#</l33t></code><code id=\"i\"><morse>..</morse><l33t>1</l33t></code><code id=\"j\"><morse>.---</morse><l33t>_|</l33t></code><code id=\"k\"><morse>-.-</morse><l33t>X</l33t></code><code id=\"l\"><morse>.-..</morse><l33t>£</l33t></code><code id=\"m\"><morse>--</morse><l33t>|V|</l33t></code><code id=\"n\"><morse>-.</morse><l33t>|V</l33t></code><code id=\"o\"><morse>---</morse><l33t>[]</l33t></code><code id=\"p\"><morse>.--.</morse><l33t>|*</l33t></code><code id=\"q\"><morse>--.-</morse><l33t>¶</l33t></code><code id=\"r\"><morse>.-.</morse><l33t>2</l33t></code><code id=\"s\"><morse>...</morse><l33t>5</l33t></code><code id=\"t\"><morse>-</morse><l33t>7</l33t></code><code id=\"u\"><morse>..-</morse><l33t>(_)</l33t></code><code id=\"v\"><morse>...-</morse><l33t>\\/</l33t></code><code id=\"w\"><morse>.--</morse><l33t>\\/\\/</l33t></code><code id=\"x\"><morse>-..-</morse><l33t>≥≤</l33t></code><code id=\"y\"><morse>-.--</morse><l33t>'/</l33t></code><code id=\"z\"><morse>--..</morse><l33t>≥</l33t></code><code id=\"0\"><morse>-----</morse><l33t>O</l33t></code><code id=\"1\"><morse>.----</morse><l33t>I</l33t></code><code id=\"2\"><morse>..---</morse><l33t>R</l33t></code><code id=\"3\"><morse>...--</morse><l33t>E</l33t></code><code id=\"4\"><morse>....-</morse><l33t>A</l33t></code><code id=\"5\"><morse>.....</morse><l33t>S</l33t></code><code id=\"6\"><morse>-....</morse><l33t>G</l33t></code><code id=\"7\"><morse>--...</morse><l33t>T</l33t></code><code id=\"8\"><morse>---..</morse><l33t>B</l33t></code><code id=\"9\"><morse>----.</morse><l33t>g</l33t></code><code id=\".\"><morse>.-.-.-</morse><l33t>.</l33t></code><code id=\",\"><morse>--..--</morse><l33t>,</l33t></code><code id=\"?\"><morse>..--..</morse><l33t>?</l33t></code><code id=\"'\"><morse>.----.</morse><l33t>'</l33t></code><code id=\"!\"><morse>-.-.-----.</morse><l33t>!</l33t></code><code id=\"/\"><morse>-..-.</morse><l33t>/</l33t></code><code id=\"(\"><morse>-.--.</morse><l33t>(</l33t></code><code id=\")\"><morse>-.--.-</morse><l33t>)</l33t></code><code id=\":\"><morse>---...</morse><l33t>:</l33t></code><code id=\";\"><morse>-.-.-.</morse><l33t>;</l33t></code><code id=\"=\"><morse>-...-</morse><l33t>=</l33t></code><code id=\"+\"><morse>.-.-.</morse><l33t>+</l33t></code><code id=\"_\"><morse>..--.-</morse><l33t>_</l33t></code><code id=\"$\"><morse>...-..-</morse><l33t>$</l33t></code><code id=\"@\"><morse>.--.-.</morse><l33t>@</l33t></code></codes>"
 
 func getData() string {
-	return xml
+	pwd, _ := os.Getwd()
+	txt, _ := ioutil.ReadFile(pwd+"/path/to/file.txt")
+	return string(txt)
 }
 
 func getByXml(path string) string {

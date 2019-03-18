@@ -30,7 +30,7 @@ func GetData(w rest.ResponseWriter, r *rest.Request) {
 	_ = json.Unmarshal(in, &raw)
 
 	request, _ := http.NewRequest(dataIn.Method, dataIn.Url, bytes.NewBuffer(in))
-	request.Header.Set("Content-Type", dataIn.Method)
+	request.Header.Set("Content-Type", dataIn.Content)
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {

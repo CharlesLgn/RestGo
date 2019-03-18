@@ -28,6 +28,22 @@
                 padding-left: 10px;
                 color: #78e08f;
             }
+            button{
+                position: absolute;
+                top:10px;
+                right: 10px;
+            }
+            table{
+                position: fixed;
+                top:90px;
+                right: 10px;
+                collapse: collapse;
+                border: white solid 1px;
+                color: white;
+            }
+            tr {
+                border: white solid 1px;
+            }
         </style>
         <script src="/public/js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript">
@@ -44,6 +60,9 @@
                     document.getElementById("terminal").innerHTML += "<p id =\"index\">></p>";
                 });
             });
+            function myFunction(){
+                document.getElementById("info").classList.toggle("none");
+            }
         </script>
 
     </head>
@@ -53,5 +72,53 @@
     <h1>Back</h1>
 </div>
 <div id="terminal"></div>
+<div id="info">
+    <table>
+        <tr>
+            <th>Methode</th>
+            <th>URL</th>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>https://localhost/articles</td>
+        </tr>
+        <tr>
+            <td>GET :</td>
+            <td>https://localhost/article/:id</td>
+        </tr>
+        <tr>
+            <td>GET :</td>
+            <td>https://localhost/article/categorie/:id</td>
+        </tr>
+        <tr>
+            <td>GET :</td>
+            <td>https://localhost/categories</td>
+        </tr>
+        <tr>
+            <td>GET :</td>
+            <td>https://localhost/categorie/:id</td>
+        </tr>
+        <tr>
+            <td>POST :</td>
+            <td>https://localhost/article</td>
+        </tr>
+        <tr>
+            <td>POST :</td>
+            <td>https://localhost/categorie</td>
+        </tr>
+        <tr>
+            <td>DELETE :</td>
+            <td>https://localhost/article/:id</td>
+        </tr>
+        <tr>
+            <td>DELETE :</td>
+            <td>https://localhost/categorie/:id</td>
+        </tr>
+        <tr>
+            <td>...</td>
+            <td>...</td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
