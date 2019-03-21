@@ -1,0 +1,8 @@
+###############################################################################
+#
+# ignore linguist-vendored for `min.js`, `html` and `css` files:
+#
+###############################################################################
+*.js linguist-vendored=false
+*.css linguist-vendored=false
+*.html linguist-vendored=false

@@ -11,8 +11,8 @@ import (
 )
 
 func GetData(w rest.ResponseWriter, r *rest.Request) {
-	dataIn := DataIn{}
-	r.DecodeJsonPayload(&dataIn)
+	dataIn := In{}
+	_ = r.DecodeJsonPayload(&dataIn)
 
 	if dataIn.Url == "" {
 		rest.Error(w, "url required", 400)
@@ -38,8 +38,21 @@ func GetData(w rest.ResponseWriter, r *rest.Request) {
 		rest.NotFound(w, r)
 		return
 	}
-	dataOut := DataOut{}
+	dataOut := Out{}
 	data, _ := ioutil.ReadAll(response.Body)
+
+
+	var head = ""
+	for k, v := range response.Header {
+		head += k + " = "
+		head += v[0]
+		for i := 1 ; i > len(v) ; i++ {
+			head += "; " + v[i]
+		}
+		head += "\n"
+		head += "\n"
+	}
+
 	var str = string(data)
 	log.Println(str)
 	dataOut.Data = str

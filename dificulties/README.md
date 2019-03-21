@@ -39,35 +39,43 @@ So the dificulty was to learn how thes lib can be use and how can we call them
 Go is think to make http server, so the langage is made to make also easy the readin of a `JSON` or a `XML`  
 For instace I have a car with an id, a name, a color and a price :
 ```Go
+package exemple
+
 type Car struct {
   Id     int
-	Name   string
-	Color  string
-	Price  float64
+  Name   string
+  Color  string
+  Price  float64
 }
 ```
 So to parse these data in a json you just have to made :  
 ```Go
+package exemple
+
 type Car struct {
   Id     int     `json:"id"`
-	Name   string  `json:"name"`
-	Color  string  `json:"color"`
-	Price  float64 `json:"price"`
+  Name   string  `json:"name"`
+  Color  string  `json:"color"`
+  Price  float64 `json:"price"`
 }
 ```
 
 And the thing very interesting is : if you want to code in french for instance but you want you json in english you can write :
 ```Go
+package exemple
+
 type Voiture struct {
   Id       int     `json:"id"`
-	Nom      string  `json:"name"`
-	Couleur  string  `json:"color"`
-	Prix     float64 `json:"price"`
+  Nom      string  `json:"name"`
+  Couleur  string  `json:"color"`
+  Prix     float64 `json:"price"`
 }
 ```
 
 Golang will parse the data by itself. Moreover if you want Json and XML you can write :
 ```Go
+package exemple
+
 type Car struct {
   Id     int     `xml:"id,attr"   json:"id"`
 	Name   string  `xml:"car>name"  json:"name"`

@@ -40,7 +40,8 @@ but if you make some change, here is the process to rebuild it
      * `go get github.com/zserge/webview` (webview lib)
      
  - build all :
-     * `go build -ldflags="-H windowsgui" -o ./out/RestGoBack.exe`
+     * be on RestGoBack : `cd ./RestMan/RestGoBack`
+     * `go build -ldflags="-H windowsgui" -o ./out/RestGoBack.exe ./src/main`
  - run project :
     * `./out/RestGoBack.exe`
 

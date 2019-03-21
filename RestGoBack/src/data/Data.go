@@ -1,6 +1,6 @@
 package data
 
-type DataIn struct {
+type In struct {
 	Url       string     `json:"url"`
 	Content   string     `json:"content-type"`
 	Method 	  string     `json:"method"`
@@ -8,7 +8,7 @@ type DataIn struct {
 	Param 	  string     `json:"param"`
 }
 
-type DataOut struct {
+type Out struct {
 	Url     string `json:"url,omitempty"`
 	Content string `json:"content-type,omitempty"`
 	Status  string `json:"status,omitempty"`

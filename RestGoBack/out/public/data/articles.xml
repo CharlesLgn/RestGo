@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<articles>
+    <article id="1">
+        <lib>Cookies</lib>
+        <price>2.99</price>
+        <idCateg>1</idCateg>
+    </article>
+    <article id="2">
+        <lib>Brownies</lib>
+        <price>3.99</price>
+        <idCateg>1</idCateg>
+    </article>
+    <article id="3">
+        <lib>Cake</lib>
+        <price>4.99</price>
+        <idCateg>1</idCateg>
+    </article>
+    <article id="4">
+        <lib>Pull</lib>
+        <price>4.99</price>
+        <idCateg>2</idCateg>
+    </article>
+</articles>
