@@ -91,7 +91,7 @@ func get8000() {
   printLogFront("RestMan is starting")
   log.Println("RestMan is starting")
   webservices.InitArticleWithXml()
-  webservices.InitCateg()
+  webservices.InitCategoryWithXml()
   api := rest.NewApi()
   api.Use(rest.DefaultDevStack...)
 

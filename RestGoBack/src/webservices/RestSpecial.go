@@ -35,6 +35,7 @@ func deleteArticles(idCateg int) {
 	for _, article := range articles {
 		if article.IdCategorie == idCateg {
 			delete(articles, article.ID)
+			deleteArticles(article.ID)
 		}
 	}
 	lockArticle.RUnlock()

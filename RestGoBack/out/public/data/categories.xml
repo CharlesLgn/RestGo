@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<categories>
+    <category id="1">
+        <lib>Cooking</lib>
+    </category>
+    <category id="2">
+        <lib>Clothes</lib>
+    </category>
+    <category id="3">
+        <lib>Video Games</lib>
+    </category>
+    <category id="4">
+        <lib>Drink</lib>
+    </category>
+</categories>
