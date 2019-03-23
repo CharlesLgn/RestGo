@@ -1,28 +1,29 @@
 package crypto
 
 import (
-  "github.com/ant0ine/go-json-rest/rest"
+  "encoding/json"
   "net/http"
   "time"
 )
 
-func TranslteL33t(w rest.ResponseWriter, r *rest.Request) {
+func TranslteL33t(w http.ResponseWriter, r *http.Request) {
   translate(w, r, true)
 }
 
-func TranslteMorse(w rest.ResponseWriter, r *rest.Request) {
+func TranslteMorse(w http.ResponseWriter, r *http.Request) {
   translate(w, r, false)
 }
 
-func translate(w rest.ResponseWriter, r *rest.Request, isL33t bool) {
+func translate(w http.ResponseWriter, r *http.Request, isL33t bool) {
+  w.Header().Set("Content-Type", "application/json; charset=utf-8")
   message := map[string]string{}
-  err := r.DecodeJsonPayload(&message)
+  err := json.NewDecoder(r.Body).Decode(&message)
   if err != nil {
-    rest.Error(w, err.Error(), http.StatusInternalServerError)
+    http.Error(w, err.Error(), http.StatusInternalServerError)
     return
   }
   if message["message"] == "" {
-    rest.Error(w, "no Message", 400)
+    http.Error(w, "no Message", 400)
     return
   }
   awnser := Awnser{}
@@ -36,5 +37,5 @@ func translate(w rest.ResponseWriter, r *rest.Request, isL33t bool) {
   t := time.Now()
   elapsed := t.Sub(start)
   awnser.Time = elapsed.String()
-  w.WriteJson(&awnser)
+  _ = json.NewEncoder(w).Encode(awnser)
 }

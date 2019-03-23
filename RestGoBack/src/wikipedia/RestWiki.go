@@ -1,20 +1,21 @@
 package wikipedia
 
 import (
+	"github.com/gorilla/mux"
+
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
 	"io/ioutil"
-	"strings"
-
-	//"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
-func GetPage(w rest.ResponseWriter, r *rest.Request) {
-	title := r.PathParam("title")
+func GetPage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	params := mux.Vars(r)
+	title := params["title"]
 	log.Println("get article :", title)
 
 	in := []byte("")
@@ -27,7 +28,7 @@ func GetPage(w rest.ResponseWriter, r *rest.Request) {
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
-		rest.NotFound(w, r)
+		http.NotFound(w, r)
 		return
 	}
 	page := Page{}
@@ -39,5 +40,5 @@ func GetPage(w rest.ResponseWriter, r *rest.Request) {
 	page.Url = strings.Split(strings.Split(str, "{\"page\":\"")[1], "\",\"")[0]
 	page.Summary = strings.Split(strings.Split(str, "},\"extract\":\"")[1], "\",\"")[0]
 
-	w.WriteJson(page)
+	_ = json.NewEncoder(w).Encode(page)
 }

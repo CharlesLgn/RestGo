@@ -1,18 +1,21 @@
 package github
 
 import (
+	"github.com/gorilla/mux"
+
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 )
 
-func GetGithubLanguagePercent(w rest.ResponseWriter, r *rest.Request) {
-	user := r.PathParam("user")
+func GetGithubLanguagePercent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	params := mux.Vars(r)
+	user := params["user"]
 	url := "https://api.github.com/users/" + user + "/repos"
 	data, err := sendRequestToGitHub(url)
 	if err != nil {
@@ -45,7 +48,7 @@ func GetGithubLanguagePercent(w rest.ResponseWriter, r *rest.Request) {
 	}
 
 	log.Println(total)
-	w.WriteJson(&dat)
+	_ = json.NewEncoder(w).Encode(dat)
 }
 
 func getNbLineOfARepo(fullName string) map[string]int {

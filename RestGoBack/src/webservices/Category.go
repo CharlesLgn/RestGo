@@ -10,9 +10,7 @@ type Categorie struct {
 	Libelle string `json:"lib"`
 }
 
-var categories map[int]*Categorie
 var lockCategorie = sync.RWMutex{}
-var idCategorie = 0
 
 func getCategData(path string) string {
 	root := getCategoryXml()
@@ -20,9 +18,5 @@ func getCategData(path string) string {
 }
 
 func addCateg(categorie Categorie)  {
-	lockCategorie.Lock()
-	categorie.ID = idCategorie
-	idCategorie++
-	categories[categorie.ID] = &categorie
-	lockCategorie.Unlock()
+	CreateCategoryInXml(&categorie)
 }

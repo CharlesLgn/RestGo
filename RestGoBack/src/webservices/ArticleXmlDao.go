@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func getXml() *xmlquery.Node {
+func getArticleXml() *xmlquery.Node {
 	pwd, _ := os.Getwd()
 	xmlArticle, _ := ioutil.ReadFile(pwd + "/public/data/articles.xml")
 
@@ -20,10 +20,31 @@ func getXml() *xmlquery.Node {
 	return root
 }
 
-func InitArticleWithXml() {
-	root := getXml()
-	articles = make(map[int]*Article)
-	idArticle = -1
+func getNewIdForArticleXml() int {
+	root := getArticleXml()
+	idArticle := -1
+	xmlquery.FindEach(root, "articles/article", func(i int, node *xmlquery.Node) {
+		id, _ := strconv.Atoi(node.Attr[0].Value)
+		if idArticle < id {
+			idArticle = id
+		}
+	})
+	return idArticle+1
+}
+
+func getArticleIdByCategInXml(idCateg int) map[int]int  {
+	root := getArticleXml()
+	articles := make(map[int]int)
+	xmlquery.FindEach(root, "articles/article[idCateg="+ strconv.Itoa(idCateg) +"]", func(i int, node *xmlquery.Node) {
+		id, _ := strconv.Atoi(node.Attr[0].Value)
+		articles[id] = id
+	})
+	return articles
+}
+
+func getAllArticleInXml() map[int]*Article {
+	root := getArticleXml()
+	articles := make(map[int]*Article)
 	xmlquery.FindEach(root, "articles/article", func(i int, node *xmlquery.Node) {
 		id, _ := strconv.Atoi(node.Attr[0].Value)
 		articlePath := "articles/article[@id='" + strconv.Itoa(id) + "']"
@@ -36,22 +57,20 @@ func InitArticleWithXml() {
 			Prix:        price,
 			IdCategorie: idCateg,
 		}
-		articles[id] = &article
-		if idArticle < id {
-			idArticle = id
-		}
+		articles[article.ID] = &article
 	})
-	idArticle++
+	return articles
 }
 
 func CreateArticleInXml(article *Article) {
+	article.ID = getNewIdForArticleXml()
 	articleToAdd := getAnArticleAsXmlString(article)
-	xmlData := strings.Split(getXmlAsString(), "</articles>")[0] + articleToAdd + "</articles>"
+	xmlData := strings.Split(getArticleXmlAsString(), "</articles>")[0] + articleToAdd + "</articles>"
 	rewriteXml(xmlData)
 }
 
 func UpdateArticleInXml(article *Article) {
-	root := getXml()
+	root := getArticleXml()
 	id := strconv.Itoa(article.ID)
 	node := xmlquery.FindOne(root, "articles/article[@id='"+id+"']")
 	if article.IdCategorie < 1 {
@@ -64,26 +83,26 @@ func UpdateArticleInXml(article *Article) {
 		article.Prix, _ = strconv.ParseFloat(node.SelectElement("price").InnerText(), 64)
 	}
 	articleToAdd := getAnArticleAsXmlString(article)
-	xmlData := strings.Split(getXmlAsString(), "</articles>")[0] + articleToAdd + "</articles>"
+	xmlData := strings.Split(getArticleXmlAsString(), "</articles>")[0] + articleToAdd + "</articles>"
 	rewriteXml(xmlData)
 }
 
 func OverwriteArticleInXml(article *Article) {
 	articleToOverwrite := getAnArticleAsXmlString(article)
-	xmlData := getXmlBeforeAnArticle(getXmlAsString(), article.ID) + articleToOverwrite + getXmlAfterAnArticle(getXmlAsString(), article.ID)
+	xmlData := getXmlBeforeAnArticle(getArticleXmlAsString(), article.ID) + articleToOverwrite + getXmlAfterAnArticle(getArticleXmlAsString(), article.ID)
 	rewriteXml(xmlData)
 }
 
 func DeleteArticleInXml(id int) {
 	//append in a string
-	xmlData := getXmlAsString()
+	xmlData := getArticleXmlAsString()
 	newXml := getXmlBeforeAnArticle(xmlData, id) + getXmlAfterAnArticle(xmlData, id)
 	rewriteXml(newXml)
 }
 
-func getXmlAsString() string {
+func getArticleXmlAsString() string {
 	xmlData := "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-	root := getXml()
+	root := getArticleXml()
 	xmlquery.FindEach(root, "articles", func(i int, node *xmlquery.Node) {
 		xmlData += node.OutputXML(true)
 	})
@@ -92,6 +111,7 @@ func getXmlAsString() string {
 
 func rewriteXml(xmlData string) {
 	pwd, _ := os.Getwd()
+	lockArticle.Lock()
 	if err := ioutil.WriteFile(pwd+"/public/data/articles.xml", []byte(xmlData), 7777); err != nil {
 		panic(err)
 	}
@@ -101,7 +121,8 @@ func rewriteXml(xmlData string) {
 	}
 	defer f.Close()
 	_, _ = f.WriteString(xmlData)
-	f.Sync()
+	_ = f.Sync()
+	lockArticle.Unlock()
 }
 
 func getAnArticleAsXmlString(article *Article) string {

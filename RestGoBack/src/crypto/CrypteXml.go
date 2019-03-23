@@ -53,7 +53,7 @@ func translateMorse(str string) string {
 func translateL33t(str string) string {
 	res := ""
 	for _, char := range str {
-		res += getL33t(string(char))+ " "
+		res += getL33t(string(char))
 	}
 	return strings.TrimSpace(res)
 }

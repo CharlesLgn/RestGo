@@ -4,18 +4,22 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-func GetData(w rest.ResponseWriter, r *rest.Request) {
-	dataIn := In{}
-	_ = r.DecodeJsonPayload(&dataIn)
+func GetData(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	var dataIn In
+	err := json.NewDecoder(r.Body).Decode(&dataIn)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
 	if dataIn.Url == "" {
-		rest.Error(w, "url required", 400)
+		http.Error(w, "url required", 400)
 		return
 	}
 	if dataIn.Method == "" {
@@ -35,12 +39,11 @@ func GetData(w rest.ResponseWriter, r *rest.Request) {
 	response, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("The HTTP request failed with error %s\n", err)
-		rest.NotFound(w, r)
+		http.NotFound(w, r)
 		return
 	}
 	dataOut := Out{}
 	data, _ := ioutil.ReadAll(response.Body)
-
 
 	var head = ""
 	for k, v := range response.Header {
@@ -60,5 +63,5 @@ func GetData(w rest.ResponseWriter, r *rest.Request) {
 	dataOut.Status = response.Status
 	dataOut.Content = response.Proto
 	fmt.Println("data send")
-	w.WriteJson(dataOut)
+	_ = json.NewEncoder(w).Encode(dataOut)
 }

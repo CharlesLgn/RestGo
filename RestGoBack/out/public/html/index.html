@@ -1,21 +1,16 @@
 <!doctype html><meta charset=utf-8>
 <html>
     <head>
-        <link rel="shortcut icon" href="../images/go-tutorial.jpg">
         <link rel="stylesheet" href="../css/style.css">
         <script src="../js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript">
-            $("body,html").keydown(function(event) {
-                document.getElementById("terminal").innerHTML = "New text!";
-            });
             setInterval(function() {
                 $.get('/terminal', function(data) {
                     document.getElementById("terminal").innerHTML = "";
-                    text = data.split('☻');
+                    let text = data.split('☻');
                     for (i = 0; i < text.length; i++) {
                         document.getElementById("terminal").innerHTML += "<p>"+text[i]+"</p>";
                     }
-                    document.getElementById("terminal").innerHTML += "<p id =\"index\">></p>";
                 });
             });
         </script>
@@ -29,9 +24,6 @@
 <div id="terminal"></div>
 <div id="info">
     <table>
-        <tr>
-            <th>Quelques méthodes</th>
-        </tr>
         <tr>
             <th>Methode</th>
             <th>URL</th>

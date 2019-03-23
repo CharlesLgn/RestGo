@@ -1,13 +1,15 @@
 package color
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/ant0ine/go-json-rest/rest"
 	"math/rand"
+	"net/http"
 	"strconv"
 )
 
-func RandomColor(w rest.ResponseWriter, r *rest.Request) {
+func RandomColor(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	color := Color{}
 	color.Blue = rand.Intn(256)
 	color.Green = rand.Intn(256)
@@ -18,7 +20,7 @@ func RandomColor(w rest.ResponseWriter, r *rest.Request) {
 	color.RGB = "#" + str
 	color.Lum = getLum(color)
 	color.Sat = getSat(color)
-	w.WriteJson(color)
+	_ = json.NewEncoder(w).Encode(color)
 }
 
 func returnNb(x int) string {

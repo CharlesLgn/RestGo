@@ -3,6 +3,7 @@ package webservices
 import (
 	"github.com/antchfx/xmlquery"
 	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -10,19 +11,31 @@ import (
 
 func getCategoryXml() *xmlquery.Node {
 	pwd, _ := os.Getwd()
-	xmlArticle, _ := ioutil.ReadFile(pwd + "/public/data/categories.xml")
+	xmlCategory, _ := ioutil.ReadFile(pwd + "/public/data/categories.xml")
 
-	root, err := xmlquery.Parse(strings.NewReader(string(xmlArticle)))
+	root, err := xmlquery.Parse(strings.NewReader(string(xmlCategory)))
 	if err != nil {
 		panic(err)
 	}
 	return root
 }
 
-func InitCategoryWithXml() {
-	root := getXml()
-	articles = make(map[int]*Article)
-	idArticle = -1
+func getNewIdForCategoryXml() int {
+	root := getCategoryXml()
+	idCategory := -1
+	xmlquery.FindEach(root, "categories/category", func(i int, node *xmlquery.Node) {
+		id, _ := strconv.Atoi(node.Attr[0].Value)
+		log.Println(id)
+		if idCategory < id {
+			idCategory = id
+		}
+	})
+	return idCategory+1
+}
+
+func getAllCategoryWithXml() map[int]*Categorie {
+	root := getCategoryXml()
+	categories := make(map[int]*Categorie)
 	xmlquery.FindEach(root, "categories/category", func(i int, node *xmlquery.Node) {
 		id, _ := strconv.Atoi(node.Attr[0].Value)
 		categoryPath := "categories/category[@id='" + strconv.Itoa(id) + "']"
@@ -32,40 +45,36 @@ func InitCategoryWithXml() {
 			Libelle:     lib,
 		}
 		categories[id] = &categorie
-		if idCategorie < id {
-			idCategorie = id
-		}
 	})
-	idCategorie++
+	return categories
 }
 
 func CreateCategoryInXml(category *Categorie) {
-	articleToAdd := getACategoryAsXmlString(category)
-	xmlData := strings.Split(getCategoryXmlAsString(), "</categorie>")[0] + articleToAdd + "</categorie>"
+	category.ID = getNewIdForCategoryXml()
+	categoryToAdd := getACategoryAsXmlString(category)
+	xmlData := strings.Split(getCategoryXmlAsString(), "</categories>")[0] + categoryToAdd + "</categories>"
 	rewriteCategoryXml(xmlData)
 }
 
 func UpdateCategoryInXml(category *Categorie) {
-	root := getXml()
+	root := getArticleXml()
 	id := strconv.Itoa(category.ID)
 	node := xmlquery.FindOne(root, "categories/category[@id='"+id+"']")
 	if category.Libelle == "" {
 		category.Libelle = node.SelectElement("lib").InnerText()
 	}
 	articleToAdd := getACategoryAsXmlString(category)
-	xmlData := strings.Split(getCategoryXmlAsString(), "</categorie>")[0] + articleToAdd + "</categorie>"
+	xmlData := getXmlBeforeACategory(getCategoryXmlAsString(), category.ID) + articleToAdd + getXmlAfterACategory(getCategoryXmlAsString(), category.ID)
 	rewriteCategoryXml(xmlData)
 }
 
 func OverwriteCategoryInXml(category *Categorie) {
-	articleToOverwrite := getACategoryAsXmlString(category)
-	xmlData := getXmlBeforeACategory(getCategoryXmlAsString(), category.ID) + articleToOverwrite + getXmlAfterACategory(getCategoryXmlAsString(), category.ID)
-	rewriteCategoryXml(xmlData)
+	UpdateCategoryInXml(category)
 }
 
 func DeleteCategoryInXml(id int) {
 	//append in a string
-	xmlData := getXmlAsString()
+	xmlData := getCategoryXmlAsString()
 	newXml := getXmlBeforeACategory(xmlData, id) + getXmlAfterACategory(xmlData, id)
 	rewriteCategoryXml(newXml)
 }
@@ -81,6 +90,7 @@ func getCategoryXmlAsString() string {
 
 func rewriteCategoryXml(xmlData string) {
 	pwd, _ := os.Getwd()
+	lockCategorie.Lock()
 	if err := ioutil.WriteFile(pwd+"/public/data/categories.xml", []byte(xmlData), 7777); err != nil {
 		panic(err)
 	}
@@ -91,6 +101,7 @@ func rewriteCategoryXml(xmlData string) {
 	defer f.Close()
 	_, _ = f.WriteString(xmlData)
 	_ = f.Sync()
+	lockCategorie.Unlock()
 }
 
 func getACategoryAsXmlString(category *Categorie) string {
@@ -98,22 +109,22 @@ func getACategoryAsXmlString(category *Categorie) string {
 	id := strconv.Itoa(category.ID)
 	lib := category.Libelle
 	//append in a string
-	categorieToAdd := "<categorie id=\"" + id + "\"><lib>" + lib + "</lib></categorie>"
+	categorieToAdd := "<category id=\"" + id + "\"><lib>" + lib + "</lib></category>"
 	return categorieToAdd
 }
 
 func getXmlBeforeACategory(xmlData string, id int) string {
 	Id := strconv.Itoa(id)
-	return strings.Split(xmlData, "<categorie id=\""+Id+"\">")[0]
+	return strings.Split(xmlData, "<category id=\""+Id+"\">")[0]
 }
 
 func getXmlAfterACategory(xmlData string, id int) string {
 	Id := strconv.Itoa(id)
 	res := ""
-	dataDelete := strings.Split(xmlData, "<categorie id=\""+Id+"\">")
-	dataDelete = strings.Split(dataDelete[1], "</categorie>")
+	dataDelete := strings.Split(xmlData, "<category id=\""+Id+"\">")
+	dataDelete = strings.Split(dataDelete[1], "</category>")
 	for i := 1; i < len(dataDelete)-1; i++ {
-		res += dataDelete[i] + "</categorie>"
+		res += dataDelete[i] + "</category>"
 	}
 	res += dataDelete[len(dataDelete)-1]
 	return res
