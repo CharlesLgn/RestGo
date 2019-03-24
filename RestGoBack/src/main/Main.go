@@ -1,7 +1,6 @@
 package main
 
 import (
-  "RestMan/RestGoBack/src/clock"
   "RestMan/RestGoBack/src/color"
   "RestMan/RestGoBack/src/data"
   "RestMan/RestGoBack/src/github"
@@ -214,10 +213,6 @@ func get8000() {
   router.HandleFunc("/fun/lissa", func(writer http.ResponseWriter, request *http.Request) {
     printLogFront("Lissajous")
     lissajous.LissajousWeb(writer, request)
-  }).Methods("GET")
-  router.HandleFunc("/fun/clock", func(writer http.ResponseWriter, request *http.Request) {
-    printLogFront("Clock")
-    clock.ClockWeb(writer, request)
   }).Methods("GET")
 
   printLogFront("Server start !")
