@@ -7,4 +7,3 @@ special-vendored-path/* linguist-vendored
 *.js linguist-vendored=false
 *.css linguist-vendored=false
 *.html linguist-vendored=false
-*.cs linguist-language=Assembly
