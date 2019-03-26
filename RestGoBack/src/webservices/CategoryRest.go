@@ -13,7 +13,6 @@ import (
 func GetCategories(w http.ResponseWriter, r *http.Request) {
 	setHeader(w)
 	contentType := r.Header.Get("Content-Type")
-	log.Println("get  all category")
 	id, err := strconv.Atoi(r.Header.Get("X-Category-id"))
 	if err == nil {
 		getCategoryById(w, r, id)
@@ -23,9 +22,11 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 			var categories Categories
 			categories.CategoryList = getMapCategAsArray(categoriesList)
+			log.Println("get  all category in XML")
 			_ = xml.NewEncoder(w).Encode(categories)
 		} else {
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			log.Println("get  all category in JSON")
 			_ = json.NewEncoder(w).Encode(categoriesList)
 		}
 	}

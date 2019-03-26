@@ -17,15 +17,16 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
   if err == nil {
     getArticleById(w, r, id)
   } else {
-    log.Println("get  all articles")
     articleList := getAllArticleInXml()
     if strings.Contains(contentType, "xml") {
       w.Header().Set("Content-Type", "application/xml; charset=utf-8")
       var articles Articles
       articles.ArticleList = getMapArticleAsArray(articleList)
+      log.Println("get  all articles in XML")
       _ = xml.NewEncoder(w).Encode(articles)
     } else {
       w.Header().Set("Content-Type", "application/json; charset=utf-8")
+      log.Println("get  all articles in JSON")
       _ = json.NewEncoder(w).Encode(articleList)
     }
   }
