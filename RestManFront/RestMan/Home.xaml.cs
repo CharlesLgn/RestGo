@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using Windows.ApplicationModel.Resources;
 using Windows.Media.Core;
@@ -171,13 +172,27 @@ namespace RestMan
         {
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
+                //using (HttpClient client = new HttpClient())
+                //{
                     Loader.Visibility = Visibility.Visible;
-                    HttpResponseMessage response = await client.GetAsync(this.Query.Text);
+                    TextBlock type = ContentType.SelectedItem as TextBlock;
+                    string typecontent = type.Text;
+                    var request = new HttpRequestMessage
+                    {
+                        RequestUri = new Uri(this.Query.Text),
+                        Method = HttpMethod.Get,
+                        Headers = {
+        { HttpRequestHeader.ContentType.ToString(), "application/xml" },
+    },
+
+                    };
+
+                    
+
+                    //HttpResponseMessage response = await client.GetAsync(this.Query.Text);
                     Loader.Visibility = Visibility.Collapsed;
-                    HttpContent content = response.Content;
-                    contentype = response.Content.Headers.ContentType.MediaType;
+                    //HttpContent content = response.Content;
+                    //contentype = response.Content.Headers.ContentType.MediaType;
 
                     if (contentype.Contains("application"))
                     {
