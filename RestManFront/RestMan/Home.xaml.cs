@@ -26,6 +26,7 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
+        HttpWebRequest webRequest;
         ResourceLoader resourceLoader;
         private List<HeaderElement> HeaderElements = new List<HeaderElement>();
         private string receivedResponse = string.Empty;
@@ -101,7 +102,7 @@ namespace RestMan
             {
                 HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
                 HttpContent content = response.Content;
-                getHeaders(response);
+                //getHeaders(response);
                 Response.Visibility = Visibility.Visible;
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -144,7 +145,7 @@ namespace RestMan
                         break;
                 }
 
-                getHeaders(response);
+                //getHeaders(response);
                 Response.Visibility = Visibility.Visible;
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -172,28 +173,121 @@ namespace RestMan
         {
             try
             {
-                //using (HttpClient client = new HttpClient())
-                //{
-                    Loader.Visibility = Visibility.Visible;
-                    TextBlock type = ContentType.SelectedItem as TextBlock;
-                    string typecontent = type.Text;
-                    var request = new HttpRequestMessage
+                Loader.Visibility = Visibility.Visible;
+                var selectedContentTypeTextBlock = ContentType.SelectedItem as TextBlock;
+                string selectedContentType = selectedContentTypeTextBlock.Text;
+                webRequest = (HttpWebRequest)WebRequest.Create(this.Query.Text);
+                webRequest.ContentType = selectedContentType;
+                webRequest.Method = "GET";
+                WebResponse response;
+                string body = string.Empty;
+                string headers = string.Empty;
+                response = await webRequest.GetResponseAsync();
+                var stream = response.GetResponseStream();
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    body = reader.ReadToEnd();
+                }
+
+                contentype = response.ContentType;
+                if (contentype.Contains("application"))
+                {
+                    Response.Visibility = Visibility.Visible;
+                    receivedResponse += body;
+                    getHeaders(response.Headers.ToString());
+                    Response.Text = receivedResponse;
+                }
+                else if (contentype.Contains("image"))
+                {
+                    BitmapImage bitmapImage = new BitmapImage();
+                    Uri uri = response.ResponseUri;
+                    bitmapImage.UriSource = uri;
+                    ResponseImage.Source = bitmapImage;
+                    receivedResponse += "Voir image ci-dessous";
+                    getHeaders(response.Headers.ToString());
+                    Response.Text = receivedResponse;
+                    ResponseImage.Visibility = Visibility.Visible;
+                    ImageDescription.Visibility = Visibility.Visible;
+
+                    try
                     {
-                        RequestUri = new Uri(this.Query.Text),
-                        Method = HttpMethod.Get,
-                        Headers = {
-        { HttpRequestHeader.ContentType.ToString(), "application/xml" },
-    },
+                        ImageDescription.Text = "Nom du fichier : " + webRequest.Headers["Content-Disposition"] + "\n" + "Type : " + response.ContentType;
+                    }
+                    catch
+                    {
+                        ImageDescription.Text = "Nom du fichier introuvable";
+                        //string fileName = response.RequestMessage.RequestUri.AbsolutePath.Substring(response.RequestMessage.RequestUri.AbsolutePath.LastIndexOf('/') + 1);
+                        //ImageDescription.Text = "Nom du fichier : " + fileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
+                    }
 
-                    };
+                }
+                else if (contentype.Contains("video"))
+                {
+                    Uri uri = response.ResponseUri;
+                    ResponseVideo.Source = MediaSource.CreateFromUri(uri);
+                    receivedResponse += "Voir vidéo ci-dessous";
+                    getHeaders(response.Headers.ToString());
+                    Response.Text = receivedResponse;
+                    ResponseVideo.Visibility = Visibility.Visible;
 
-                    
+                }
+                else if (contentype.Contains("html"))
+                {
+                    Uri url = response.ResponseUri;
+                    ResponseHTML.Navigate(url);
+                    SpaceWeb.Height = 20;
+                    SpaceWeb2.Height = 20;
+                    receivedResponse += body;
+                    Response.Text = receivedResponse;
+                    BrowseWeb.Visibility = Visibility.Visible;
+                    Response.Visibility = Visibility.Visible;
+                    getHeaders(response.Headers.ToString());
 
+                }
+                else
+                {
+                    Response.Visibility = Visibility.Visible;
+                    receivedResponse += body;
+                    getHeaders(response.Headers.ToString());
+                    Response.Text = receivedResponse;
+                }
+
+                if (((System.Net.HttpWebResponse)response).StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
+                }
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de la requête" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+
+            Loader.Visibility = Visibility.Collapsed;
+        }
+
+        /*private async void getQuery()
+        {
+            try
+            {
+                HttpContent content;
+                using (HttpClient client = new HttpClient())
+                {
+                    Loader.Visibility = Visibility.Visible;
                     //HttpResponseMessage response = await client.GetAsync(this.Query.Text);
+                    client.BaseAddress = new Uri(Query.Text);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Query.Text);
+                    request.Headers.Add("Accept", "application/xml");
+                    HttpResponseMessage response = await client.SendAsync(request);
+                    content = response.Content;
                     Loader.Visibility = Visibility.Collapsed;
-                    //HttpContent content = response.Content;
-                    //contentype = response.Content.Headers.ContentType.MediaType;
-
+                    contentype = response.Content.Headers.ContentType.MediaType;
                     if (contentype.Contains("application"))
                     {
                         Response.Visibility = Visibility.Visible;
@@ -272,14 +366,14 @@ namespace RestMan
                 dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
                 var res = dialog.ShowAsync();
             }
-        }
+        }*/
 
         private void BrowseWeb_Click(object sender, RoutedEventArgs e)
         {
             ResponseHTML.Visibility = Visibility.Visible;
         }
 
-        private void getHeaders(HttpResponseMessage response)
+        private void getHeaders(/*HttpResponseMessage*/ string response)
         {
             List<string> listdata = new List<string>();
             string entetes = response.ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace(" ", string.Empty).Replace("\r", string.Empty);
@@ -406,7 +500,7 @@ namespace RestMan
         private void getImage(object sender, RoutedEventArgs e)
         {
             Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8001/fun/lissa";
+            Query.Text = "http://localhost:8000/fun/lissa";
             Lancer_Click(sender, e);
         }
 
