@@ -31,9 +31,13 @@ Fortunatly Golang has a very good idea. there is inside go a versionning and bui
 the rest API is powered by Gorilla mux which is a powerful URL router and dispatcher for golang.  
 [![mux](http://www.gorillatoolkit.org/static/images/gorilla-icon-64.png)]() 
 
-Moreover we use an other library to make easy the restFul Json api : [go-json-rest](https://github.com/ant0ine/go-json-rest)
+Moreover, when we send a document, we need to set the content-type in return.
+Basicly, go send all data in `text` so we need to add :
+```Go
+  writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+```
 
-So the dificulty was to learn how thes lib can be use and how can we call them
+So the dificulty was to learn how these lib can be use and how can we call them
 
 #### Particalarity of Golang Structure type
 Go is think to make http server, so the langage is made to make also easy the readin of a `JSON` or a `XML`  
