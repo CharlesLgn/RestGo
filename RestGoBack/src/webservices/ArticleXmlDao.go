@@ -42,6 +42,15 @@ func getArticleIdByCategInXml(idCateg int) map[int]int  {
 	return articles
 }
 
+func getMapArticleAsArray(data map[int]*Article) []*Article {
+	const size = 500
+	articles := make([]*Article, size)
+	for k,v := range data {
+		articles[k] = v
+	}
+	return articles
+}
+
 func getAllArticleInXml() map[int]*Article {
 	root := getArticleXml()
 	articles := make(map[int]*Article)
