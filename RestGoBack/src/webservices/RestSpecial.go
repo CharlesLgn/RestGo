@@ -10,7 +10,12 @@ import (
   "strings"
 )
 
+func setHeader(w http.ResponseWriter)  {
+  w.Header().Set("X-Powered-by", "Okya Corp")
+}
+
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
+  setHeader(w)
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
   log.Println("get  article by categ: ", idCateg)
@@ -38,6 +43,7 @@ func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteArticlesByCateg(w http.ResponseWriter, r *http.Request) {
+  setHeader(w)
   w.Header().Set("Content-Type", "application/json; charset=utf-8")
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
