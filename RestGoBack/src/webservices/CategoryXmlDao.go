@@ -33,6 +33,15 @@ func getNewIdForCategoryXml() int {
 	return idCategory+1
 }
 
+func getMapCategAsArray(data map[int]*Categorie) []*Categorie {
+	const size = 500
+	categories := make([]*Categorie, size)
+	for k,v := range data {
+		categories[k] = v
+	}
+	return categories
+}
+
 func getAllCategoryWithXml() map[int]*Categorie {
 	root := getCategoryXml()
 	categories := make(map[int]*Categorie)

@@ -2,17 +2,27 @@ package webservices
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
-func GetCategories(w http.ResponseWriter, _ *http.Request) {
+func GetCategories(w http.ResponseWriter, r *http.Request) {
+	contentType := r.Header.Get("Content-Type")
 	log.Println("get  all category")
-	categories := getAllCategoryWithXml()
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	_ = json.NewEncoder(w).Encode(categories)
+	categoriesList := getAllCategoryWithXml()
+	if strings.Contains(contentType, "xml") {
+		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+		var categories Categories
+		categories.CategoryList = getMapCategAsArray(categoriesList)
+		_ = xml.NewEncoder(w).Encode(categories)
+	} else {
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		_ = json.NewEncoder(w).Encode(categoriesList)
+	}
 }
 
 func GetCategoryById(w http.ResponseWriter, r *http.Request) {
@@ -20,11 +30,20 @@ func GetCategoryById(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, _ := strconv.Atoi(params["id"])
 	categories := getAllCategoryWithXml()
+	var dataToSend *Categorie
 	for _, category := range categories {
 		if category.ID == id {
-			_ = json.NewEncoder(w).Encode(category)
+			dataToSend = category
 			break
 		}
+	}
+	contentType := r.Header.Get("Content-Type")
+	if strings.Contains(contentType, "xml") {
+		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+		_ = xml.NewEncoder(w).Encode(dataToSend)
+	} else {
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		_ = json.NewEncoder(w).Encode(dataToSend)
 	}
 }
 

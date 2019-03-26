@@ -1,31 +1,40 @@
 package webservices
 
 import (
-  "github.com/gorilla/mux"
-
   "encoding/json"
+  "encoding/xml"
+  "github.com/gorilla/mux"
   "log"
   "net/http"
   "strconv"
+  "strings"
 )
 
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
-  w.Header().Set("Content-Type", "application/json; charset=utf-8")
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
   log.Println("get  article by categ: ", idCateg)
   lockArticle.RLock()
 
-  stock := make([]Article, 0)
+  stock := make([]*Article, 0)
   articles := getAllArticleInXml()
 
   for _, article := range articles {
     if article.IdCategorie == idCateg {
-      stock = insert(stock, *article)
+      stock = insert(stock, article)
     }
   }
-  lockArticle.RUnlock()
-  _ = json.NewEncoder(w).Encode(stock)
+
+  contentType := r.Header.Get("Content-Type")
+  if strings.Contains(contentType, "xml") {
+    w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+    articlesXml := Articles{}
+    articlesXml.ArticleList = stock
+    _ = xml.NewEncoder(w).Encode(articlesXml)
+  } else {
+    w.Header().Set("Content-Type", "application/json; charset=utf-8")
+    _ = json.NewEncoder(w).Encode(stock)
+  }
 }
 
 func DeleteArticlesByCateg(w http.ResponseWriter, r *http.Request) {
@@ -44,8 +53,8 @@ func deleteArticles(idCateg int) {
   }
 }
 
-func insert(original []Article, value Article) []Article {
-  target := make([]Article, len(original)+1)
+func insert(original []*Article, value *Article) []*Article {
+  target := make([]*Article, len(original)+1)
   copy(target, original[:])
   target[len(original)] = value
 

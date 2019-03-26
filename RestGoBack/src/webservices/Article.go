@@ -1,15 +1,22 @@
 package webservices
 
 import (
+  "encoding/xml"
   "github.com/antchfx/xmlquery"
   "sync"
 )
 
+type Articles struct {
+  XMLName     xml.Name   `xml:"articles" json:"-"`
+  ArticleList []*Article `xml:"article,omitempty"  json:"articles"`
+}
+
 type Article struct {
-  ID          int      `json:"id,omitempty"`
-  Libelle     string   `json:"lib,omitempty"`
-  Prix        float64  `json:"price,omitempty"`
-  IdCategorie int      `json:"idCateg,omitempty"`
+  XMLName     xml.Name `xml:"article"  json:"-"`
+  ID          int      `xml:"id,attr" json:"id,omitempty"`
+  Libelle     string   `xml:"lib"      json:"lib,omitempty"`
+  Prix        float64  `xml:"price"    json:"price,omitempty"`
+  IdCategorie int      `xml:"idCateg"  json:"idCateg,omitempty"`
 }
 
 var lockArticle = sync.RWMutex{}
