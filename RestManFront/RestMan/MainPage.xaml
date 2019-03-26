@@ -5,7 +5,7 @@
     xmlns:local="using:RestMan"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Background="{ThemeResource AppBarBorderThemeBrush}">
+    mc:Ignorable="d" Background="{ThemeResource AppBarBorderThemeBrush}" GettingFocus="Page_GettingFocus">
 
     <Page.Resources>
         <Style TargetType="ListBoxItem">
@@ -36,7 +36,7 @@
         </ScrollViewer>
 
         <StackPanel Orientation="Horizontal" Background="{ThemeResource SystemControlBackgroundAccentBrush}" >
-            <Button Name="Hamburger" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="36" Click="Hamburger_Click" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Width="70"/>
+            <Button Name="Hamburger" FontFamily="Segoe MDL2 Assets" Content="&#xE700;" FontSize="36" Click="Hamburger_Click" Background="{ThemeResource SystemControlBackgroundAccentBrush}" Width="70" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Bottom"/>
             <!--<TextBlock FontSize="36" Margin="10,0,0,0">RestGo</TextBlock>-->
             <Image Name="Logo" Width="200"/>
         </StackPanel>
@@ -48,7 +48,7 @@
                             <Rectangle Name="RecAccueil" Width="4" Height="58" Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"></Rectangle>
                             <TextBlock Name="SpaceAccueil" Width="5" />
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="48" Text="&#xE10F;" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" Width="45"/>
-                            <TextBlock Text="Accueil" FontSize="36"  Margin="30,0,0,0" FontFamily="Segoe UI"/>
+                            <TextBlock x:Name="lb_Accueil" x:Uid="Accueil" FontSize="36"  Margin="30,0,0,0" FontFamily="Segoe UI" x:FieldModifier="public"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Name="Langue" FontFamily="Segoe UI">
@@ -56,7 +56,7 @@
                             <Rectangle Name="RecLangue" Width="4" Height="58" Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"></Rectangle>
                             <TextBlock Name="SpaceLangue" Width="6" />
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="48" Text="&#xE164;"/>
-                            <TextBlock Text="Langue" FontSize="36" Margin="30,0,0,0"/>
+                            <TextBlock x:Name="lb_langue" x:Uid="Langue" FontSize="36" Margin="30,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
                     <ListBoxItem Name="Propos">
@@ -64,7 +64,7 @@
                             <Rectangle Name="RecPropos" Width="4" Height="58" Fill="{ThemeResource SystemControlBackgroundAltHighBrush}"></Rectangle>
                             <TextBlock Name="SpacePropos" Width="6" />
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="48" Text="&#xE783;"/>
-                            <TextBlock Text="À propos" FontSize="36" Margin="30,0,0,0"/>
+                            <TextBlock x:Name="lb_propos" x:Uid="Propos" FontSize="36" Margin="30,0,0,0"/>
                         </StackPanel>
                     </ListBoxItem>
                 </ListBox>

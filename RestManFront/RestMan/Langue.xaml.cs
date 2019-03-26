@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -51,10 +52,12 @@ namespace RestMan
 
         private void FrImage_Click(object sender, RoutedEventArgs e)
         {
+            Windows.ApplicationModel.Resources.Core.ResourceContext.SetGlobalQualifierValue("Language", "fr-FR");
         }
 
         private void EnglImage_Click(object sender, RoutedEventArgs e)
         {
+            Windows.ApplicationModel.Resources.Core.ResourceContext.SetGlobalQualifierValue("Language", "en-US");
         }
     }
 }

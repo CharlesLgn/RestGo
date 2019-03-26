@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Windows.ApplicationModel.Resources;
 using Windows.Media.Core;
 using Windows.UI;
 using Windows.UI.Popups;
@@ -24,6 +25,7 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
+        ResourceLoader resourceLoader;
         private List<HeaderElement> HeaderElements = new List<HeaderElement>();
         private string receivedResponse = string.Empty;
         private string receivedHeaders = string.Empty;
@@ -460,6 +462,23 @@ namespace RestMan
         {
             QuerySample.ClearValue(Button.ForegroundProperty);
             QuerySampleRotate.Rotation = 0;
+        }
+
+        private void Page_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
+        {
+            /*ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            string foo = resourceLoader.GetString("LancerName");
+            lb_lancer.Text = foo;*/
+        }
+
+        private void Page_Loading(FrameworkElement sender, object args)
+        {
+            resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            lb_lancer.Text = resourceLoader.GetString("LancerName");
+            lb_body.Text = resourceLoader.GetString("Body");
+            lb_reponse.Text = resourceLoader.GetString("Reponse");
+            lb_entetes.Text = resourceLoader.GetString("Entetes");
+            lb_visiterPage.Text = resourceLoader.GetString("VisiterPage");
         }
     }
 }

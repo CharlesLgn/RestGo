@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -101,6 +102,14 @@ namespace RestMan
                 RecPropos.Visibility = Visibility.Visible;
                 MyFrame.Navigate(typeof(Propos));
             }
+        }
+
+        private void Page_GettingFocus(UIElement sender, GettingFocusEventArgs args)
+        {
+            ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            lb_Accueil.Text = resourceLoader.GetString("Accueil");
+            lb_langue.Text = resourceLoader.GetString("Langue");
+            lb_propos.Text = resourceLoader.GetString("Propos");
         }
     }
 }

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Data.Pdf;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -54,6 +55,21 @@ namespace RestMan
         {
             var uri = new Uri("https://drive.google.com/file/d/1d78jWWdqbD4-om1J4g6c1Xv7Xp2LF9DJ/view?usp=sharing");
             Windows.System.Launcher.LaunchUriAsync(uri);
+        }
+
+        private void Page_Loading(FrameworkElement sender, object args)
+        {
+            ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
+            lb_propos.Text = resourceLoader.GetString("Propos");
+            lb_auteurs.Text = resourceLoader.GetString("Auteurs");
+            lb_projet.Text = resourceLoader.GetString("Projet");
+            lb_titreSujet.Text = resourceLoader.GetString("TitreSujet");
+            lb_IntroSujet.Text = resourceLoader.GetString("IntroSujet");
+            lb_sujet.Text = resourceLoader.GetString("Sujet");
+            lb_btsujet.Text = resourceLoader.GetString("btSujet");
+            lb_indication.Text = resourceLoader.GetString("Indication");
+            lb_indicationcontenu.Text = resourceLoader.GetString("IndicationContenu");
+            lb_livrable.Text = resourceLoader.GetString("Livrables");
         }
     }
 }

@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Accueil" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Auteurs" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="Body" xml:space="preserve">
+    <value>Request's body</value>
+  </data>
+  <data name="btSujet" xml:space="preserve">
+    <value>See the subject</value>
+  </data>
+  <data name="Entetes" xml:space="preserve">
+    <value>Headers</value>
+  </data>
+  <data name="Indication" xml:space="preserve">
+    <value>Indication</value>
+  </data>
+  <data name="IndicationContenu" xml:space="preserve">
+    <value>The client part and the server part are not necessarily in the same programming language</value>
+  </data>
+  <data name="IntroSujet" xml:space="preserve">
+    <value>The goal of this lab is to recreate in a very simplified way a web browser.
+The project will consist of 2 elements:
+- a client interface that will act as a browser. In this browser, we will have:
+- an input field for the url that you want to call,
+- a drop-down list to select the content-type,
+- a drop-down list for the method used (GET, POST, etc ...)
+- a drop-down list to indicate the language used,
+- a text field to send parameters
+- a button to send our request,
+- a field to display the result (return headers and data)
+- a server that will have to:
+- interpret the request received,
+- return the correct content according to the headers used,
+- indicate the success or failure of the operation (HTTP codes seen in progress)
+In summary you are asked to reproduce the debug window HTTP requests that you can launch
+from any browser by pressing F12.
+Your client interface could theoretically work by pointing to any url.
+I will ask you to develop for the server part several webservices:
+- the article webservice:
+- an article is composed of an identifier generated at creation, a label, a price and the identifier
+a category
+- the webservice GET / articles will return the list of articles,
+- the webservices GET / article /: id will return an article in particular (where: id is the identifier of the article),
+- the POST / article webservice will create an article,
+- the webservice DELETE / article /: id will delete an article
+- the webservice category:
+- a category is composed of an identifier (generated at creation), and a label,
+- the webservice GET / categories will return the list of categories,
+- the webservices GET / category /: id will return a particular category (where: id is the identifier of the
+category),
+- the POST / category webservice will create a category,
+- DELETE webservice / category /: id will delete a category
+Of course, the call to a web service that does not exist or with the wrong method will have to return the http code
+corresponding.</value>
+  </data>
+  <data name="LancerName" xml:space="preserve">
+    <value>Launch request</value>
+  </data>
+  <data name="Langue" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Livrables" xml:space="preserve">
+    <value>Deliverables</value>
+  </data>
+  <data name="Projet" xml:space="preserve">
+    <value>Project made by</value>
+  </data>
+  <data name="Propos" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="Reponse" xml:space="preserve">
+    <value>Response</value>
+  </data>
+  <data name="Sujet" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="TitreSujet" xml:space="preserve">
+    <value>Project advanced management HTTP</value>
+  </data>
+  <data name="Valeur" xml:space="preserve">
+    <value>Values</value>
+  </data>
+  <data name="VisiterPage" xml:space="preserve">
+    <value>Visit website</value>
+  </data>
+</root>

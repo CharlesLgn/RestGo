@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource AppBarBackgroundThemeBrush}">
+    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loading="Page_Loading">
 
     <Grid Loaded="Grid_Loaded">
         <VisualStateManager.VisualStateGroups>
@@ -73,7 +73,7 @@
 
                 <StackPanel Name="First" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0,75,0,0">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="48">à propos.</TextBlock>
+                        <TextBlock x:Name="lb_propos" x:Uid="Propos" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="48">à propos.</TextBlock>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image Source="Assets/StoreLogo.scale-400.png" Width="150" Height="150"/>
@@ -81,8 +81,8 @@
                         <Image Source="https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_Lorraine_%28logo%29.png/200px-University_of_Lorraine_%28logo%29.png" Width="100" Height="100"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Projet réalisé en licence professionnelle." />
-                        <TextBlock Text="Auteurs :" HorizontalAlignment="Stretch" />
+                        <TextBlock x:Name="lb_projet" x:Uid="Projet" Text="Projet réalisé en licence professionnelle." />
+                        <TextBlock x:Name="lb_auteurs" x:Uid="Auteurs" Text="Auteurs :" HorizontalAlignment="Stretch" />
                         <TextBlock Width="20"></TextBlock>
                         <Button x:Name="bt_Cyril" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="200" Click="Bt_Cyril_Click">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -103,13 +103,13 @@
                 </StackPanel>
                 <StackPanel Name="Second" Grid.Row="1" Margin="0,0,0,0" Padding="0,75,0,0" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Center" FontSize="48">Sujet.</TextBlock>
+                        <TextBlock x:Name="lb_sujet" x:Uid="Sujet" Margin="0,0,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Center" FontSize="48">Sujet.</TextBlock>
                         <TextBlock Height="20"/>
                         <Button Name="Sujet" Click="Sujet_Click">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="22" Margin="0,5,0,0">&#xE1A5;</TextBlock>
                                 <TextBlock Width="20"/>
-                                <TextBlock Text="Voir le sujet" FontSize="22"/>
+                                <TextBlock x:Name="lb_btsujet" x:Uid="btSujet" Text="Voir le sujet" FontSize="22"/>
                             </StackPanel>
 
                         </Button>
@@ -118,8 +118,8 @@
                 <StackPanel Name="Third" Grid.Row="2" Margin="0,75,149,0" HorizontalAlignment="Stretch" Padding="0,0,0,0">
                     <ScrollViewer HorizontalAlignment="Stretch">
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">Projet gestion avancée HTTP</TextBlock>
-                            <TextBlock TextWrapping="Wrap">
+                            <TextBlock x:Name="lb_titreSujet" x:Uid="TitreSujet" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">Projet gestion avancée HTTP</TextBlock>
+                            <TextBlock x:Name="lb_IntroSujet" x:Uid="IntroSujet" TextWrapping="Wrap">
                         Le but de ce TP est de recréer de manière très simplifiée un navigateur web.
 Le projet se composera de 2 éléments:
 - une interface cliente qui fera office de navigateur. Dans ce navigateur, on aura :
@@ -156,12 +156,12 @@ Bien entendu, l’appel à un webservice inexistant ou avec la mauvaise méthode
 correspondant.
 
                             </TextBlock>
-                            <TextBlock FontSize="18" FontWeight="Bold">Indications</TextBlock>
-                            <TextBlock TextWrapping="Wrap">
+                            <TextBlock x:Name="lb_indication" x:Uid="Indication" FontSize="18" FontWeight="Bold">Indications</TextBlock>
+                            <TextBlock x:Name="lb_indicationcontenu" x:Uid="IndicationContenu" TextWrapping="Wrap">
                                 La partie client et la partie serveur ne sont pas forcément dans le même langage de
 programmation
                             </TextBlock>
-                            <TextBlock FontSize="20" FontWeight="Bold">Livrables</TextBlock>
+                            <TextBlock x:Name="lb_livrable" x:Uid="Livrables" FontSize="20" FontWeight="Bold">Livrables</TextBlock>
                             <TextBlock>● application client, le navigateur web</TextBlock>
                             <TextBlock>● application serveur (webservices)</TextBlock>
                             <TextBlock TextWrapping="Wrap">● un readme pour m’expliquer les choses à savoir pour faire fonctionner votre application et les difficultés que

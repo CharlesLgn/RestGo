@@ -8,7 +8,7 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:data="using:RestMan.Objects"
     mc:Ignorable="d"
-    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI">
+    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI" GettingFocus="Page_GettingFocus" Loading="Page_Loading">
 
     <Grid Padding="0,0,0,0">
         <VisualStateManager.VisualStateGroups>
@@ -288,7 +288,7 @@
                         <StackPanel Orientation="Horizontal">
                             <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE945;</TextBlock>
                             <TextBlock Width="10"></TextBlock>
-                            <TextBlock Name="LancerName" Height="25">Lancer la requête</TextBlock>
+                            <TextBlock x:Name="lb_lancer" x:Uid="LancerName" Height="25" FontFamily="Segoe UI" FontSize="11" x:FieldModifier="public"/>
                         </StackPanel>
                     </Button>
                 </StackPanel>
@@ -298,7 +298,7 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <TextBlock x:Name="lb_body" VerticalAlignment="Center" HorizontalAlignment="Center" FocusVisualPrimaryBrush="Black" RequestedTheme="Default" FontSize="18" FontFamily="Segoe UI"><Underline>Corps de la requête</Underline></TextBlock>
+                    <TextBlock x:Name="lb_body"  x:Uid="Body" VerticalAlignment="Center" HorizontalAlignment="Center" FocusVisualPrimaryBrush="Black" RequestedTheme="Default" FontSize="18" FontFamily="Segoe UI" TextDecorations="Underline"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="Fifth" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Padding="20,50,20,0">
                     <StackPanel.ChildrenTransitions>
@@ -323,12 +323,14 @@
                     </StackPanel.ChildrenTransitions>
                     <ProgressRing IsActive="True" Foreground="Red" Visibility="Collapsed" Name="Loader" Width="150" Height="150" />
                     <Border BorderThickness="0,0,0,2" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}" >
-                        <TextBlock FontFamily="Segoe UI" Text="Réponse" FontSize="18" />
+                        <TextBlock x:Name="lb_reponse" x:Uid="Reponse" FontFamily="Segoe UI" Text="Réponse" FontSize="18" />
                     </Border>
                     <TextBlock Height="20"/>
                     <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Response" Height="228" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True"/>
                     <TextBlock Name="SpaceWeb2" Height="0"/>
-                    <Button Name="BrowseWeb" Content="Visiter la page" HorizontalAlignment="Center" VerticalAlignment="Center" Click="BrowseWeb_Click"/>
+                    <Button Name="BrowseWeb" HorizontalAlignment="Center" VerticalAlignment="Center" Click="BrowseWeb_Click">
+                        <TextBlock x:Name="lb_visiterPage" x:Uid="VisiterPage" Text="Visiter la page"/>
+                    </Button>
                     <TextBlock Name="SpaceWeb" Height="0"/>
                     <WebView Name="ResponseHTML" Width="1200" Height="1000"/>
                     <Image Name="ResponseImage" HorizontalAlignment="Stretch" MaxWidth="400" MaxHeight="400"/>
@@ -337,7 +339,7 @@
                     <MediaPlayerElement Name="ResponseVideo" AutoPlay="True" AreTransportControlsEnabled="True" Visibility="Collapsed" FontFamily="Arial Narrow"/>
                     <TextBlock Height="20"/>
                     <Border BorderThickness="0,0,0,2" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"> 
-                        <TextBlock Text="Entêtes" FontSize="18" FontFamily="Segoe UI"/>
+                        <TextBlock x:Name="lb_entetes" x:Uid="Entetes" Text="Entêtes" FontSize="18" FontFamily="Segoe UI"/>
                     </Border>
                     <TextBlock Height="20"/>
                     <controls:DataGrid x:Name="ResponseGridView" Width="1200" Height="150" FontFamily="Segoe UI" FontSize="22"/>
