@@ -14,29 +14,29 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 	setHeader(w)
 	contentType := r.Header.Get("Content-Type")
 	log.Println("get  all category")
-	categoriesList := getAllCategoryWithXml()
-	if strings.Contains(contentType, "xml") {
-		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
-		var categories Categories
-		categories.CategoryList = getMapCategAsArray(categoriesList)
-		_ = xml.NewEncoder(w).Encode(categories)
+	id, err := strconv.Atoi(r.Header.Get("X-Category-id"))
+	if err == nil {
+		getCategoryById(w, r, id)
 	} else {
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		_ = json.NewEncoder(w).Encode(categoriesList)
+		categoriesList := getAllCategoryWithXml()
+		if strings.Contains(contentType, "xml") {
+			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+			var categories Categories
+			categories.CategoryList = getMapCategAsArray(categoriesList)
+			_ = xml.NewEncoder(w).Encode(categories)
+		} else {
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			_ = json.NewEncoder(w).Encode(categoriesList)
+		}
 	}
 }
 
-func GetCategoryById(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	params := mux.Vars(r)
-	id, _ := strconv.Atoi(params["id"])
+func getCategoryById(w http.ResponseWriter, r *http.Request, id int) {
 	categories := getAllCategoryWithXml()
 	var dataToSend *Categorie
-	for _, category := range categories {
-		if category.ID == id {
-			dataToSend = category
-			break
+	for _, categ := range categories {
+		if categ.ID == id {
+			dataToSend = categ
 		}
 	}
 	contentType := r.Header.Get("Content-Type")
@@ -47,6 +47,14 @@ func GetCategoryById(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		_ = json.NewEncoder(w).Encode(dataToSend)
 	}
+}
+
+func GetCategoryById(w http.ResponseWriter, r *http.Request) {
+	setHeader(w)
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	params := mux.Vars(r)
+	id, _ := strconv.Atoi(params["id"])
+	getCategoryById(w, r, id)
 }
 
 func CreateCategory(w http.ResponseWriter, r *http.Request) {

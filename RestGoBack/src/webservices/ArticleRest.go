@@ -15,14 +15,7 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
   contentType := r.Header.Get("Content-Type")
   id, err := strconv.Atoi(r.Header.Get("X-Article-id"))
   if err == nil {
-    dataToSend := getArticleById(id)
-    if strings.Contains(contentType, "xml") {
-      w.Header().Set("Content-Type", "application/xml; charset=utf-8")
-      _ = xml.NewEncoder(w).Encode(dataToSend)
-    } else {
-      w.Header().Set("Content-Type", "application/json; charset=utf-8")
-      _ = json.NewEncoder(w).Encode(dataToSend)
-    }
+    getArticleById(w, r, id)
   } else {
     log.Println("get  all articles")
     articleList := getAllArticleInXml()
@@ -38,23 +31,14 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
   }
 }
 
-func getArticleById(id int) *Article {
+func getArticleById(w http.ResponseWriter, r *http.Request, id int) {
   articles := getAllArticleInXml()
+  var dataToSend *Article
   for _, article := range articles {
     if article.ID == id {
-      return article
+      dataToSend = article
     }
   }
-  return nil
-}
-
-
-func GetArticleById(w http.ResponseWriter, r *http.Request) {
-  setHeader(w)
-  params := mux.Vars(r)
-  log.Println("get one article")
-  id, _ := strconv.Atoi(params["id"])
-  dataToSend := getArticleById(id)
   contentType := r.Header.Get("Content-Type")
   if strings.Contains(contentType, "xml") {
     w.Header().Set("Content-Type", "application/xml; charset=utf-8")
@@ -63,6 +47,15 @@ func GetArticleById(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json; charset=utf-8")
     _ = json.NewEncoder(w).Encode(dataToSend)
   }
+}
+
+
+func GetArticleById(w http.ResponseWriter, r *http.Request) {
+  setHeader(w)
+  params := mux.Vars(r)
+  log.Println("get one article")
+  id, _ := strconv.Atoi(params["id"])
+  getArticleById(w, r, id)
 }
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
