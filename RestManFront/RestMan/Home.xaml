@@ -200,8 +200,8 @@
                                 <EdgeUIThemeTransition/>
                             </TransitionCollection>
                         </ComboBox.ItemContainerTransitions>
-                        <TextBlock>Fr</TextBlock>
-                        <TextBlock>En</TextBlock>
+                        <TextBlock>fr-FR</TextBlock>
+                        <TextBlock>en-US</TextBlock>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Name="Second" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,50,0,0" Orientation="Horizontal">
@@ -292,6 +292,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
+              
                 <StackPanel Name="Fourth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Padding="0,50,0,0">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
@@ -306,6 +307,15 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
+                    <Pivot Background ="{ThemeResource ApplicationPageBackgroundThemeBrush}" Width="1200" Height="200">
+                        <PivotItem Header="Headers">
+                            <TextBlock Text="plip"/>
+                        </PivotItem>
+                        <PivotItem Header="Body">
+                            <TextBlock Text="plop"/>
+                        </PivotItem>
+                    </Pivot>
+                    <TextBlock Height="10" />
                     <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="150" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Name="Sixth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Padding="0,50,0,0">

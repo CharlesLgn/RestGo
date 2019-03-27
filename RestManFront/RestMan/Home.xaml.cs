@@ -176,10 +176,12 @@ namespace RestMan
                 Loader.Visibility = Visibility.Visible;
                 var selectedContentTypeTextBlock = ContentType.SelectedItem as TextBlock;
                 string selectedContentType = selectedContentTypeTextBlock.Text;
+                var selectedLanguageTextBLock = PrefLang.SelectedItem as TextBlock;
+                string selectedLanguage = selectedLanguageTextBLock.Text;
                 webRequest = (HttpWebRequest)WebRequest.Create(this.Query.Text);
-                //webRequest.ContentType = selectedContentType;
-                    WebHeaderCollection myWebHeaderCollection = webRequest.Headers;
-                myWebHeaderCollection.Add("Accept-Language", "en;q=0.8");
+                webRequest.ContentType = selectedContentType;
+                WebHeaderCollection myWebHeaderCollection = webRequest.Headers;
+                myWebHeaderCollection.Add("Accept-Language", selectedLanguage);
                 webRequest.Method = "GET";
                 WebResponse response;
                 string body = string.Empty;
@@ -213,15 +215,12 @@ namespace RestMan
 
                     try
                     {
-                        ImageDescription.Text = "Nom du fichier : " + webRequest.Headers["Content-Disposition"] + "\n" + "Type : " + response.ContentType;
+                        ImageDescription.Text = "Type : " + response.ContentType;
                     }
                     catch
                     {
                         ImageDescription.Text = "Nom du fichier introuvable";
-                        //string fileName = response.RequestMessage.RequestUri.AbsolutePath.Substring(response.RequestMessage.RequestUri.AbsolutePath.LastIndexOf('/') + 1);
-                        //ImageDescription.Text = "Nom du fichier : " + fileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
                     }
-
                 }
                 else if (contentype.Contains("video"))
                 {
@@ -384,11 +383,11 @@ namespace RestMan
         private void getHeaders(/*HttpResponseMessage*/ string response)
         {
             List<string> listdata = new List<string>();
-            string entetes = response.ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace(" ", string.Empty).Replace("\r", string.Empty);
+            string entetes = response.ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace("\r", string.Empty);
             var splitentete = entetes.Split("\n");
-            splitentete[0] = splitentete[0].Replace(":", string.Empty);
+            //splitentete[0] = splitentete[0].Replace(":", string.Empty);
             foreach (var item in splitentete)
-            {
+             {
                 if (!String.IsNullOrEmpty(item))
                 {
                     listdata.Add(item);
@@ -403,7 +402,8 @@ namespace RestMan
 
                 if (item.Contains(':'))
                 {
-                    var element = item.Split(':');
+                    //var element = item.Split(':');
+                    var element = item.Split(new[] { ':' }, 2);
                     HeaderElements.Add(new HeaderElement { Entête = element[0], Valeur = element[1] });
                 }
                 else
