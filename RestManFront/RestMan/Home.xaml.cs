@@ -177,7 +177,9 @@ namespace RestMan
                 var selectedContentTypeTextBlock = ContentType.SelectedItem as TextBlock;
                 string selectedContentType = selectedContentTypeTextBlock.Text;
                 webRequest = (HttpWebRequest)WebRequest.Create(this.Query.Text);
-                webRequest.ContentType = selectedContentType;
+                //webRequest.ContentType = selectedContentType;
+                    WebHeaderCollection myWebHeaderCollection = webRequest.Headers;
+                myWebHeaderCollection.Add("Accept-Language", "en;q=0.8");
                 webRequest.Method = "GET";
                 WebResponse response;
                 string body = string.Empty;
@@ -242,7 +244,6 @@ namespace RestMan
                     BrowseWeb.Visibility = Visibility.Visible;
                     Response.Visibility = Visibility.Visible;
                     getHeaders(response.Headers.ToString());
-
                 }
                 else
                 {
@@ -288,6 +289,13 @@ namespace RestMan
                     content = response.Content;
                     Loader.Visibility = Visibility.Collapsed;
                     contentype = response.Content.Headers.ContentType.MediaType;
+=======
+                    HttpResponseMessage response = await client.GetAsync(this.Query.Text);
+                    Loader.Visibility = Visibility.Collapsed;
+                    HttpContent content = response.Content;
+                    //contentype = response.Content.Headers.ContentType.MediaType;
+
+>>>>>>> Stashed changes
                     if (contentype.Contains("application"))
                     {
                         Response.Visibility = Visibility.Visible;
