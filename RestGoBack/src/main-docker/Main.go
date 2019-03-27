@@ -16,7 +16,7 @@ import (
   "net/http"
 )
 
-// main function
+// main-gui function
 func main() {
   get8000()
 }

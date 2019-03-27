@@ -7,18 +7,16 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 func GetCategories(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
-	contentType := r.Header.Get("Content-Type")
+	setHeader(w, r)
 	id, err := strconv.Atoi(r.Header.Get("X-Category-id"))
 	if err == nil {
 		getCategoryById(w, r, id)
 	} else {
 		categoriesList := getAllCategoryWithXml()
-		if strings.Contains(contentType, "xml") {
+		if isResInXML(r) {
 			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 			var categories Categories
 			categories.CategoryList = getMapCategAsArray(categoriesList)
@@ -40,8 +38,7 @@ func getCategoryById(w http.ResponseWriter, r *http.Request, id int) {
 			dataToSend = categ
 		}
 	}
-	contentType := r.Header.Get("Content-Type")
-	if strings.Contains(contentType, "xml") {
+	if isResInXML(r) {
 		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 		_ = xml.NewEncoder(w).Encode(dataToSend)
 	} else {
@@ -51,7 +48,7 @@ func getCategoryById(w http.ResponseWriter, r *http.Request, id int) {
 }
 
 func GetCategoryById(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	params := mux.Vars(r)
 	id, _ := strconv.Atoi(params["id"])
@@ -59,7 +56,7 @@ func GetCategoryById(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateCategory(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	var category Categorie
 	err := json.NewDecoder(r.Body).Decode(&category)
@@ -76,7 +73,7 @@ func CreateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteCategory(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
@@ -93,7 +90,7 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
@@ -112,7 +109,7 @@ func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func OverrideCategory(w http.ResponseWriter, r *http.Request) {
-	setHeader(w)
+	setHeader(w, r)
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {

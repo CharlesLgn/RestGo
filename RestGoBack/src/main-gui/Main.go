@@ -34,7 +34,7 @@ func init() {
   }
 }
 
-// main function
+// main-gui function
 func main() {
   // run the web server in a separate goroutine
   go app(prefixChannel)
