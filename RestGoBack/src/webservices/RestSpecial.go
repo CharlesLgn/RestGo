@@ -10,12 +10,18 @@ import (
   "strings"
 )
 
-func setHeader(w http.ResponseWriter)  {
+func setHeader(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("X-Powered-by", "Okya Corp")
+  lang := r.Header.Get("Accept-Language")
+  if strings.Contains(lang, "fr") || strings.Contains(lang, "FR") {
+    w.Header().Set("X-Custom", "Salut mon pote")
+  } else {
+    w.Header().Set("X-Custom", "Good Morning Sir")
+  }
 }
 
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
-  setHeader(w)
+  setHeader(w, r)
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
   log.Println("get  article by categ: ", idCateg)
@@ -30,8 +36,7 @@ func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
     }
   }
 
-  contentType := r.Header.Get("Content-Type")
-  if strings.Contains(contentType, "xml") {
+  if isResInXML(r) {
     w.Header().Set("Content-Type", "application/xml; charset=utf-8")
     articlesXml := Articles{}
     articlesXml.ArticleList = stock
@@ -43,7 +48,7 @@ func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteArticlesByCateg(w http.ResponseWriter, r *http.Request) {
-  setHeader(w)
+  setHeader(w, r)
   w.Header().Set("Content-Type", "application/json; charset=utf-8")
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
@@ -65,4 +70,14 @@ func insert(original []*Article, value *Article) []*Article {
   target[len(original)] = value
 
   return target
+}
+
+func isResInXML(r *http.Request) bool {
+  contentType := r.Header.Get("Content-Type")
+  accept := r.Header.Get("Accept")
+  if strings.Contains(contentType, "xml") || strings.Contains(accept, "xml") {
+    return true
+  } else {
+    return false
+  }
 }
