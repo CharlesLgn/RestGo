@@ -22,6 +22,7 @@ func setHeader(w http.ResponseWriter, r *http.Request) {
 
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
   setHeader(w, r)
+  
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
   log.Println("get  article by categ: ", idCateg)
