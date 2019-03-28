@@ -26,6 +26,7 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
+        double actualPivotHeaderHeight = 200;
         HttpWebRequest webRequest;
         ResourceLoader resourceLoader;
         private List<HeaderElement> HeaderElements = new List<HeaderElement>();
@@ -380,14 +381,14 @@ namespace RestMan
             ResponseHTML.Visibility = Visibility.Visible;
         }
 
-        private void getHeaders(/*HttpResponseMessage*/ string response)
+        private void getHeaders(string response)
         {
             List<string> listdata = new List<string>();
             string entetes = response.ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace("\r", string.Empty);
             var splitentete = entetes.Split("\n");
             //splitentete[0] = splitentete[0].Replace(":", string.Empty);
             foreach (var item in splitentete)
-             {
+            {
                 if (!String.IsNullOrEmpty(item))
                 {
                     listdata.Add(item);
@@ -395,15 +396,12 @@ namespace RestMan
             }
 
             listdata.Sort();
-
-            int iterateur = 1;
             foreach (string item in listdata)
             {
 
                 if (item.Contains(':'))
                 {
-                    //var element = item.Split(':');
-                    var element = item.Split(new[] { ':' }, 2);
+                    var element = item.Split(new[] { ':' }, 2); // Split par le premier caractère uniquement
                     HeaderElements.Add(new HeaderElement { Entête = element[0], Valeur = element[1] });
                 }
                 else
@@ -597,5 +595,69 @@ namespace RestMan
             lb_entetes.Text = resourceLoader.GetString("Entetes");
             lb_visiterPage.Text = resourceLoader.GetString("VisiterPage");
         }
+
+        /// <summary>
+        /// Sur cet évènement, on ajoute un nouveau couple de controls pour ajouter une entête
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AjouterHeader_Click(object sender, RoutedEventArgs e)
+        {
+            pivot.Height = pivot.Height + 40;
+            TextBlock tbh10 = new TextBlock();
+            tbh10.Height = 10;
+            TextBlock tbw30 = new TextBlock();
+            tbw30.Width = 30;
+            TextBlock tbw30n2 = new TextBlock();
+            tbw30n2.Width = 30;
+            StackPanel sp = new StackPanel();
+            sp.Name = "newHeader";
+            sp.Orientation = Orientation.Horizontal;
+            TextBox tbHeader = new TextBox();
+            tbHeader.PlaceholderText = "Entête";
+            tbHeader.Width = 300;
+            TextBox tbValue = new TextBox();
+            tbValue.PlaceholderText = "Valeur";
+            tbValue.Width = 750;
+            Button btRemove = new Button();
+            btRemove.Height = 32;
+            btRemove.Width = 100;
+            btRemove.Click += RetirerHeader_Click;
+            StackPanel spbtRemove = new StackPanel();
+            spbtRemove.Orientation = Orientation.Horizontal;
+            TextBlock tbMinusPic = new TextBlock();
+            tbMinusPic.FontFamily = new FontFamily("Segoe MDL2 Assets");
+            tbMinusPic.Text = "";
+            spbtRemove.Children.Add(tbMinusPic);
+            btRemove.Content = spbtRemove;
+            sp.Children.Add(tbHeader);
+            sp.Children.Add(tbw30);
+            sp.Children.Add(tbValue);
+            sp.Children.Add(tbw30n2);
+            sp.Children.Add(btRemove);
+            multipleEntete.Children.Add(tbh10);
+            multipleEntete.Children.Add(sp);
+            actualPivotHeaderHeight = pivot.Height;
+        }
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //Windows.UI.Xaml.Controls.ItemCollection items = pivot.Items;
+            PivotItem pi = ((PivotItem)pivot.SelectedItem);
+            if (pi.Name == "PivotItemHeaders")
+            {
+                pivot.Height = actualPivotHeaderHeight;
+            }
+            else
+            {
+                pivot.Height = 200;
+            }
+        }
+
+        private void RetirerHeader_Click(object sender, RoutedEventArgs e)
+        {
+            multipleEntete.Children.Remove((UIElement)this.FindName("newHeader");
+        }
     }
 }
+

@@ -292,7 +292,7 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-              
+
                 <StackPanel Name="Fourth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Padding="0,50,0,0">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
@@ -307,26 +307,26 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <Pivot Background ="{ThemeResource AppBarBackgroundThemeBrush}" Width="1250" Height="200">
-                        <PivotItem Header="Headers">
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Height="10"/>
-                                <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,0" Click="AjouterHeader_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE109;</TextBlock>
-                                    <TextBlock Width="10"></TextBlock>
-                                    <TextBlock x:Name="lb_AjouterHeader" Text="Ajouter une entête" x:Uid="LancerName" Height="25" FontFamily="Segoe UI" FontSize="11" x:FieldModifier="public"/>
-                                </StackPanel>
+                    <Pivot x:Name="pivot" Background ="{ThemeResource AppBarBackgroundThemeBrush}" Width="1250" Height="200" SelectionChanged="Pivot_SelectionChanged">
+                        <PivotItem Name="PivotItemHeaders" Header="Headers">
+                            <StackPanel x:Name="multipleEntete" Orientation="Vertical">
+                                <TextBlock Height="20"/>
+                                <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" Margin="0,0,0,0" Click="AjouterHeader_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE109;</TextBlock>
+                                        <TextBlock Width="10"></TextBlock>
+                                        <TextBlock x:Name="lb_AjouterHeader" Text="Ajouter une entête" x:Uid="LancerName" Height="25" FontFamily="Segoe UI" FontSize="11" x:FieldModifier="public"/>
+                                    </StackPanel>
                                 </Button>
                                 <TextBlock Height="10"/>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox PlaceholderText="Header" VerticalAlignment="Center" Width="300"/>
+                                    <TextBox PlaceholderText="Entête" Width="300"/>
                                     <TextBlock Width="30"/>
-                                    <TextBox PlaceholderText="Valeur" VerticalAlignment="Center" Width="880"/>
+                                    <TextBox PlaceholderText="Valeur" Width="880"/>
                                 </StackPanel>
                             </StackPanel>
                         </PivotItem>
-                        <PivotItem Header="Body">
+                        <PivotItem Name="PivotItemBody" Header="Body">
                             <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="150" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </PivotItem>
                     </Pivot>
@@ -361,7 +361,7 @@
                     <TextBlock Name="ImageDescription" HorizontalAlignment="Center" FontFamily="Arial Narrow"/>
                     <MediaPlayerElement Name="ResponseVideo" AutoPlay="True" AreTransportControlsEnabled="True" Visibility="Collapsed" FontFamily="Arial Narrow"/>
                     <TextBlock Height="20"/>
-                    <Border BorderThickness="0,0,0,2" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"> 
+                    <Border BorderThickness="0,0,0,2" BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}">
                         <TextBlock x:Name="lb_entetes" x:Uid="Entetes" Text="Entêtes" FontSize="18" FontFamily="Segoe UI"/>
                     </Border>
                     <TextBlock Height="20"/>
