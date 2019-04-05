@@ -1,14 +1,18 @@
-﻿using RestMan.Objects;
+﻿using Newtonsoft.Json;
+using RestMan.Objects;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Media.Core;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -26,6 +30,14 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
+        List<AuthenticationSave> basicAuthentication = new List<AuthenticationSave>();
+        List<AuthenticationSave> customAuthentication = new List<AuthenticationSave>();
+        ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+        private string[] customHeaders = { "Accept", "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Authorization", "Cache-Control", "Connection", "Content-Language", "Content-Type", "Cookie", "DNT", "Date", "DPR", "Early-Data", "Expect", "Forwarded", "From", "Host", "if-Match", "If-Modified-Since", "If-None-Match", "If-Range", "If-Unmodified-Since", "Keep-Alive", "Max-Forwards", "Origin", "Pragma", "Proxy-Authorization", "Range", "If-Unmodified-Since", "Referer", "Save-Data", "TE", "Trailer", "Transfer-Encoding", "Upgrade", "Upgrade-Insecure-Requests", "User-Agent", "Vary", "Via", "Viewport-Width", "Warning", "Width" };
+        private string[] customValuesContentType = { "application/json", "application/x-www-form-urlencoded", "application/xhtml+xml", "application/xml", "multipart/form-data", "text/html", "text/plain", "text/xml" };
+        private int iterateurCustomHeaders = 0;
+        private Dictionary<Button, Dictionary<StackPanel, TextBlock>> listCustomHeaders = new Dictionary<Button, Dictionary<StackPanel, TextBlock>>();
+        private Dictionary<Dictionary<StackPanel, TextBlock>, bool> EtatCustomHeader = new Dictionary<Dictionary<StackPanel, TextBlock>, bool>();
         double actualPivotHeaderHeight = 200;
         HttpWebRequest webRequest;
         ResourceLoader resourceLoader;
@@ -33,7 +45,7 @@ namespace RestMan
         private string receivedResponse = string.Empty;
         private string receivedHeaders = string.Empty;
         private string contentype = string.Empty;
-        enum sendMethods { POST, PATCH, PUT };
+        enum sendMethods { POST, PATCH, PUT, GET };
 
         public Home()
         {
@@ -46,6 +58,7 @@ namespace RestMan
             ContentType.SelectedIndex = 0;
             PrefLang.SelectedIndex = 0;
             BrowseWeb.Visibility = Visibility.Collapsed;
+            addCustomHeader();
         }
 
         /// <summary>
@@ -68,24 +81,20 @@ namespace RestMan
                 ImageDescription.Text = string.Empty;
                 ResponseGridView.ItemsSource = null;
                 HeaderElements.Clear();
-                switch (((TextBlock)Methode.SelectedItem).Text)
+                string method = ((TextBlock)Methode.SelectedItem).Text;
+                if (method == "GET")
                 {
-                    case "GET":
-                        getQuery();
-                        break;
-                    case "POST":
-                        sendQuery(sendMethods.POST);
-                        break;
-                    case "DELETE":
-                        deleteQuery();
-                        break;
-                    case "PATCH":
-                        sendQuery(sendMethods.PATCH);
-                        break;
-                    case "PUT":
-                        sendQuery(sendMethods.PUT);
-                        break;
+                    getQuery();
                 }
+                else
+                {
+                    QuerySender();
+                }
+
+                localSettings.Values["BasicUserName"] = BasiqueUserName.Text;
+                localSettings.Values["BasicPassword"] = BasiquePassword.Password;
+                localSettings.Values["CustomUserName"] = CustomScheme.Text;
+                localSettings.Values["CustomToken"] = CustomToken.Text;
             }
             catch (Exception ex)
             {
@@ -94,100 +103,53 @@ namespace RestMan
                 dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
                 var res = dialog.ShowAsync();
             }
-
         }
 
-        private async void deleteQuery()
+        public async void QuerySender()
         {
-            using (HttpClient client = new HttpClient())
+            try
             {
-                HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
-                HttpContent content = response.Content;
-                //getHeaders(response);
+                string body = string.Empty;
+                string headers = string.Empty;
+                Loader.Visibility = Visibility.Visible;
+                WebResponse response = await ExecuteHttpWebRequest();
                 Response.Visibility = Visibility.Visible;
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                if (((System.Net.HttpWebResponse)response).StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    receivedResponse = "Echec";
                     Response.BorderBrush = new SolidColorBrush(Colors.Red);
                 }
                 else
                 {
-                    receivedResponse = "Succès";
                     Response.BorderBrush = new SolidColorBrush(Colors.Green);
+                    var stream = response.GetResponseStream();
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        Response.Text = reader.ReadToEnd();
+                    }
+                    getHeaders(response.Headers.ToString());
                 }
-
-                Response.Text = receivedResponse;
             }
-        }
-
-        private async void sendQuery(sendMethods Method)
-        {
-            using (HttpClient client = new HttpClient())
+            catch (Exception ex)
             {
-                string json = Body.Text;
-                string selectedContentType = ((TextBlock)ContentType.SelectedItem).Text;
-                var content = new StringContent(json, Encoding.UTF8, selectedContentType);
-                HttpResponseMessage response = null;
-                HttpContent contentres = null;
-
-                switch (Method)
-                {
-                    case sendMethods.POST:
-                        response = await client.PostAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                    case sendMethods.PATCH:
-                        response = await client.PatchAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                    case sendMethods.PUT:
-                        response = await client.PutAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                }
-
-                //getHeaders(response);
-                Response.Visibility = Visibility.Visible;
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    receivedResponse = "Echec";
-                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
-                }
-                else
-                {
-                    if (contentres != null)
-                    {
-                        receivedResponse = await contentres.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        receivedResponse = "Succès";
-                    }
-                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
-                }
-
-                Response.Text = receivedResponse;
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de la requête" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
             }
+            Loader.Visibility = Visibility.Collapsed;
+
         }
 
+        /// <summary>
+        /// Effectue une requête get
+        /// </summary>
         private async void getQuery()
         {
             try
             {
-                Loader.Visibility = Visibility.Visible;
-                var selectedContentTypeTextBlock = ContentType.SelectedItem as TextBlock;
-                string selectedContentType = selectedContentTypeTextBlock.Text;
-                var selectedLanguageTextBLock = PrefLang.SelectedItem as TextBlock;
-                string selectedLanguage = selectedLanguageTextBLock.Text;
-                webRequest = (HttpWebRequest)WebRequest.Create(this.Query.Text);
-                webRequest.ContentType = selectedContentType;
-                WebHeaderCollection myWebHeaderCollection = webRequest.Headers;
-                myWebHeaderCollection.Add("Accept-Language", selectedLanguage);
-                webRequest.Method = "GET";
-                WebResponse response;
                 string body = string.Empty;
                 string headers = string.Empty;
-                response = await webRequest.GetResponseAsync();
+                Loader.Visibility = Visibility.Visible;
+                WebResponse response = await ExecuteHttpWebRequest();
                 var stream = response.GetResponseStream();
                 using (StreamReader reader = new StreamReader(stream))
                 {
@@ -272,109 +234,167 @@ namespace RestMan
             Loader.Visibility = Visibility.Collapsed;
         }
 
-        /*private async void getQuery()
+        private async void deleteQuery()
         {
-            try
+            using (HttpClient client = new HttpClient())
             {
-                HttpContent content;
-                using (HttpClient client = new HttpClient())
+                HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
+                HttpContent content = response.Content;
+                //getHeaders(response);
+                Response.Visibility = Visibility.Visible;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    Loader.Visibility = Visibility.Visible;
-                    //HttpResponseMessage response = await client.GetAsync(this.Query.Text);
-                    client.BaseAddress = new Uri(Query.Text);
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
-                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Query.Text);
-                    request.Headers.Add("Accept", "application/xml");
-                    HttpResponseMessage response = await client.SendAsync(request);
-                    content = response.Content;
-                    Loader.Visibility = Visibility.Collapsed;
-                    contentype = response.Content.Headers.ContentType.MediaType;
-=======
-                    HttpResponseMessage response = await client.GetAsync(this.Query.Text);
-                    Loader.Visibility = Visibility.Collapsed;
-                    HttpContent content = response.Content;
-                    //contentype = response.Content.Headers.ContentType.MediaType;
+                    receivedResponse = "Echec";
+                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    receivedResponse = "Succès";
+                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
+                }
 
->>>>>>> Stashed changes
-                    if (contentype.Contains("application"))
+                Response.Text = receivedResponse;
+            }
+        }
+
+        private async void sendQuery(sendMethods Method)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string json = Body.Text;
+                string selectedContentType = ((TextBlock)ContentType.SelectedItem).Text;
+                var content = new StringContent(json, Encoding.UTF8, selectedContentType);
+                HttpResponseMessage response = null;
+                HttpContent contentres = null;
+
+                switch (Method)
+                {
+                    case sendMethods.POST:
+                        response = await client.PostAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
+                        break;
+                    case sendMethods.PATCH:
+                        //response = await client.PatchAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
+                        break;
+                    case sendMethods.PUT:
+                        response = await client.PutAsync(this.Query.Text, content);
+                        try { contentres = response.Content; } catch { };
+                        break;
+                }
+
+                //getHeaders(response);
+                Response.Visibility = Visibility.Visible;
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    receivedResponse = "Echec";
+                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    if (contentres != null)
                     {
-                        Response.Visibility = Visibility.Visible;
-                        receivedResponse += await content.ReadAsStringAsync();
-                        getHeaders(response);
-                        Response.Text = receivedResponse;
-                    }
-                    else if (contentype.Contains("image"))
-                    {
-                        BitmapImage bitmapImage = new BitmapImage();
-                        Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
-                        bitmapImage.UriSource = uri;
-                        ResponseImage.Source = bitmapImage;
-                        receivedResponse += "Voir image ci-dessous";
-                        getHeaders(response);
-                        Response.Text = receivedResponse;
-                        ResponseImage.Visibility = Visibility.Visible;
-                        ImageDescription.Visibility = Visibility.Visible;
-
-                        try
-                        {
-                            ImageDescription.Text = "Nom du fichier : " + response.Content.Headers.ContentDisposition.FileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
-                        }
-                        catch
-                        {
-                            string fileName = response.RequestMessage.RequestUri.AbsolutePath.Substring(response.RequestMessage.RequestUri.AbsolutePath.LastIndexOf('/') + 1);
-                            ImageDescription.Text = "Nom du fichier : " + fileName + "\n" + "Type : " + response.Content.Headers.ContentType.MediaType;
-                        }
-
-                    }
-                    else if (contentype.Contains("video"))
-                    {
-                        Uri uri = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
-                        ResponseVideo.Source = MediaSource.CreateFromUri(uri);
-                        receivedResponse += "Voir vidéo ci-dessous";
-                        getHeaders(response);
-                        Response.Text = receivedResponse;
-                        ResponseVideo.Visibility = Visibility.Visible;
-
-                    }
-                    else if (contentype.Contains("html"))
-                    {
-                        Uri url = new Uri(response.RequestMessage.RequestUri.AbsoluteUri);
-                        ResponseHTML.Navigate(url);
-                        SpaceWeb.Height = 20;
-                        SpaceWeb2.Height = 20;
-                        receivedResponse += await content.ReadAsStringAsync();
-                        Response.Text = receivedResponse;
-                        BrowseWeb.Visibility = Visibility.Visible;
-                        Response.Visibility = Visibility.Visible;
-                        getHeaders(response);
-
+                        receivedResponse = await contentres.ReadAsStringAsync();
                     }
                     else
                     {
-                        Response.Visibility = Visibility.Visible;
-                        receivedResponse += await content.ReadAsStringAsync();
-                        getHeaders(response);
-                        Response.Text = receivedResponse;
+                        receivedResponse = "Succès";
                     }
+                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
+                }
 
-                    if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                Response.Text = receivedResponse;
+            }
+        }
+
+        private WebHeaderCollection AddAuthorization(WebHeaderCollection wc)
+        {
+
+            if (expanderBasique.IsExpanded)
+            {
+                if (!String.IsNullOrEmpty(BasiqueUserName.Text) && !String.IsNullOrEmpty(BasiquePassword.Password))
+                {
+                    string username = BasiqueUserName.Text.Trim();
+                    string password = BasiquePassword.Password.Trim();
+                    string encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(username + ":" + password));
+                    wc.Add("Authorization", "Basic " + encoded);
+                }
+            }
+            else if(expanderCustom.IsExpanded)
+            {
+                if (!String.IsNullOrEmpty(CustomScheme.Text) && !String.IsNullOrEmpty(CustomToken.Text))
+                {
+                    string username = CustomScheme.Text.Trim();
+                    string password = CustomToken.Text.Trim();
+                    string encoded = System.Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(username + ":" + password));
+                    wc.Add("Authorization", "Basic " + encoded);
+                }
+            }
+
+            return wc;
+        }
+
+        private WebHeaderCollection BuildHeaderCollection(WebHeaderCollection whc)
+        {
+            foreach (KeyValuePair<Button, Dictionary<StackPanel, TextBlock>> entry in listCustomHeaders)
+            {
+                foreach (KeyValuePair<StackPanel, TextBlock> val in entry.Value)
+                {
+                    StackPanel sp = val.Key;
+                    string entete = string.Empty;
+                    string valeur = string.Empty;
+                    foreach (UIElement item in sp.Children)
                     {
-                        Response.BorderBrush = new SolidColorBrush(Colors.Red);
-                    }
-                    else
-                    {
-                        Response.BorderBrush = new SolidColorBrush(Colors.Green);
+                        if (item.GetType() == typeof(AutoSuggestBox))
+                        {
+                            if (((AutoSuggestBox)item).PlaceholderText == "Entête")
+                            {
+                                entete = ((AutoSuggestBox)item).Text;
+                            }
+
+                            if (((AutoSuggestBox)item).PlaceholderText == "Valeur")
+                            {
+                                valeur = ((AutoSuggestBox)item).Text;
+                            }
+
+                            if (!String.IsNullOrEmpty(entete) && !String.IsNullOrEmpty(valeur))
+                            {
+                                whc.Add(entete, valeur);
+                            }
+                        }
                     }
                 }
             }
-            catch (Exception ex)
+
+            return whc;
+        }
+
+        /// <summary>
+        /// Contruit et éxecute la requête
+        /// </summary>
+        /// <returns></returns>
+        private async Task<WebResponse> ExecuteHttpWebRequest()
+        {
+            var selectedMethode = Methode.SelectedItem as TextBlock;
+            string method = selectedMethode.Text;
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(Query.Text);
+            WebHeaderCollection myWebHeaderCollection = webRequest.Headers;
+            myWebHeaderCollection = BuildHeaderCollection(myWebHeaderCollection);
+            myWebHeaderCollection = AddAuthorization(myWebHeaderCollection);
+            webRequest.PreAuthenticate = true;
+            webRequest.Method = method;
+            webRequest.UserAgent = "something";
+            if (webRequest.Method == "POST" || webRequest.Method == "PUT" || webRequest.Method == "PATCH")
             {
-                Loader.Visibility = Visibility.Collapsed;
-                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de la requête" };
-                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
-                var res = dialog.ShowAsync();
+                byte[] data = Encoding.ASCII.GetBytes(Body.Text);
+                webRequest.ContentLength = data.Length;
+                using (var stream = webRequest.GetRequestStream())
+                {
+                    stream.Write(data, 0, data.Length);
+                }
             }
-        }*/
+            return await webRequest.GetResponseAsync();
+        }
 
         private void BrowseWeb_Click(object sender, RoutedEventArgs e)
         {
@@ -415,7 +435,6 @@ namespace RestMan
 
         private void Methode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Body.Text = string.Empty;
             Response.Text = string.Empty;
             Response.ClearValue(TextBox.BorderBrushProperty);
             receivedHeaders = string.Empty;
@@ -590,7 +609,6 @@ namespace RestMan
         {
             resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             lb_lancer.Text = resourceLoader.GetString("LancerName");
-            lb_body.Text = resourceLoader.GetString("Body");
             lb_reponse.Text = resourceLoader.GetString("Reponse");
             lb_entetes.Text = resourceLoader.GetString("Entetes");
             lb_visiterPage.Text = resourceLoader.GetString("VisiterPage");
@@ -603,6 +621,11 @@ namespace RestMan
         /// <param name="e"></param>
         private void AjouterHeader_Click(object sender, RoutedEventArgs e)
         {
+            addCustomHeader();
+        }
+
+        private void addCustomHeader()
+        {
             pivot.Height = pivot.Height + 40;
             TextBlock tbh10 = new TextBlock();
             tbh10.Height = 10;
@@ -611,14 +634,17 @@ namespace RestMan
             TextBlock tbw30n2 = new TextBlock();
             tbw30n2.Width = 30;
             StackPanel sp = new StackPanel();
-            sp.Name = "newHeader";
             sp.Orientation = Orientation.Horizontal;
-            TextBox tbHeader = new TextBox();
+            AutoSuggestBox tbHeader = new AutoSuggestBox();
             tbHeader.PlaceholderText = "Entête";
             tbHeader.Width = 300;
-            TextBox tbValue = new TextBox();
+            tbHeader.TextChanged += AutoSuggestBox_TextChanged_Entete;
+            tbHeader.GotFocus += AutoSuggestBox_GotFocus_Entete;
+            AutoSuggestBox tbValue = new AutoSuggestBox();
             tbValue.PlaceholderText = "Valeur";
             tbValue.Width = 750;
+            tbValue.TextChanged += AutoSuggestBox_TextChanged_Entete;
+            tbValue.GotFocus += AutoSuggestBox_GotFocus_Valeur;
             Button btRemove = new Button();
             btRemove.Height = 32;
             btRemove.Width = 100;
@@ -638,6 +664,16 @@ namespace RestMan
             multipleEntete.Children.Add(tbh10);
             multipleEntete.Children.Add(sp);
             actualPivotHeaderHeight = pivot.Height;
+
+            Dictionary<StackPanel, TextBlock> dicTempo = new Dictionary<StackPanel, TextBlock>();
+            dicTempo.Add(sp, tbh10);
+            listCustomHeaders.Add(btRemove, dicTempo);
+            EtatCustomHeader.Add(dicTempo, false);
+        }
+
+        private void TbHeader_GotFocus(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -654,9 +690,227 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Retire le custom header
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RetirerHeader_Click(object sender, RoutedEventArgs e)
         {
-            multipleEntete.Children.Remove((UIElement)this.FindName("newHeader");
+            foreach (KeyValuePair<Button, Dictionary<StackPanel, TextBlock>> entry in listCustomHeaders)
+            {
+                if (entry.Key == (Button)sender)
+                {
+                    if (getCustomHeaderState(entry.Key))
+                    {
+                        foreach (KeyValuePair<StackPanel, TextBlock> val in entry.Value)
+                        {
+                            multipleEntete.Children.Remove(val.Key);
+                            multipleEntete.Children.Remove(val.Value);
+                            pivot.Height = pivot.Height - 40;
+                        }
+                    }
+                }
+            }
+        }
+
+        private string[] GetSuggestions(string text)
+        {
+            return customHeaders.Where(x => x.ToLower().StartsWith(text.ToLower())).ToArray();
+        }
+
+        /// <summary>
+        /// Indique si le custom header est vide ou non
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        private bool getCustomHeaderState(UIElement element)
+        {
+            var parent = getParent(element);
+            foreach (KeyValuePair<Dictionary<StackPanel, TextBlock>, bool> entry in EtatCustomHeader)
+            {
+                foreach (KeyValuePair<StackPanel, TextBlock> val in entry.Key)
+                {
+                    if (val.Key == parent)
+                    {
+                        if (!entry.Value)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void CustomHeadersManager(UIElement sender)
+        {
+            StackPanel selectedStack = new StackPanel();
+            bool isModified = false;
+            ((AutoSuggestBox)sender).ItemsSource = this.GetSuggestions(((AutoSuggestBox)sender).Text);
+            var parent = getParent(sender);
+            foreach (KeyValuePair<Dictionary<StackPanel, TextBlock>, bool> entry in EtatCustomHeader)
+            {
+                foreach (KeyValuePair<StackPanel, TextBlock> val in entry.Key)
+                {
+                    if (val.Key == parent)
+                    {
+                        if (!entry.Value && ((AutoSuggestBox)sender).Text.Length > 0)
+                        {
+                            EtatCustomHeader[entry.Key] = true;
+                            addCustomHeader();
+                            isModified = true;
+                            break;
+                        }
+                        else if (entry.Value && ((AutoSuggestBox)sender).Text.Length < 1)
+                        {
+                            ((AutoSuggestBox)sender).ItemsSource = customHeaders;
+                            multipleEntete.Children.Remove(val.Key);
+                            multipleEntete.Children.Remove(val.Value);
+                            pivot.Height = pivot.Height - 40;
+                        }
+                    }
+                }
+
+                if (isModified)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void AutoSuggestBox_TextChanged_Entete(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            CustomHeadersManager(sender);
+        }
+
+        private void AutoSuggestBox_TextChanged_Value(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            AutoSuggestBox_TextChanged_Entete(sender, args);
+        }
+
+        private void AutoSuggestBox_GotFocus_Entete(object sender, RoutedEventArgs e)
+        {
+            ((AutoSuggestBox)sender).ItemsSource = customHeaders;
+        }
+
+        private UIElement getParent(UIElement element)
+        {
+            return VisualTreeHelper.GetParent(element) as UIElement;
+        }
+
+        private void AutoSuggestBox_GotFocus_Valeur(object sender, RoutedEventArgs e)
+        {
+            var parent = getParent((AutoSuggestBox)sender);
+
+            foreach (UIElement val in ((StackPanel)parent).Children)
+            {
+                if (val is AutoSuggestBox)
+                {
+                    if (((AutoSuggestBox)val).Text == "Content-Type")
+                    {
+                        ((AutoSuggestBox)sender).ItemsSource = customValuesContentType;
+                    }
+                }
+            }
+        }
+
+        private void CollapseExpander()
+        {
+            if (!expanderBasique.IsExpanded)
+            {
+                expanderBasique.Height = 50;
+            }
+            else
+            {
+                expanderCustom.Height = 50;
+            }
+            expanderCustom.Visibility = Visibility.Visible;
+            expanderBasique.Visibility = Visibility.Visible;
+        }
+
+        private void ExpandExpander()
+        {
+            if (expanderBasique.IsExpanded)
+            {
+                expanderBasique.Height = 130;
+                expanderCustom.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                expanderCustom.Height = 130;
+                expanderBasique.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ExpanderBasique_Expanded(object sender, EventArgs e)
+        {
+            ExpandExpander();
+        }
+
+        private void ExpanderBasique_Collapsed(object sender, EventArgs e)
+        {
+            CollapseExpander();
+        }
+
+        private void ExpanderCustom_Expanded(object sender, EventArgs e)
+        {
+            ExpandExpander();
+        }
+
+        private void ExpanderCustom_Collapsed(object sender, EventArgs e)
+        {
+            CollapseExpander();
+        }
+
+        /// <summary>
+        /// Charge les authentications précédentes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_Loaded(object sender, RoutedEventArgs e)
+        {
+            string checknull = localSettings.Values["Basic"] as string;
+            if (checknull == null)
+            {
+                localSettings.Values["Basic"] = string.Empty;
+                localSettings.Values["Custom"] = string.Empty;
+            }
+
+            string basicAuthenticationSaves = localSettings.Values["Basic"] as string;
+            string customAuthenticationSaves = localSettings.Values["Custom"] as string;
+            int nbbasic = Int32.Parse(basicAuthenticationSaves);
+            int nbcustom = Int32.Parse(customAuthenticationSaves);
+
+            for(int i = 0; i <= nbbasic; i++)
+            {
+            }
+
+
+            //BasiqueUserName.Text = basicAuthenticationSaves.Libelle;
+            //BasiquePassword.Password = basicAuthenticationSaves.Password;
+            //CustomScheme.Text = customAuthenticationSaves.Libelle;
+            //CustomToken.Text = customAuthenticationSaves.Password;
+        }
+
+        private void buildSavedAuthenticationButton()
+        {
+            
+        }
+
+        /// <summary>
+        /// Enregistre l'authentication
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveAuthentication_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -10,7 +10,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI" GettingFocus="Page_GettingFocus" Loading="Page_Loading">
 
-    <Grid Padding="0,0,0,0">
+    <Grid Padding="0,0,0,0" Loaded="Grid_Loaded">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Wide">
@@ -182,8 +182,8 @@
                         <TextBlock Text="PUT"/>
                         <TextBlock Text="DELETE"/>
                     </ComboBox>
-                    <TextBlock Height="20"></TextBlock>
-                    <ComboBox Name="ContentType" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Height="20" Visibility="Collapsed"></TextBlock>
+                    <ComboBox Name="ContentType" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
                         <ComboBox.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EdgeUIThemeTransition/>
@@ -193,8 +193,8 @@
                         <TextBlock>application/xml</TextBlock>
                         <TextBlock>application/png</TextBlock>
                     </ComboBox>
-                    <TextBlock Height="20"></TextBlock>
-                    <ComboBox Name="PrefLang" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Height="20" Visibility="Collapsed"></TextBlock>
+                    <ComboBox Name="PrefLang" Width="150" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed">
                         <ComboBox.ItemContainerTransitions>
                             <TransitionCollection>
                                 <EdgeUIThemeTransition/>
@@ -210,7 +210,7 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1168"/>
+                    <TextBox Name="Query" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1168" ToolTipService.ToolTip="Vous pouvez utiliser la flèche pour obtenir des requêtes pré-construites"/>
                     <Button Name="QuerySample" Height="32" Width="32" FontFamily="Segoe MDL2 Assets" Content="&#xE122;" RenderTransformOrigin="0.5,0.5">
                         <Button.RenderTransform>
                             <CompositeTransform x:Name="QuerySampleRotate" Rotation="0"/>
@@ -299,7 +299,6 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <TextBlock x:Name="lb_body"  x:Uid="Body" VerticalAlignment="Center" HorizontalAlignment="Center" FocusVisualPrimaryBrush="Black" RequestedTheme="Default" FontSize="18" FontFamily="Segoe UI" TextDecorations="Underline"></TextBlock>
                 </StackPanel>
                 <StackPanel Name="Fifth" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Padding="20,50,20,0">
                     <StackPanel.ChildrenTransitions>
@@ -308,10 +307,10 @@
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
                     <Pivot x:Name="pivot" Background ="{ThemeResource AppBarBackgroundThemeBrush}" Width="1250" Height="200" SelectionChanged="Pivot_SelectionChanged">
-                        <PivotItem Name="PivotItemHeaders" Header="Headers">
+                        <PivotItem Name="PivotItemHeaders" Header="Entêtes">
                             <StackPanel x:Name="multipleEntete" Orientation="Vertical">
-                                <TextBlock Height="20"/>
-                                <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" Margin="0,0,0,0" Click="AjouterHeader_Click">
+                                <TextBlock Height="10"/>
+                                <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" Margin="0,0,0,0" Click="AjouterHeader_Click" Visibility="Collapsed">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE109;</TextBlock>
                                         <TextBlock Width="10"></TextBlock>
@@ -319,15 +318,43 @@
                                     </StackPanel>
                                 </Button>
                                 <TextBlock Height="10"/>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBox PlaceholderText="Entête" Width="300"/>
+                                <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                                    <!--<TextBox PlaceholderText="Entête" Width="300"/>-->
+                                    <AutoSuggestBox TextChanged="AutoSuggestBox_TextChanged_Entete"
+                                    Width="300" PlaceholderText="Entête" AutomationProperties.Name="Basic AutoSuggestBox" GotFocus="AutoSuggestBox_GotFocus_Entete"/>
                                     <TextBlock Width="30"/>
-                                    <TextBox PlaceholderText="Valeur" Width="880"/>
+                                    <!--<TextBox PlaceholderText="Valeur" Width="880"/>-->
+                                    <AutoSuggestBox TextChanged="AutoSuggestBox_TextChanged_Value" Width="880" PlaceholderText="Valeur" GotFocus="AutoSuggestBox_GotFocus_Valeur"/>
                                 </StackPanel>
                             </StackPanel>
                         </PivotItem>
-                        <PivotItem Name="PivotItemBody" Header="Body">
-                            <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="150" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <PivotItem Name="PivotItemBody" Header="Corps">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Height="10"/>
+                                <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="150" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </PivotItem>
+                        <PivotItem Name="PivotItemAuthorization" Header="Autorisations">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Height="10"/>
+                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox PlaceholderText="User Name" x:Name="BasiqueUserName" Width="300" />
+                                        <TextBlock Width="20"/>
+                                        <PasswordBox PlaceholderText="Password" x:Name="BasiquePassword" Width="300" />
+                                        <TextBlock Width="20"/>
+                                        <Button x:Name="saveAuthentication" Click="SaveAuthentication_Click"/>
+                                    </StackPanel>
+                                </controls:Expander>
+                                <TextBlock Height="10"/>
+                                <controls:Expander Header="Avec jeton personnel" x:Name="expanderCustom" Expanded="ExpanderCustom_Expanded" Collapsed="ExpanderCustom_Collapsed">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox PlaceholderText="User Name" x:Name="CustomScheme" Width="300" />
+                                        <TextBlock Width="20"/>
+                                        <TextBox PlaceholderText="Token" x:Name="CustomToken" Width="300" />
+                                    </StackPanel>
+                                </controls:Expander>
+                            </StackPanel>
                         </PivotItem>
                     </Pivot>
                 </StackPanel>

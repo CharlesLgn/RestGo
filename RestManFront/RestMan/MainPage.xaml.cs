@@ -28,23 +28,6 @@ namespace RestMan
         public MainPage()
         {
             this.InitializeComponent();
-            //Process back = new Process();
-            //back.StartInfo.UseShellExecute = false;
-            //back.StartInfo.RedirectStandardOutput = true;
-            //back.StartInfo.FileName = @"C:\Users\Cyril Challouatte\GolandProjects\RestMan\RestManFront\RestMan\Assets\test.exe";
-            //back.Start();
-            // Do not wait for the child process to exit before
-            // reading to the end of its redirected stream.
-            // p.WaitForExit();
-            // Read the output stream first and then wait.
-            //string output = back.StandardOutput.ReadToEnd();
-            //back.WaitForExit();
-
-            /*var uiSettings = new Windows.UI.ViewManagement.UISettings();
-            var color = uiSettings.GetColorValue(
-                                    Windows.UI.ViewManagement.UIColorType.Background
-                                   );*/
-
             var isDark = Application.Current.RequestedTheme == ApplicationTheme.Dark;
 
             if (isDark)
@@ -110,6 +93,11 @@ namespace RestMan
             lb_Accueil.Text = resourceLoader.GetString("Accueil");
             lb_langue.Text = resourceLoader.GetString("Langue");
             lb_propos.Text = resourceLoader.GetString("Propos");
+        }
+
+        private void Principal_Loaded(object sender, RoutedEventArgs e)
+        {
+            MyFrame.Navigate(typeof(Home));
         }
     }
 }
