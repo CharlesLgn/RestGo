@@ -684,9 +684,13 @@ namespace RestMan
             {
                 pivot.Height = actualPivotHeaderHeight;
             }
-            else
+            else if(pi.Name == "PivotItemBody")
             {
                 pivot.Height = 200;
+            }
+            else if (pi.Name == "PivotItemAuthorization")
+            {
+                pivot.Height = 400;
             }
         }
 
@@ -838,12 +842,12 @@ namespace RestMan
         {
             if (expanderBasique.IsExpanded)
             {
-                expanderBasique.Height = 130;
+                expanderBasique.Height = 400;
                 expanderCustom.Visibility = Visibility.Collapsed;
             }
             else
             {
-                expanderCustom.Height = 130;
+                expanderCustom.Height = 400;
                 expanderBasique.Visibility = Visibility.Collapsed;
             }
         }
@@ -878,8 +882,8 @@ namespace RestMan
             string checknull = localSettings.Values["Basic"] as string;
             if (checknull == null)
             {
-                localSettings.Values["Basic"] = string.Empty;
-                localSettings.Values["Custom"] = string.Empty;
+                localSettings.Values["Basic"] = "0";
+                localSettings.Values["Custom"] = "0";
             }
 
             string basicAuthenticationSaves = localSettings.Values["Basic"] as string;
@@ -889,6 +893,7 @@ namespace RestMan
 
             for(int i = 0; i <= nbbasic; i++)
             {
+
             }
 
 
@@ -910,6 +915,11 @@ namespace RestMan
         /// <param name="e"></param>
         private void SaveAuthentication_Click(object sender, RoutedEventArgs e)
         {
+            int nbSaves = basicAuthentication.Count + 1;
+            localSettings.Values["Basic"] = nbSaves;
+            localSettings.Values["BasicUserName" + nbSaves] = BasiqueUserName.Text;
+            localSettings.Values["BasicPassword" + nbSaves] = BasiqueUserName.Text;
+            localSettings.Values["BasicDate" + nbSaves] = DateTime.Now;
 
         }
     }

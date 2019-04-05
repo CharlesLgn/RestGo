@@ -306,8 +306,8 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <Pivot x:Name="pivot" Background ="{ThemeResource AppBarBackgroundThemeBrush}" Width="1250" Height="200" SelectionChanged="Pivot_SelectionChanged">
-                        <PivotItem Name="PivotItemHeaders" Header="Entêtes">
+                    <Pivot x:Name="pivot" Background ="{ThemeResource AppBarBackgroundThemeBrush}" Width="1250" Height="400" SelectionChanged="Pivot_SelectionChanged">
+                        <PivotItem Name="PivotItemHeaders" Header="Entêtes" Background="Black">
                             <StackPanel x:Name="multipleEntete" Orientation="Vertical">
                                 <TextBlock Height="10"/>
                                 <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" Margin="0,0,0,0" Click="AjouterHeader_Click" Visibility="Collapsed">
@@ -337,18 +337,64 @@
                         <PivotItem Name="PivotItemAuthorization" Header="Autorisations">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Height="10"/>
-                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox PlaceholderText="User Name" x:Name="BasiqueUserName" Width="300" />
-                                        <TextBlock Width="20"/>
-                                        <PasswordBox PlaceholderText="Password" x:Name="BasiquePassword" Width="300" />
-                                        <TextBlock Width="20"/>
-                                        <Button x:Name="saveAuthentication" Click="SaveAuthentication_Click"/>
-                                    </StackPanel>
+                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <!--<StackPanel Orientation="Vertical">-->
+                                        <ScrollViewer HorizontalAlignment="Center" VerticalAlignment="Center" VerticalScrollBarVisibility="Hidden">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBox PlaceholderText="User Name" x:Name="BasiqueUserName" Width="300" />
+                                                <TextBlock Width="20"/>
+                                                <PasswordBox PlaceholderText="Password" x:Name="BasiquePassword" Width="300" />
+                                                <TextBlock Width="20"/>
+                                                <Button x:Name="saveAuthentication" Click="SaveAuthentication_Click" Content="Enregistrer" Width="150"/>
+                                            </StackPanel>
+                                            <TextBlock Height="20"/>
+                                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock>1</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>UserName</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>05/04/2019</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock>1</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>UserName</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>05/04/2019</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock>1</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>UserName</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>05/04/2019</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock>1</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>UserName</TextBlock>
+                                                        <TextBlock Width="20"/>
+                                                        <TextBlock>05/04/2019</TextBlock>
+                                                    </StackPanel>
+                                                </Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ScrollViewer>
+
+                                    <!--</StackPanel>-->
                                 </controls:Expander>
                                 <TextBlock Height="10"/>
-                                <controls:Expander Header="Avec jeton personnel" x:Name="expanderCustom" Expanded="ExpanderCustom_Expanded" Collapsed="ExpanderCustom_Collapsed">
-                                    <StackPanel Orientation="Horizontal">
+                                <controls:Expander Header="Avec jeton personnel" x:Name="expanderCustom" Expanded="ExpanderCustom_Expanded" Collapsed="ExpanderCustom_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                         <TextBox PlaceholderText="User Name" x:Name="CustomScheme" Width="300" />
                                         <TextBlock Width="20"/>
                                         <TextBox PlaceholderText="Token" x:Name="CustomToken" Width="300" />
