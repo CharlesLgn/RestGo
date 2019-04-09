@@ -20,7 +20,7 @@ ___Specification:___
 
  - Back:  `GoLang`
  - Front: `C#` (UWP) 
- - Building Tool: `PowerShell`
+ - Building Tool: `PowerShell` _(UWP)_ + `gcc` _(Go (for a GUI))_
  
 [![Golang](https://img.icons8.com/color/60/000000/golang.png)](https://golang.org/)  
 [![UWP](https://img.icons8.com/color/60/000000/windows-10.png)](https://docs.microsoft.com/en-us/windows/uwp/)
