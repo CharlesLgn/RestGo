@@ -4,7 +4,7 @@
 [![Okya project](https://img.shields.io/badge/%C3%98kya-Official-0c2461.svg)]()
 
 Project made for Licence Pro GL (_3rd year University_)  
-It use the Framework Front Flutter developped by Google
+It use the Framework UWP developped by Microsoft
 
 ***
 
@@ -23,7 +23,7 @@ ___Specification:___
  - Building Tool: `PowerShell`
  
 [![Golang](https://img.icons8.com/color/60/000000/golang.png)](https://golang.org/)  
-[![UWP](https://img.icons8.com/color/60/000000/windows-10.png)](https://flutter.io/)
+[![UWP](https://img.icons8.com/color/60/000000/windows-10.png)](https://docs.microsoft.com/en-us/windows/uwp/)
 
 ***
 
