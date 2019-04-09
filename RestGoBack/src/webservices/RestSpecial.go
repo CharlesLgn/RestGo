@@ -3,11 +3,14 @@ package webservices
 import (
   "encoding/json"
   "encoding/xml"
-  "github.com/gorilla/mux"
   "log"
   "net/http"
   "strconv"
   "strings"
+
+  "github.com/gorilla/mux"
+
+  "gopkg.in/yaml.v2"
 )
 
 func setHeader(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +25,6 @@ func setHeader(w http.ResponseWriter, r *http.Request) {
 
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
   setHeader(w, r)
-  
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
   log.Println("get  article by categ: ", idCateg)
@@ -37,13 +39,14 @@ func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
     }
   }
 
+  w.Header().Set("Content-Type", getContentType(r))
   if isResInXML(r) {
-    w.Header().Set("Content-Type", "application/xml; charset=utf-8")
     articlesXml := Articles{}
     articlesXml.ArticleList = stock
     _ = xml.NewEncoder(w).Encode(articlesXml)
+  } else if isResInYaml(r) {
+    _ = yaml.NewEncoder(w).Encode(stock)
   } else {
-    w.Header().Set("Content-Type", "application/json; charset=utf-8")
     _ = json.NewEncoder(w).Encode(stock)
   }
 }
@@ -73,12 +76,30 @@ func insert(original []*Article, value *Article) []*Article {
   return target
 }
 
-func isResInXML(r *http.Request) bool {
+func isResInThis(r *http.Request, this string) bool {
   contentType := r.Header.Get("Content-Type")
   accept := r.Header.Get("Accept")
-  if strings.Contains(contentType, "xml") || strings.Contains(accept, "xml") {
+  if strings.Contains(contentType, this) || strings.Contains(accept, this) {
     return true
   } else {
     return false
+  }
+}
+
+func isResInXML(r *http.Request) bool {
+  return isResInThis(r, "xml")
+}
+
+func isResInYaml(r *http.Request) bool {
+  return isResInThis(r, "yaml")
+}
+
+func getContentType(r *http.Request) string {
+  if isResInXML(r) {
+    return "application/xml; charset=utf-8"
+  } else if isResInYaml(r) {
+    return "application/x-yaml; charset=utf-8"
+  } else {
+    return "application/json; charset=utf-8"
   }
 }

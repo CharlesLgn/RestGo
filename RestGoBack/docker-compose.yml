@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  app:
+    image: golang:1.6.1-alpine
+    ports:
+       - "8000:8000"
+    volumes:
+      - .:/go/src/RestGoBack
+    working_dir: /go/src/RestGoBack
+    command: go build -o ./out/RestGoBackDocker.exe ./src/main-docker && cd ./out && .\RestGoBackDocker.exe && cd ..

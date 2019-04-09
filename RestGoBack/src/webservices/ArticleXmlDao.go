@@ -51,6 +51,16 @@ func getMapArticleAsArray(data map[int]*Article) []*Article {
 	return articles
 }
 
+func getMapArticleAsStructArray(data map[int]*Article) *ArticleList {
+	const size = 500
+	articles := make(ArticleList, size)
+	for k,v := range data {
+		article := *v
+		articles[k].Article = article
+	}
+	return &articles
+}
+
 func getAllArticleInXml() map[int]*Article {
 	root := getArticleXml()
 	articles := make(map[int]*Article)

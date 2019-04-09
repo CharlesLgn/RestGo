@@ -3,10 +3,13 @@ package webservices
 import (
   "encoding/json"
   "encoding/xml"
-  "github.com/gorilla/mux"
   "log"
   "net/http"
   "strconv"
+
+  "github.com/gorilla/mux"
+
+  "gopkg.in/yaml.v3"
 )
 
 func GetArticles(w http.ResponseWriter, r *http.Request) {
@@ -16,14 +19,18 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
     getArticleById(w, r, id)
   } else {
     articleList := getAllArticleInXml()
+    w.Header().Set("Content-Type", getContentType(r))
     if isResInXML(r) {
-      w.Header().Set("Content-Type", "application/xml; charset=utf-8")
       var articles Articles
       articles.ArticleList = getMapArticleAsArray(articleList)
       log.Println("get  all articles in XML")
       _ = xml.NewEncoder(w).Encode(articles)
+    } else if isResInYaml(r) {
+      articles := getMapArticleAsStructArray(articleList)
+      d, _ := yaml.Marshal(articles)
+      log.Println(string(d))
+      _, _ = w.Write([]byte(d))
     } else {
-      w.Header().Set("Content-Type", "application/json; charset=utf-8")
       log.Println("get  all articles in JSON")
       _ = json.NewEncoder(w).Encode(articleList)
     }

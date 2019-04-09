@@ -7,16 +7,21 @@ import (
 )
 
 type Articles struct {
-  XMLName     xml.Name   `xml:"articles" json:"-"`
-  ArticleList []*Article `xml:"article,omitempty"  json:"articles"`
+  XMLName     xml.Name   `xml:"articles" json:"-" yaml:"-"`
+  ArticleList []*Article `xml:"article,omitempty"  json:"articles" yaml:"article"`
+}
+
+type ArticleList []struct{
+  XMLName     xml.Name   `xml:"articles" json:"-" yaml:"-"`
+  Article     Article    `xml:"article,omitempty" json:"articles" yaml:"article"`
 }
 
 type Article struct {
-  XMLName     xml.Name `xml:"article"  json:"-"`
-  ID          int      `xml:"id,attr" json:"id,omitempty"`
-  Libelle     string   `xml:"lib"      json:"lib,omitempty"`
-  Prix        float64  `xml:"price"    json:"price,omitempty"`
-  IdCategorie int      `xml:"idCateg"  json:"idCateg,omitempty"`
+  XMLName     xml.Name `xml:"article"  json:"-" yaml:"-"`
+  ID          int      `xml:"id,attr"  json:"id,omitempty" yaml:"id,omitempty"`
+  Libelle     string   `xml:"lib"      json:"lib,omitempty" yaml:"id"`
+  Prix        float64  `xml:"price"    json:"price,omitempty" yaml:"id"`
+  IdCategorie int      `xml:"idCateg"  json:"idCateg,omitempty" yaml:"id"`
 }
 
 var lockArticle = sync.RWMutex{}
