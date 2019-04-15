@@ -42,6 +42,15 @@ func getArticleIdByCategInXml(idCateg int) map[int]int  {
 	return articles
 }
 
+func getMapArticleWithCategAsArray(data map[int]*ArticleWithCateg) []*ArticleWithCateg {
+	const size = 500
+	articles := make([]*ArticleWithCateg, size)
+	for k,v := range data {
+		articles[k] = v
+	}
+	return articles
+}
+
 func getMapArticleAsArray(data map[int]*Article) []*Article {
 	const size = 500
 	articles := make([]*Article, size)
@@ -49,16 +58,6 @@ func getMapArticleAsArray(data map[int]*Article) []*Article {
 		articles[k] = v
 	}
 	return articles
-}
-
-func getMapArticleAsStructArray(data map[int]*Article) *ArticleList {
-	const size = 500
-	articles := make(ArticleList, size)
-	for k,v := range data {
-		article := *v
-		articles[k].Article = article
-	}
-	return &articles
 }
 
 func getAllArticleInXml() map[int]*Article {
@@ -75,6 +74,33 @@ func getAllArticleInXml() map[int]*Article {
 			Libelle:     lib,
 			Prix:        price,
 			IdCategorie: idCateg,
+		}
+		articles[article.ID] = &article
+	})
+	return articles
+}
+
+func getAllArticleWhithCategInXml() map[int]*ArticleWithCateg {
+	root := getArticleXml()
+	articles := make(map[int]*ArticleWithCateg)
+	categories := getAllCategoryWithXml()
+	xmlquery.FindEach(root, "articles/article", func(i int, node *xmlquery.Node) {
+		id, _ := strconv.Atoi(node.Attr[0].Value)
+		articlePath := "articles/article[@id='" + strconv.Itoa(id) + "']"
+		lib := getData(articlePath + "/lib")
+		price, _ := strconv.ParseFloat(getData(articlePath+"/price"), 64)
+		idCateg, _ := strconv.Atoi(getData(articlePath + "/idCateg"))
+		var categ *Categorie
+		for _, category := range categories {
+			if idCateg == category.ID {
+				categ = category
+			}
+		}
+		article := ArticleWithCateg{
+			ID:          id,
+			Libelle:     lib,
+			Prix:        price,
+			Categorie: 	 categ,
 		}
 		articles[article.ID] = &article
 	})

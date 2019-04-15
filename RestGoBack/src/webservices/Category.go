@@ -7,14 +7,14 @@ import (
 )
 
 type Categories struct {
-  XMLName      xml.Name   `xml:"categories" json:"-"`
-  CategoryList []*Categorie `xml:"category,omitempty"  json:"categories"`
+  XMLName      xml.Name   `xml:"categories" json:"-"  yaml:"-"`
+  CategoryList []*Categorie `xml:"category,omitempty"  json:"categories"  yaml:"categories"`
 }
 
 type Categorie struct {
-  XMLName xml.Name `xml:"category" json:"-"`
-  ID      int      `xml:"id,attr" json:"id"`
-  Libelle string   `xml:"lib" json:"lib"`
+  XMLName xml.Name `xml:"category" json:"-" yaml:"-"`
+  ID      int      `xml:"id,attr" json:"id"  yaml:"id"`
+  Libelle string   `xml:"lib" json:"lib"  yaml:"lib"`
 }
 
 var lockCategorie = sync.RWMutex{}

@@ -8,4 +8,4 @@ services:
     volumes:
       - .:/go/src/RestGoBack
     working_dir: /go/src/RestGoBack
-    command: go build -o ./out/RestGoBackDocker.exe ./src/main-docker && cd ./out && .\RestGoBackDocker.exe && cd ..
+    command: go build -o ./out/RestGoBack.exe ./src/main-docker && cd ./out && .\RestGoBack.exe

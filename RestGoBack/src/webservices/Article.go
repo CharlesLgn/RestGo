@@ -8,20 +8,28 @@ import (
 
 type Articles struct {
   XMLName     xml.Name   `xml:"articles" json:"-" yaml:"-"`
-  ArticleList []*Article `xml:"article,omitempty"  json:"articles" yaml:"article"`
-}
-
-type ArticleList []struct{
-  XMLName     xml.Name   `xml:"articles" json:"-" yaml:"-"`
-  Article     Article    `xml:"article,omitempty" json:"articles" yaml:"article"`
+  ArticleList []*Article `xml:"article,omitempty"  json:"articles" yaml:"articles"`
 }
 
 type Article struct {
   XMLName     xml.Name `xml:"article"  json:"-" yaml:"-"`
   ID          int      `xml:"id,attr"  json:"id,omitempty" yaml:"id,omitempty"`
-  Libelle     string   `xml:"lib"      json:"lib,omitempty" yaml:"id"`
-  Prix        float64  `xml:"price"    json:"price,omitempty" yaml:"id"`
-  IdCategorie int      `xml:"idCateg"  json:"idCateg,omitempty" yaml:"id"`
+  Libelle     string   `xml:"lib"      json:"lib,omitempty" yaml:"lib"`
+  Prix        float64  `xml:"price"    json:"price,omitempty" yaml:"price"`
+  IdCategorie int      `xml:"idCateg"  json:"idCateg,omitempty" yaml:"idCateg"`
+}
+
+type ArticlesWithCateg struct {
+  XMLName     xml.Name            `xml:"articles" json:"-" yaml:"-"`
+  ArticleList []*ArticleWithCateg `xml:"article,omitempty"  json:"articles" yaml:"articles"`
+}
+
+type ArticleWithCateg struct {
+  XMLName     xml.Name `xml:"article"  json:"-" yaml:"-"`
+  ID          int      `xml:"id,attr"  json:"id,omitempty" yaml:"id,omitempty"`
+  Libelle     string   `xml:"lib"      json:"lib,omitempty" yaml:"lib"`
+  Prix        float64  `xml:"price"    json:"price,omitempty" yaml:"price"`
+  Categorie   *Categorie`xml:"category"  json:"category,omitempty" yaml:"category"`
 }
 
 var lockArticle = sync.RWMutex{}

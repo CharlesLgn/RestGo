@@ -2,11 +2,11 @@ package webservices
 
 import (
 	"encoding/json"
-	"encoding/xml"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
 func GetCategories(w http.ResponseWriter, r *http.Request) {
@@ -16,17 +16,9 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 		getCategoryById(w, r, id)
 	} else {
 		categoriesList := getAllCategoryWithXml()
-		if isResInXML(r) {
-			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
-			var categories Categories
-			categories.CategoryList = getMapCategAsArray(categoriesList)
-			log.Println("get  all category in XML")
-			_ = xml.NewEncoder(w).Encode(categories)
-		} else {
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			log.Println("get  all category in JSON")
-			_ = json.NewEncoder(w).Encode(categoriesList)
-		}
+		var categories Categories
+		categories.CategoryList = getMapCategAsArray(categoriesList)
+		encode(w, r, categories, categoriesList, "get all Categories")
 	}
 }
 
@@ -38,18 +30,15 @@ func getCategoryById(w http.ResponseWriter, r *http.Request, id int) {
 			dataToSend = categ
 		}
 	}
-	if isResInXML(r) {
-		w.Header().Set("Content-Type", "application/xml; charset=utf-8")
-		_ = xml.NewEncoder(w).Encode(dataToSend)
+	if dataToSend == nil {
+		http.Error(w, "no article with this id", http.StatusNotFound)
 	} else {
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		_ = json.NewEncoder(w).Encode(dataToSend)
+		encode(w, r, dataToSend, dataToSend, "get category " + strconv.Itoa(id))
 	}
 }
 
 func GetCategoryById(w http.ResponseWriter, r *http.Request) {
 	setHeader(w, r)
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	params := mux.Vars(r)
 	id, _ := strconv.Atoi(params["id"])
 	getCategoryById(w, r, id)

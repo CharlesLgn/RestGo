@@ -8,14 +8,15 @@ import (
   "strconv"
   "strings"
 
+  "github.com/CharlesLgn/yamlGoParser/yaml"
   "github.com/gorilla/mux"
-
-  "gopkg.in/yaml.v2"
 )
 
 func setHeader(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Content-Type", getContentType(r))
   w.Header().Set("X-Powered-by", "Okya Corp")
   lang := r.Header.Get("Accept-Language")
+  w.Header().Set("Accept-Language", lang)
   if strings.Contains(lang, "fr") || strings.Contains(lang, "FR") {
     w.Header().Set("X-Custom", "Salut mon pote")
   } else {
@@ -25,30 +26,47 @@ func setHeader(w http.ResponseWriter, r *http.Request) {
 
 func GetArticleByCateg(w http.ResponseWriter, r *http.Request) {
   setHeader(w, r)
+  display := isDisplayCateg(w, r)
+  if display {
+    GetArticleByCategWithDisplay(w, r)
+  } else {
+    params := mux.Vars(r)
+    idCateg, _ := strconv.Atoi(params["id"])
+    lockArticle.RLock()
+
+    stock := make([]*Article, 0)
+    articles := getAllArticleInXml()
+
+    for _, article := range articles {
+      if article.IdCategorie == idCateg {
+        stock = insert(stock, article)
+      }
+    }
+
+    articlesXml := Articles{}
+    articlesXml.ArticleList = stock
+    encode(w, r, articlesXml, stock, "get article by categ:"+strconv.Itoa(idCateg))
+  }
+}
+
+func GetArticleByCategWithDisplay(w http.ResponseWriter, r *http.Request) {
   params := mux.Vars(r)
   idCateg, _ := strconv.Atoi(params["id"])
-  log.Println("get  article by categ: ", idCateg)
   lockArticle.RLock()
 
-  stock := make([]*Article, 0)
+  stock := make([]*ArticleWithCateg, 0)
   articles := getAllArticleInXml()
 
   for _, article := range articles {
     if article.IdCategorie == idCateg {
-      stock = insert(stock, article)
+      articleWC := toArticleWithCateg(article)
+      stock = insertAWC(stock, &articleWC)
     }
   }
+  articlesXml := ArticlesWithCateg{}
+  articlesXml.ArticleList = stock
 
-  w.Header().Set("Content-Type", getContentType(r))
-  if isResInXML(r) {
-    articlesXml := Articles{}
-    articlesXml.ArticleList = stock
-    _ = xml.NewEncoder(w).Encode(articlesXml)
-  } else if isResInYaml(r) {
-    _ = yaml.NewEncoder(w).Encode(stock)
-  } else {
-    _ = json.NewEncoder(w).Encode(stock)
-  }
+  encode(w, r, articlesXml, stock, "get article by categ:"+strconv.Itoa(idCateg))
 }
 
 func DeleteArticlesByCateg(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +88,14 @@ func deleteArticles(idCateg int) {
 
 func insert(original []*Article, value *Article) []*Article {
   target := make([]*Article, len(original)+1)
+  copy(target, original[:])
+  target[len(original)] = value
+
+  return target
+}
+
+func insertAWC(original []*ArticleWithCateg, value *ArticleWithCateg) []*ArticleWithCateg {
+  target := make([]*ArticleWithCateg, len(original)+1)
   copy(target, original[:])
   target[len(original)] = value
 
@@ -101,5 +127,34 @@ func getContentType(r *http.Request) string {
     return "application/x-yaml; charset=utf-8"
   } else {
     return "application/json; charset=utf-8"
+  }
+}
+
+func toArticleWithCateg(article *Article) ArticleWithCateg {
+  categories := getAllCategoryWithXml()
+  var categ *Categorie
+  for _, category := range categories {
+    if article.IdCategorie == category.ID {
+      categ = category
+    }
+  }
+  return ArticleWithCateg{
+    ID:        article.ID,
+    Libelle:   article.Libelle,
+    Prix:      article.Prix,
+    Categorie: categ,
+  }
+}
+
+func encode(w http.ResponseWriter, r *http.Request, caseXML interface{}, otherCase interface{}, message string) {
+  if isResInXML(r) {
+    log.Println("[XML]", message)
+    _ = xml.NewEncoder(w).Encode(caseXML)
+  } else if isResInYaml(r) {
+    log.Println("[YAML]", message)
+    _ = yaml.NewEncoder(w).Encode(otherCase)
+  } else {
+    log.Println("[JSON]", message)
+    _ = json.NewEncoder(w).Encode(otherCase)
   }
 }

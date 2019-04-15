@@ -1,16 +1,25 @@
 package webservices
 
 import (
+
   "encoding/json"
-  "encoding/xml"
   "log"
   "net/http"
   "strconv"
 
   "github.com/gorilla/mux"
 
-  "gopkg.in/yaml.v3"
 )
+
+func isDisplayCateg(w http.ResponseWriter, r *http.Request) bool {
+  b := r.Header.Get("X-display-categ") == "true"
+  if b {
+    w.Header().Set("X-display-categ", "true")
+  } else {
+    w.Header().Set("X-display-categ", "false")
+  }
+  return b
+}
 
 func GetArticles(w http.ResponseWriter, r *http.Request) {
   setHeader(w, r)
@@ -18,26 +27,24 @@ func GetArticles(w http.ResponseWriter, r *http.Request) {
   if err == nil {
     getArticleById(w, r, id)
   } else {
-    articleList := getAllArticleInXml()
-    w.Header().Set("Content-Type", getContentType(r))
-    if isResInXML(r) {
-      var articles Articles
-      articles.ArticleList = getMapArticleAsArray(articleList)
-      log.Println("get  all articles in XML")
-      _ = xml.NewEncoder(w).Encode(articles)
-    } else if isResInYaml(r) {
-      articles := getMapArticleAsStructArray(articleList)
-      d, _ := yaml.Marshal(articles)
-      log.Println(string(d))
-      _, _ = w.Write([]byte(d))
+    var articleList interface{}
+    var articles interface{}
+    displayCateg := isDisplayCateg(w,r)
+    if displayCateg {
+      var articles ArticlesWithCateg
+      articleList = getAllArticleWhithCategInXml()
+      articles.ArticleList = getMapArticleWithCategAsArray(articleList.(map[int]*ArticleWithCateg))
     } else {
-      log.Println("get  all articles in JSON")
-      _ = json.NewEncoder(w).Encode(articleList)
+      var articles Articles
+      articleList = getAllArticleInXml()
+      articles.ArticleList = getMapArticleAsArray(articleList.(map[int]*Article))
     }
+    encode(w, r, articles,articleList, "get  all articles")
   }
 }
 
 func getArticleById(w http.ResponseWriter, r *http.Request, id int) {
+  display := isDisplayCateg(w, r)
   articles := getAllArticleInXml()
   var dataToSend *Article
   for _, article := range articles {
@@ -45,12 +52,16 @@ func getArticleById(w http.ResponseWriter, r *http.Request, id int) {
       dataToSend = article
     }
   }
-  if isResInXML(r) {
-    w.Header().Set("Content-Type", "application/xml; charset=utf-8")
-    _ = xml.NewEncoder(w).Encode(dataToSend)
+  if dataToSend == nil {
+    http.Error(w, "no article with this id", http.StatusNotFound)
   } else {
-    w.Header().Set("Content-Type", "application/json; charset=utf-8")
-    _ = json.NewEncoder(w).Encode(dataToSend)
+    var data interface{}
+    if display {
+      data = toArticleWithCateg(dataToSend)
+    } else {
+      data = dataToSend
+    }
+    encode(w, r, data, data, "get article "+strconv.Itoa(id))
   }
 }
 

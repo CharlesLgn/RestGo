@@ -4,62 +4,68 @@
 [![Run the Back](https://img.shields.io/badge/ReadMe-Back-75CEDE.svg)](https://github.com/CharlesLgn/RestGo/blob/master/RestGoBack/README.md)
 
 ## Note
-All request for `article` and `category`  can be receive in XML and JSON  
+All request for `article` and `category`  can be receive in __XML__, __JSON__ and __YAML__
 But for post request, just JSON is read
 
 ## Article
  - GET :
    - __`localhost:8000/articles`__
      - Get all articles store
-     - `X-Article-Id` : if there is a `X-Article-Id` in the Header of the request,  
+     - `X-Article-Id` : if there is a `X-Article-Id` in the Header of the request,
      Get just the article whit this id
+     - `X-display-categ`  : if you write `true` in this Header,
+     the data you receive appears with the _categorie id and lib_  
    - __`localhost:8000/article/{id}`__
      - Get the article whit this id  
-      If the id doesn't exit, it return an 400 eror
+      If the id does not exit, it return an 400 error
+     - `X-display-categ`  : if you write `true` in this Header,
+            the data you receive appears with the _categorie id and lib_
    - __`localhost:8000/article/categorie/{id}`__
      - Get all article from a categorie whit this id  
-      If the id doesn't exit, it return an 400 eror
+      If the id does not exit, it return an 400 error
+     - `X-display-categ`  : if you write `true` in this Header,
+          the data you receive appears with the _categorie id and lib_
  - POST :
    - __`localhost:8000/article`__
      - Create an article
-     - Json to send (all can't be ommit) :
+     - Json to send (all can't be omit) :
      ```JSON
      {
-       "lib"    : string,
-       "price"  : double,
-       "idCeteg": int
+       "lib"    : "string",
+       "price"  : 0.00,
+       "idCateg": 0
      }
      ```
    - __`localhost:8000/article/{id}`__
      - Update the article whit this id
-     - Json to send (all can be ommit) :
+     - Json example to send (all can be omit) :
      ```JSON
      {
-       "lib"    : string,
-       "price"  : double,
-       "idCeteg": int
+       "lib"    : "string",
+       "price"  : 0.00,
+       "idCateg": 0
      }
      ```
  - PUT :
    - __`localhost:8000/article/{id}`__
      - Overwrite the article whit this id
-     - Json to send (all can't be ommit) :
+     - Json to send (all can't be omit) :
      ```JSON
      {
        "lib"    : string,
        "price"  : double,
-       "idCeteg": int
+       "idCateg": int
      }
      ```
  - PATCH :
    - __`localhost:8000/article/{id}`__
      - Update the article whit this id
-     - Json to send (all can be ommit) :
+     - Json to send (all can be omit) :
      ```JSON
      {
        "lib"    : string,
        "price"  : double,
-       "idCeteg": int
+       "idCateg": int
      }
      ```
  - DELETE :
@@ -80,7 +86,7 @@ But for post request, just JSON is read
  - POST :
    - __`localhost:8000/categorie`__
      - Create an categorie
-     - Json to send (all can't be ommit) :
+     - Json to send (all can't be omit) :
      ```JSON
      {
        "lib" : string
@@ -88,7 +94,7 @@ But for post request, just JSON is read
      ```
    - __`localhost:8000/categorie/{id}`__
      - Update the categorie whit this id
-     - Json to send (all can be ommit) :
+     - Json to send (all can be omit) :
      ```JSON
      {
        "lib" : string
@@ -97,7 +103,7 @@ But for post request, just JSON is read
  - PUT :
    - __`localhost:8000/article/{id}`__
      - Overwrite the categorie whit this id
-     - Json to send (all can't be ommit) :
+     - Json to send (all can't be omit) :
      ```JSON
      {
        "lib" : string
@@ -106,7 +112,7 @@ But for post request, just JSON is read
  - PATCH :
    - __`localhost:8000/categorie/{id}`__
      - Update the categorie whit this id
-     - Json to send (all can be ommit) :
+     - Json to send (all can be omit) :
      ```JSON
      {
        "lib" : string
@@ -122,7 +128,7 @@ But for post request, just JSON is read
    - __`localhost:8000/fun/color`__
      - Get data of a random color
    - __`localhost:8000/fun/yes`__
-     - Get the awnser `yes`, `no` or `maybe`  
+     - Get the answer `yes`, `no` or `maybe`  
    - __`localhost:8000/fun/wiki/{title}`__
      - Get the wikipedia resume of this title  
    - __`localhost:8000/fun/github/{user}`__ (Beta)
@@ -132,10 +138,10 @@ But for post request, just JSON is read
  - POST :
    - __`localhost:8000/fun/data`__
      - RestGo Back version
-     - Json to send (some can be ommit) :
+     - Json to send (some can be omit) :
      ```JSON
      {
-       "url":string,                    //can't be ommit
+       "url":string,                    //can't be omit
        "content-type":string,           //if omit : Application/json
        "method":string,                 //if omit : GET
        "lang":string,                   //can be nothing
@@ -144,7 +150,7 @@ But for post request, just JSON is read
      ```
    - __`localhost:8000/fun/trad/l33t`__
      - L33t translator
-     - Json to send (can't be ommit) :
+     - Json to send (can't be omit) :
      ```JSON
      {
        "message":string
@@ -152,7 +158,7 @@ But for post request, just JSON is read
      ```
    - __`localhost:8000/fun/trad/morse`__
      - Morse translator
-     - Json to send (can't be ommit) :
+     - Json to send (can't be omit) :
      ```JSON
      {
        "message":string
