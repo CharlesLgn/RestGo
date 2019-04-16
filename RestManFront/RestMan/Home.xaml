@@ -319,11 +319,9 @@
                                 </Button>
                                 <TextBlock Height="10"/>
                                 <StackPanel Orientation="Horizontal" Visibility="Collapsed">
-                                    <!--<TextBox PlaceholderText="Entête" Width="300"/>-->
                                     <AutoSuggestBox TextChanged="AutoSuggestBox_TextChanged_Entete"
                                     Width="300" PlaceholderText="Entête" AutomationProperties.Name="Basic AutoSuggestBox" GotFocus="AutoSuggestBox_GotFocus_Entete"/>
                                     <TextBlock Width="30"/>
-                                    <!--<TextBox PlaceholderText="Valeur" Width="880"/>-->
                                     <AutoSuggestBox TextChanged="AutoSuggestBox_TextChanged_Value" Width="880" PlaceholderText="Valeur" GotFocus="AutoSuggestBox_GotFocus_Valeur"/>
                                 </StackPanel>
                             </StackPanel>
@@ -337,60 +335,26 @@
                         <PivotItem Name="PivotItemAuthorization" Header="Autorisations">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Height="10"/>
-                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <!--<StackPanel Orientation="Vertical">-->
-                                        <ScrollViewer HorizontalAlignment="Center" VerticalAlignment="Center" VerticalScrollBarVisibility="Hidden">
-                                        <StackPanel Orientation="Vertical">
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" SizeChanged="ExpanderBasique_SizeChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <ScrollViewer Margin="0,0,0,60" x:Name="BasiqueScrollViewer">
+                                        <StackPanel x:Name="expanderBasiqueStack" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,20">
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                 <TextBox PlaceholderText="User Name" x:Name="BasiqueUserName" Width="300" />
                                                 <TextBlock Width="20"/>
                                                 <PasswordBox PlaceholderText="Password" x:Name="BasiquePassword" Width="300" />
                                                 <TextBlock Width="20"/>
                                                 <Button x:Name="saveAuthentication" Click="SaveAuthentication_Click" Content="Enregistrer" Width="150"/>
                                             </StackPanel>
-                                            <TextBlock Height="20"/>
-                                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock>1</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>UserName</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>05/04/2019</TextBlock>
-                                                    </StackPanel>
-                                                </Button>
-                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock>1</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>UserName</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>05/04/2019</TextBlock>
-                                                    </StackPanel>
-                                                </Button>
-                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock>1</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>UserName</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>05/04/2019</TextBlock>
-                                                    </StackPanel>
-                                                </Button>
-                                                <Button Background="#FF171717" Style="{ThemeResource ButtonRevealStyle}" Width="300" Height="75" HorizontalAlignment="Center">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock>1</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>UserName</TextBlock>
-                                                        <TextBlock Width="20"/>
-                                                        <TextBlock>05/04/2019</TextBlock>
-                                                    </StackPanel>
-                                                </Button>
-                                            </StackPanel>
+                                            <TextBlock Height="50"/>
+                                            <ListView x:Name="ListViewBasique" SelectionMode="Multiple" SelectionChanged="ListViewBasique_SelectionChanged">
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="ListViewItem">
+                                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
+                                            </ListView>
                                         </StackPanel>
                                     </ScrollViewer>
-
-                                    <!--</StackPanel>-->
                                 </controls:Expander>
                                 <TextBlock Height="10"/>
                                 <controls:Expander Header="Avec jeton personnel" x:Name="expanderCustom" Expanded="ExpanderCustom_Expanded" Collapsed="ExpanderCustom_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

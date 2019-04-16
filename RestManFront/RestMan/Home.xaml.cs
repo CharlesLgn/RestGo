@@ -20,6 +20,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
+using RestManDataAccess;
+using Windows.UI.Xaml.Input;
+
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,9 +33,6 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
-        List<AuthenticationSave> basicAuthentication = new List<AuthenticationSave>();
-        List<AuthenticationSave> customAuthentication = new List<AuthenticationSave>();
-        ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         private string[] customHeaders = { "Accept", "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Authorization", "Cache-Control", "Connection", "Content-Language", "Content-Type", "Cookie", "DNT", "Date", "DPR", "Early-Data", "Expect", "Forwarded", "From", "Host", "if-Match", "If-Modified-Since", "If-None-Match", "If-Range", "If-Unmodified-Since", "Keep-Alive", "Max-Forwards", "Origin", "Pragma", "Proxy-Authorization", "Range", "If-Unmodified-Since", "Referer", "Save-Data", "TE", "Trailer", "Transfer-Encoding", "Upgrade", "Upgrade-Insecure-Requests", "User-Agent", "Vary", "Via", "Viewport-Width", "Warning", "Width" };
         private string[] customValuesContentType = { "application/json", "application/x-www-form-urlencoded", "application/xhtml+xml", "application/xml", "multipart/form-data", "text/html", "text/plain", "text/xml" };
         private int iterateurCustomHeaders = 0;
@@ -59,6 +59,18 @@ namespace RestMan
             PrefLang.SelectedIndex = 0;
             BrowseWeb.Visibility = Visibility.Collapsed;
             addCustomHeader();
+            PopulateBasiqueListView();
+        }
+
+        private void PopulateBasiqueListView()
+        {
+            ListViewBasique.Items.Clear();
+            List<string> data = DataAccess.GetData("BASICTOKEN");
+            foreach(string item in data)
+            {
+                var splitItem = item.Split('|');
+                ListViewBasique.Items.Add(splitItem[0] + " " + splitItem[1] + " " + splitItem[3]);
+            }
         }
 
         /// <summary>
@@ -90,11 +102,6 @@ namespace RestMan
                 {
                     QuerySender();
                 }
-
-                localSettings.Values["BasicUserName"] = BasiqueUserName.Text;
-                localSettings.Values["BasicPassword"] = BasiquePassword.Password;
-                localSettings.Values["CustomUserName"] = CustomScheme.Text;
-                localSettings.Values["CustomToken"] = CustomToken.Text;
             }
             catch (Exception ex)
             {
@@ -879,28 +886,6 @@ namespace RestMan
         /// <param name="e"></param>
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            string checknull = localSettings.Values["Basic"] as string;
-            if (checknull == null)
-            {
-                localSettings.Values["Basic"] = "0";
-                localSettings.Values["Custom"] = "0";
-            }
-
-            string basicAuthenticationSaves = localSettings.Values["Basic"] as string;
-            string customAuthenticationSaves = localSettings.Values["Custom"] as string;
-            int nbbasic = Int32.Parse(basicAuthenticationSaves);
-            int nbcustom = Int32.Parse(customAuthenticationSaves);
-
-            for(int i = 0; i <= nbbasic; i++)
-            {
-
-            }
-
-
-            //BasiqueUserName.Text = basicAuthenticationSaves.Libelle;
-            //BasiquePassword.Password = basicAuthenticationSaves.Password;
-            //CustomScheme.Text = customAuthenticationSaves.Libelle;
-            //CustomToken.Text = customAuthenticationSaves.Password;
         }
 
         private void buildSavedAuthenticationButton()
@@ -915,12 +900,41 @@ namespace RestMan
         /// <param name="e"></param>
         private void SaveAuthentication_Click(object sender, RoutedEventArgs e)
         {
-            int nbSaves = basicAuthentication.Count + 1;
-            localSettings.Values["Basic"] = nbSaves;
-            localSettings.Values["BasicUserName" + nbSaves] = BasiqueUserName.Text;
-            localSettings.Values["BasicPassword" + nbSaves] = BasiqueUserName.Text;
-            localSettings.Values["BasicDate" + nbSaves] = DateTime.Now;
+            try
+            {
+                DataAccess.AddData("BASICTOKEN", BasiqueUserName.Text, BasiquePassword.Password, DateTime.Now.ToString());
+                PopulateBasiqueListView();
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+        }
 
+        private void ExpanderBasique_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        }
+
+        private void ListViewBasique_ItemClick(object sender, ItemClickEventArgs e)
+        {
+        }
+
+        private void ListViewBasique_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = ListViewBasique.SelectedItem;
+            if (!String.IsNullOrEmpty(item as string))
+            {
+                var splitItem = ((string)item).Split(' ');
+                string strID = splitItem[0];
+                int ID = Int32.Parse(splitItem[0]);
+                List<string> data = DataAccess.GetBasiqueByID("BASICTOKEN", ID);
+                string result = data[0];
+                var splitResult = result.Split('|');
+                BasiqueUserName.Text = splitResult[0];
+                BasiquePassword.Password = splitResult[1];
+            }
         }
     }
 }

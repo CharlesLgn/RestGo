@@ -8,9 +8,9 @@ namespace RestMan.Objects
 {
     public class AuthenticationSave
     {
+        public string ID { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string Libelle { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
     }
 }
