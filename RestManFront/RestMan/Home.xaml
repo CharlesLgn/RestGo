@@ -336,7 +336,7 @@
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Height="10"/>
                                 <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" SizeChanged="ExpanderBasique_SizeChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <ScrollViewer Margin="0,0,0,60" x:Name="BasiqueScrollViewer">
+                                    <ScrollViewer Margin="0,0,0,60" x:Name="BasiqueScrollViewer" VerticalScrollBarVisibility="Hidden">
                                         <StackPanel x:Name="expanderBasiqueStack" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,20">
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                                 <TextBox PlaceholderText="User Name" x:Name="BasiqueUserName" Width="300" />
@@ -353,6 +353,14 @@
                                                     </Style>
                                                 </ListView.ItemContainerStyle>
                                             </ListView>
+                                            <TextBlock Height="50"/>
+                                            <Button x:Name="DeleteBasiqueAuthentication" Click="DeleteBasiqueAuthentication_Click"  Height="32" Width="150" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE74D;</TextBlock>
+                                                    <TextBlock Width="30"></TextBlock>
+                                                    <TextBlock Text="Supprimer" Height="25" FontFamily="Segoe UI" FontSize="11" x:FieldModifier="public"/>
+                                                </StackPanel>
+                                            </Button>
                                         </StackPanel>
                                     </ScrollViewer>
                                 </controls:Expander>

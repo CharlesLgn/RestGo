@@ -66,7 +66,7 @@ namespace RestMan
         {
             ListViewBasique.Items.Clear();
             List<string> data = DataAccess.GetData("BASICTOKEN");
-            foreach(string item in data)
+            foreach (string item in data)
             {
                 var splitItem = item.Split('|');
                 ListViewBasique.Items.Add(splitItem[0] + " " + splitItem[1] + " " + splitItem[3]);
@@ -327,7 +327,7 @@ namespace RestMan
                     wc.Add("Authorization", "Basic " + encoded);
                 }
             }
-            else if(expanderCustom.IsExpanded)
+            else if (expanderCustom.IsExpanded)
             {
                 if (!String.IsNullOrEmpty(CustomScheme.Text) && !String.IsNullOrEmpty(CustomToken.Text))
                 {
@@ -691,7 +691,7 @@ namespace RestMan
             {
                 pivot.Height = actualPivotHeaderHeight;
             }
-            else if(pi.Name == "PivotItemBody")
+            else if (pi.Name == "PivotItemBody")
             {
                 pivot.Height = 200;
             }
@@ -890,7 +890,7 @@ namespace RestMan
 
         private void buildSavedAuthenticationButton()
         {
-            
+
         }
 
         /// <summary>
@@ -929,11 +929,39 @@ namespace RestMan
                 var splitItem = ((string)item).Split(' ');
                 string strID = splitItem[0];
                 int ID = Int32.Parse(splitItem[0]);
-                List<string> data = DataAccess.GetBasiqueByID("BASICTOKEN", ID);
+                List<string> data = DataAccess.GetByID("BASICTOKEN", ID);
                 string result = data[0];
                 var splitResult = result.Split('|');
                 BasiqueUserName.Text = splitResult[0];
                 BasiquePassword.Password = splitResult[1];
+            }
+        }
+
+        /// <summary>
+        /// supprime les objets sélectionnés de la base
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteBasiqueAuthentication_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var foo = ListViewBasique.SelectedItems;
+                foreach (var item in foo)
+                {
+                    var splitItem = ((string)item).Split(' ');
+                    string strID = splitItem[0];
+                    int ID = Int32.Parse(splitItem[0]);
+                    DataAccess.DeleteByID("BASICTOKEN", ID);
+                }
+
+                PopulateBasiqueListView();
+            }
+            catch(Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
             }
         }
     }
