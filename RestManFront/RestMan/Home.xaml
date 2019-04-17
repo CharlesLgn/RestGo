@@ -40,6 +40,7 @@
                         <Setter Target="Fifth.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="Sixth.(Grid.ColumnSpan)" Value="1" />
                         <Setter Target="Seventh.(Grid.ColumnSpan)" Value="1" />
+                        <Setter Target="expanderBasiqueStack.Orientation" Value="Vertical"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Mid">

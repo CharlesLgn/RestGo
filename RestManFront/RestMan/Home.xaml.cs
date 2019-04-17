@@ -66,10 +66,19 @@ namespace RestMan
         {
             ListViewBasique.Items.Clear();
             List<string> data = DataAccess.GetData("BASICTOKEN");
+            if(data.Count == 0)
+            {
+                DeleteBasiqueAuthentication.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                DeleteBasiqueAuthentication.Visibility = Visibility.Visible;
+            }
+
             foreach (string item in data)
             {
                 var splitItem = item.Split('|');
-                ListViewBasique.Items.Add(splitItem[0] + " " + splitItem[1] + " " + splitItem[3]);
+                ListViewBasique.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
             }
         }
 
@@ -894,15 +903,37 @@ namespace RestMan
         }
 
         /// <summary>
+        /// Une simple boite de dialogue pour entrer du texte
+        /// </summary>
+        /// <returns></returns>
+        private async Task<string> InputTextDialogAsync()
+        {
+            TextBox inputTextBox = new TextBox();
+            inputTextBox.AcceptsReturn = false;
+            inputTextBox.Height = 32;
+            ContentDialog dialog = new ContentDialog();
+            dialog.Content = inputTextBox;
+            dialog.Title = "Entrez un nom pour votre sauvegarde";
+            dialog.IsSecondaryButtonEnabled = false;
+            dialog.PrimaryButtonText = "Enregistrer";
+            //dialog.SecondaryButtonText = "Cancel";
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                return inputTextBox.Text;
+            else
+                return "";
+        }
+
+        /// <summary>
         /// Enregistre l'authentication
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SaveAuthentication_Click(object sender, RoutedEventArgs e)
+        private async void SaveAuthentication_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                DataAccess.AddData("BASICTOKEN", BasiqueUserName.Text, BasiquePassword.Password, DateTime.Now.ToString());
+                string libelle = await InputTextDialogAsync();
+                DataAccess.AddData("BASICTOKEN", BasiqueUserName.Text, BasiquePassword.Password, DateTime.Now.ToString(), libelle);
                 PopulateBasiqueListView();
             }
             catch (Exception ex)
