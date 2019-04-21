@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestMan", "RestMan\RestMan.csproj", "{66A37530-D952-4264-A781-F5152C3F5FA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestManDataAccess", "RestManDataAccess\RestManDataAccess.csproj", "{FDB2E8A5-F01F-4C50-AEA2-AAC8C1D61B96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RestManDataAccess", "RestManDataAccess\RestManDataAccess.csproj", "{FDB2E8A5-F01F-4C50-AEA2-AAC8C1D61B96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE38BEEF-F29C-4B0B-A922-CC536F923716}"
 EndProject
@@ -24,6 +24,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|Any CPU.Build.0 = Debug|x86
+		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|ARM.ActiveCfg = Debug|ARM
 		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|ARM.Build.0 = Debug|ARM
 		{66A37530-D952-4264-A781-F5152C3F5FA1}.Debug|ARM.Deploy.0 = Debug|ARM

@@ -60,26 +60,7 @@ namespace RestMan
             BrowseWeb.Visibility = Visibility.Collapsed;
             addCustomHeader();
             PopulateBasiqueListView();
-        }
-
-        private void PopulateBasiqueListView()
-        {
-            ListViewBasique.Items.Clear();
-            List<string> data = DataAccess.GetData("BASICTOKEN");
-            if(data.Count == 0)
-            {
-                DeleteBasiqueAuthentication.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                DeleteBasiqueAuthentication.Visibility = Visibility.Visible;
-            }
-
-            foreach (string item in data)
-            {
-                var splitItem = item.Split('|');
-                ListViewBasique.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
-            }
+            PopulateSaves();
         }
 
         /// <summary>
@@ -960,7 +941,7 @@ namespace RestMan
                 var splitItem = ((string)item).Split(' ');
                 string strID = splitItem[0];
                 int ID = Int32.Parse(splitItem[0]);
-                List<string> data = DataAccess.GetByID("BASICTOKEN", ID);
+                List<string> data = DataAccess.GetByIDAuthorization("BASICTOKEN", ID);
                 string result = data[0];
                 var splitResult = result.Split('|');
                 BasiqueUserName.Text = splitResult[0];
@@ -988,11 +969,239 @@ namespace RestMan
 
                 PopulateBasiqueListView();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
                 dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
                 var res = dialog.ShowAsync();
+            }
+        }
+
+        /// <summary>
+        /// Récupère et écrit les valeurs sauvegardées
+        /// </summary>
+        private void PopulateBasiqueListView()
+        {
+            ListViewBasique.Items.Clear();
+            List<string> data = DataAccess.GetData("BASICTOKEN");
+            if (data.Count == 0)
+            {
+                DeleteBasiqueAuthentication.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                DeleteBasiqueAuthentication.Visibility = Visibility.Visible;
+            }
+
+            foreach (string item in data)
+            {
+                var splitItem = item.Split('|');
+                ListViewBasique.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
+            }
+        }
+
+        /// <summary>
+        /// Affiche les boutons de sauvegarde
+        /// </summary>
+        private void PopulateSaves()
+        {
+            Configs.Children.Clear();
+            List<string> data = DataAccess.GetData("CONFIG");
+            foreach (string item in data)
+            {
+                var splitItem = item.Split('|');
+                string id = splitItem[0];
+                string type = splitItem[1];
+                string url = splitItem[2];
+                string body = splitItem[3];
+                string label = splitItem[4];
+                TextBlock hauteur = new TextBlock();
+                hauteur.Height = 10;
+                Button bt = new Button();
+                bt.Height = 32;
+                bt.Width = 250;
+                bt.FontFamily = new FontFamily("Segoe UI");
+                bt.Content = id + ". " + label;
+                bt.Click += PopulateConfig;
+                Configs.Children.Add(bt);
+                Configs.Children.Add(hauteur);
+            }
+
+            if (data.Count > 0)
+            {
+                Button btDelete = new Button();
+                btDelete.Height = 50;
+                btDelete.Width = 250;
+                btDelete.FontFamily = new FontFamily("Segoe UI");
+                btDelete.Content = "Supprimer toutes les requêtes";
+                btDelete.Click += DeleteConfigData;
+                btDelete.Foreground = new SolidColorBrush(Colors.DarkOrange);
+                Configs.Children.Add(btDelete);
+            }
+        }
+
+        private void DeleteConfigData(object sender, RoutedEventArgs e)
+        {
+            DataAccess.DeleteAllData("CONFIG");
+            PopulateSaves();
+        }
+
+        /// <summary>
+        /// Charge l'élément enregistré
+        /// </summary>
+        /// <param name="id"></param>
+        private void PopulateConfig(object sender, RoutedEventArgs e)
+        {
+            string id = ((Button)sender).Content as string;
+            string[] splitiem = id.Split('.');
+            string strID = splitiem[0];
+            int ID = Int32.Parse(strID);
+            List<string> data = DataAccess.GetByIDConfig(ID);
+            string result = data[0];
+            var splitResult = result.Split('|');
+            string type = splitResult[0];
+            string url = splitResult[1];
+            string body = splitResult[2];
+            foreach (TextBlock item in Methode.Items)
+            {
+                if (item.Text == type)
+                {
+                    Methode.SelectedItem = item;
+                }
+            }
+
+            Query.Text = url;
+            Body.Text = body;
+        }
+
+
+
+        /// <summary>
+        /// Sauvegarde la configuration actuelle
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void SaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            ListViewBasique.Items.Clear();
+            try
+            {
+                string libelle = await InputTextDialogAsync();
+                string type = ((TextBlock)Methode.SelectedItem).Text;
+                string url = Query.Text;
+                string body = Body.Text;
+                DataAccess.AddData("CONFIG", type, url, body, libelle);
+                PopulateSaves();
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+        }
+
+        /// <summary>
+        /// Adaptation de la taille
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            pivot.Width = Body.Width;
+            double size = ((Frame)Window.Current.Content).ActualWidth;
+            if (size > 1700)
+            {
+                foreach (UIElement val in multipleEntete.Children)
+                {
+                    if (val is StackPanel)
+                    {
+                        foreach (UIElement elmt in ((StackPanel)val).Children)
+                        {
+                            if (elmt is AutoSuggestBox)
+                            {
+                                if (((AutoSuggestBox)elmt).PlaceholderText == "Entête")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 300;
+                                }
+                                else if (((AutoSuggestBox)elmt).PlaceholderText == "Valeur")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 700;
+                                }
+                            }
+                            else if (elmt is Button)
+                            {
+                                ((Button)elmt).Width = 100;
+                            }
+                            else if (elmt is TextBlock)
+                            {
+                                ((TextBlock)elmt).Width = 20;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (size < 1700 && size > 900)
+            {
+                foreach (UIElement val in multipleEntete.Children)
+                {
+                    if (val is StackPanel)
+                    {
+                        foreach (UIElement elmt in ((StackPanel)val).Children)
+                        {
+                            if (elmt is AutoSuggestBox)
+                            {
+                                if (((AutoSuggestBox)elmt).PlaceholderText == "Entête")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 150;
+                                }
+                                else if (((AutoSuggestBox)elmt).PlaceholderText == "Valeur")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 325;
+                                }
+                            }
+                            else if (elmt is Button)
+                            {
+                                ((Button)elmt).Width = 100;
+                            }
+                            else if (elmt is TextBlock)
+                            {
+                                ((TextBlock)elmt).Width = 20;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (size < 900)
+            {
+                foreach (UIElement val in multipleEntete.Children)
+                {
+                    if (val is StackPanel)
+                    {
+                        foreach (UIElement elmt in ((StackPanel)val).Children)
+                        {
+                            if (elmt is AutoSuggestBox)
+                            {
+                                if (((AutoSuggestBox)elmt).PlaceholderText == "Entête")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 125;
+                                }
+                                else if (((AutoSuggestBox)elmt).PlaceholderText == "Valeur")
+                                {
+                                    ((AutoSuggestBox)elmt).Width = 125;
+                                }
+                            }
+                            else if (elmt is Button)
+                            {
+                                ((Button)elmt).Width = 50;
+                            }
+                            else if (elmt is TextBlock)
+                            {
+                                ((TextBlock)elmt).Width = 5;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
