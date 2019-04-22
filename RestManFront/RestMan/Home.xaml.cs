@@ -1112,6 +1112,11 @@ namespace RestMan
             double size = ((Frame)Window.Current.Content).ActualWidth;
             if (size > 1700)
             {
+                Second.Padding = new Thickness(0, 0, 0, 0);
+                BasiqueUserName.Width = 300;
+                BasiquePassword.Width = 300;
+                saveAuthentication.Width = 150;
+                expanderBasiqueStackFormulaire.Orientation = Orientation.Horizontal;
                 foreach (UIElement val in multipleEntete.Children)
                 {
                     if (val is StackPanel)
@@ -1143,6 +1148,11 @@ namespace RestMan
             }
             else if (size < 1700 && size > 900)
             {
+                Second.Padding = new Thickness(0, 25, 0, 0);
+                BasiqueUserName.Width = 200;
+                BasiquePassword.Width = 200;
+                saveAuthentication.Width = 100;
+                expanderBasiqueStackFormulaire.Orientation = Orientation.Horizontal;
                 foreach (UIElement val in multipleEntete.Children)
                 {
                     if (val is StackPanel)
@@ -1174,6 +1184,11 @@ namespace RestMan
             }
             else if (size < 900)
             {
+                Second.Padding = new Thickness(0, 25, 0, 0);
+                BasiqueUserName.Width = 150;
+                BasiquePassword.Width = 150;
+                saveAuthentication.Width = 100;
+                expanderBasiqueStackFormulaire.Orientation = Orientation.Vertical;
                 foreach (UIElement val in multipleEntete.Children)
                 {
                     if (val is StackPanel)
