@@ -60,6 +60,7 @@ namespace RestMan
             BrowseWeb.Visibility = Visibility.Collapsed;
             addCustomHeader();
             PopulateBasiqueListView();
+            PopulateCustomListView();
             PopulateSaves();
         }
 
@@ -905,7 +906,7 @@ namespace RestMan
         }
 
         /// <summary>
-        /// Enregistre l'authentication
+        /// Enregistre l'authentication basique
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -916,6 +917,27 @@ namespace RestMan
                 string libelle = await InputTextDialogAsync();
                 DataAccess.AddData("BASICTOKEN", BasiqueUserName.Text, BasiquePassword.Password, DateTime.Now.ToString(), libelle);
                 PopulateBasiqueListView();
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+        }
+
+        /// <summary>
+        ///  Enregistre l'authentication avec token
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void CustomSaveAuthentication_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string libelle = await InputTextDialogAsync();
+                DataAccess.AddData("CUSTOMTOKEN", CustomScheme.Text, CustomToken.Text, DateTime.Now.ToString(), libelle);
+                PopulateCustomListView();
             }
             catch (Exception ex)
             {
@@ -949,6 +971,22 @@ namespace RestMan
             }
         }
 
+        private void ListViewCustom_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = ListViewCustom.SelectedItem;
+            if (!String.IsNullOrEmpty(item as string))
+            {
+                var splitItem = ((string)item).Split(' ');
+                string strID = splitItem[0];
+                int ID = Int32.Parse(splitItem[0]);
+                List<string> data = DataAccess.GetByIDAuthorization("CUSTOMTOKEN", ID);
+                string result = data[0];
+                var splitResult = result.Split('|');
+                CustomScheme.Text = splitResult[0];
+                CustomToken.Text = splitResult[1];
+            }
+        }
+
         /// <summary>
         /// supprime les objets sélectionnés de la base
         /// </summary>
@@ -968,6 +1006,29 @@ namespace RestMan
                 }
 
                 PopulateBasiqueListView();
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+        }
+
+        private void DeleteCustomAuthentication_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var foo = ListViewCustom.SelectedItems;
+                foreach (var item in foo)
+                {
+                    var splitItem = ((string)item).Split(' ');
+                    string strID = splitItem[0];
+                    int ID = Int32.Parse(splitItem[0]);
+                    DataAccess.DeleteByID("CUSTOMTOKEN", ID);
+                }
+
+                PopulateCustomListView();
             }
             catch (Exception ex)
             {
@@ -999,6 +1060,31 @@ namespace RestMan
                 ListViewBasique.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
             }
         }
+
+        /// <summary>
+        /// Récupère et écrit les valeurs sauvegardées
+        /// </summary>
+        private void PopulateCustomListView()
+        {
+            ListViewCustom.Items.Clear();
+            List<string> data = DataAccess.GetData("CUSTOMTOKEN");
+            if (data.Count == 0)
+            {
+                DeleteCustomAuthentication.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                DeleteCustomAuthentication.Visibility = Visibility.Visible;
+            }
+
+            foreach (string item in data)
+            {
+                var splitItem = item.Split('|');
+                ListViewCustom.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
+            }
+        }
+
+
 
         /// <summary>
         /// Affiche les boutons de sauvegarde
@@ -1116,6 +1202,10 @@ namespace RestMan
                 BasiqueUserName.Width = 300;
                 BasiquePassword.Width = 300;
                 saveAuthentication.Width = 150;
+                CustomScheme.Width = 300;
+                CustomToken.Width = 300;
+                CustomSaveAuthentication.Width = 150;
+                expanderCustomStackFormulaire.Orientation = Orientation.Horizontal;
                 expanderBasiqueStackFormulaire.Orientation = Orientation.Horizontal;
                 foreach (UIElement val in multipleEntete.Children)
                 {
@@ -1152,6 +1242,10 @@ namespace RestMan
                 BasiqueUserName.Width = 200;
                 BasiquePassword.Width = 200;
                 saveAuthentication.Width = 100;
+                CustomScheme.Width = 200;
+                CustomToken.Width = 200;
+                CustomSaveAuthentication.Width = 100;
+                expanderCustomStackFormulaire.Orientation = Orientation.Horizontal;
                 expanderBasiqueStackFormulaire.Orientation = Orientation.Horizontal;
                 foreach (UIElement val in multipleEntete.Children)
                 {
@@ -1188,6 +1282,10 @@ namespace RestMan
                 BasiqueUserName.Width = 150;
                 BasiquePassword.Width = 150;
                 saveAuthentication.Width = 100;
+                CustomScheme.Width = 150;
+                CustomToken.Width = 150;
+                CustomSaveAuthentication.Width = 100;
+                expanderCustomStackFormulaire.Orientation = Orientation.Vertical;
                 expanderBasiqueStackFormulaire.Orientation = Orientation.Vertical;
                 foreach (UIElement val in multipleEntete.Children)
                 {

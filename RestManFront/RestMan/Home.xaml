@@ -373,11 +373,33 @@
                                 </controls:Expander>
                                 <TextBlock Height="10"/>
                                 <controls:Expander Header="Avec jeton personnel" x:Name="expanderCustom" Expanded="ExpanderCustom_Expanded" Collapsed="ExpanderCustom_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBox PlaceholderText="User Name" x:Name="CustomScheme" Width="300" />
-                                        <TextBlock Width="20"/>
-                                        <TextBox PlaceholderText="Token" x:Name="CustomToken" Width="300" />
-                                    </StackPanel>
+                                    <ScrollViewer Margin="0,0,0,60" x:Name="ScrollViewer" VerticalScrollBarVisibility="Hidden">
+                                        <StackPanel x:Name="expanderCustomStack" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,20">
+                                            <StackPanel x:Name="expanderCustomStackFormulaire" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBox PlaceholderText="User Name" x:Name="CustomScheme" Width="300" />
+                                                <TextBlock Width="20"/>
+                                                <TextBox PlaceholderText="Token" x:Name="CustomToken" Width="300" />
+                                                <TextBlock Width="20"/>
+                                                <Button x:Name="CustomSaveAuthentication" Click="CustomSaveAuthentication_Click" Content="Enregistrer" Width="150" HorizontalAlignment="Center"/>
+                                            </StackPanel>
+                                            <TextBlock Height="50"/>
+                                            <ListView x:Name="ListViewCustom" SelectionMode="Multiple" SelectionChanged="ListViewCustom_SelectionChanged">
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="ListViewItem">
+                                                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
+                                            </ListView>
+                                            <TextBlock Height="50"/>
+                                            <Button x:Name="DeleteCustomAuthentication" Click="DeleteCustomAuthentication_Click"  Height="32" Width="150" HorizontalAlignment="Center" FontFamily="Segoe MDL2 Assets" Margin="0,0,0,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="15">&#xE74D;</TextBlock>
+                                                    <TextBlock Width="30"></TextBlock>
+                                                    <TextBlock Text="Supprimer" Height="25" FontFamily="Segoe UI" FontSize="11" x:FieldModifier="public"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </ScrollViewer>
                                 </controls:Expander>
                             </StackPanel>
                         </PivotItem>
