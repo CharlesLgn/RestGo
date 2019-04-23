@@ -113,11 +113,12 @@ namespace RestMan
                 string headers = string.Empty;
                 Loader.Visibility = Visibility.Visible;
                 WebResponse response = await ExecuteHttpWebRequest();
-                string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                //string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                string bodySave = Body.Text;
                 string type = ((TextBlock)Methode.SelectedItem).Text;
                 string url = Query.Text;
                 string date = DateTime.Now.ToString();
-                DataAccess.AddData("HISTORY", type, url, date, statut);
+                DataAccess.AddData("HISTORY", type, url, date, bodySave);
                 populateHistory();
                 Response.Visibility = Visibility.Visible;
                 if (((System.Net.HttpWebResponse)response).StatusCode != System.Net.HttpStatusCode.OK)
@@ -157,11 +158,12 @@ namespace RestMan
 
                 response = await ExecuteHttpWebRequest();
                 var stream = response.GetResponseStream();
-                string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                //string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                string bodySave = Body.Text;
                 string type = ((TextBlock)Methode.SelectedItem).Text;
                 string url = Query.Text;
                 string date = DateTime.Now.ToString();
-                DataAccess.AddData("HISTORY", type, url, date, statut);
+                DataAccess.AddData("HISTORY", type, url, date, body);
                 populateHistory();
                 using (StreamReader reader = new StreamReader(stream))
                 {
@@ -980,17 +982,13 @@ namespace RestMan
 
         private void ListViewBasique_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = ListViewBasique.SelectedItem;
-            if (!String.IsNullOrEmpty(item as string))
+            TextBlock item = (TextBlock)ListViewBasique.SelectedItem;
+            if (item != null)
             {
-                var splitItem = ((string)item).Split(' ');
-                string strID = splitItem[0];
-                int ID = Int32.Parse(splitItem[0]);
-                List<string> data = DataAccess.GetByIDAuthorization("BASICTOKEN", ID);
-                string result = data[0];
-                var splitResult = result.Split('|');
-                BasiqueUserName.Text = splitResult[0];
-                BasiquePassword.Password = splitResult[1];
+                string id = (string)item.Tag;
+                string[] data = DataAccess.GetByID("BASICTOKEN", id);
+                BasiqueUserName.Text = data[1];
+                BasiquePassword.Password = data[2];
             }
         }
 
@@ -1073,8 +1071,9 @@ namespace RestMan
                 TextBlock tb = new TextBlock();
                 tb.Text = item[3] + "\n" + item[1] + " " + item[2];
                 tb.Tag = item[0];
-                ListViewHistory.Items.Add(tb);
-                //ListViewHistory.Items.Add(item[3] + "\n" + item[1] + " " + item[2]);
+                tb.TextWrapping = TextWrapping.Wrap;
+                if (ListViewHistory.Items.Count <= 5)
+                    ListViewHistory.Items.Add(tb);
             }
         }
 
@@ -1096,7 +1095,11 @@ namespace RestMan
 
             foreach (string[] item in data)
             {
-                ListViewBasique.Items.Add(item[0] + " Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3]);
+                TextBlock tb = new TextBlock();
+                tb.TextWrapping = TextWrapping.Wrap;
+                tb.Tag = item[0];
+                tb.Text = "Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3];
+                ListViewBasique.Items.Add(tb);
             }
         }
 
@@ -1141,10 +1144,11 @@ namespace RestMan
                 TextBlock hauteur = new TextBlock();
                 hauteur.Height = 10;
                 Button bt = new Button();
+                bt.Tag = id;
                 bt.Height = 32;
                 bt.Width = 250;
                 bt.FontFamily = new FontFamily("Segoe UI");
-                bt.Content = id + ". " + label;
+                bt.Content = label;
                 bt.Click += PopulateConfig;
                 Configs.Children.Add(bt);
                 Configs.Children.Add(hauteur);
@@ -1175,16 +1179,11 @@ namespace RestMan
         /// <param name="id"></param>
         private void PopulateConfig(object sender, RoutedEventArgs e)
         {
-            string id = ((Button)sender).Content as string;
-            string[] splitiem = id.Split('.');
-            string strID = splitiem[0];
-            int ID = Int32.Parse(strID);
-            List<string> data = DataAccess.GetByIDConfig(ID);
-            string result = data[0];
-            var splitResult = result.Split('|');
-            string type = splitResult[0];
-            string url = splitResult[1];
-            string body = splitResult[2];
+            string id = (string)((Button)sender).Tag;
+            string[] data = DataAccess.GetByID("CONFIG", id);
+            string type = data[1];
+            string url = data[2];
+            string body = data[4];
             foreach (TextBlock item in Methode.Items)
             {
                 if (item.Text == type)
@@ -1362,7 +1361,24 @@ namespace RestMan
         private void ListViewHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TextBlock tb = (TextBlock)ListViewHistory.SelectedItem;
-            object foo = tb.Tag;
+            if (tb != null)
+            {
+                string id = (string)tb.Tag;
+                string[] data = DataAccess.GetByID("HISTORY", id);
+                string type = data[1];
+                string url = data[2];
+                string body = data[4];
+                foreach (TextBlock item in Methode.Items)
+                {
+                    if (item.Text == type)
+                    {
+                        Methode.SelectedItem = item;
+                    }
+                }
+
+                Query.Text = url;
+                Body.Text = body;
+            }
         }
     }
 }

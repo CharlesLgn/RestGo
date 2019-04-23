@@ -18,7 +18,7 @@ namespace RestManDataAccess
                 String tableCommandBasic = "CREATE TABLE IF NOT EXISTS BASICTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT)";
                 String tableCommandCustom = "CREATE TABLE IF NOT EXISTS CUSTOMTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT )";
                 String tableConfig = "CREATE TABLE IF NOT EXISTS CONFIG (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, BODY TEXT NOT NULL, LABEL TEXT NOT NULL)";
-                String tableHistory = "CREATE TABLE IF NOT EXISTS HISTORY (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, DATE TEXT NOT NULL, STATUT TEXT NOT NULL)";
+                String tableHistory = "CREATE TABLE IF NOT EXISTS HISTORY (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, DATE TEXT NOT NULL, BODY TEXT NOT NULL)";
 
                 //SqliteCommand foo1b1 = new SqliteCommand(foo1, db);
 
@@ -67,7 +67,7 @@ namespace RestManDataAccess
                 db.Open();
 
                 SqliteCommand selectCommand = new SqliteCommand
-                    ("SELECT * from " + table, db);
+                    ("SELECT * from " + table + " ORDER BY ID DESC", db);
 
                 SqliteDataReader query = selectCommand.ExecuteReader();
 
@@ -86,6 +86,37 @@ namespace RestManDataAccess
             }
 
             return entries;
+        }
+
+        public static string[] GetByID(string table, string id)
+        {
+            List<string[]> entries = new List<string[]>();
+
+            using (SqliteConnection db =
+                new SqliteConnection("Filename=RestManDB.db"))
+            {
+                db.Open();
+
+                SqliteCommand selectCommand = new SqliteCommand
+                    ("SELECT * from " + table + " WHERE ID = " + id, db);
+
+                SqliteDataReader query = selectCommand.ExecuteReader();
+
+                while (query.Read())
+                {
+                    string val1 = query.GetString(0);
+                    string val2 = query.GetString(1);
+                    string val3 = query.GetString(2);
+                    string val4 = query.GetString(3);
+                    string val5 = query.GetString(4);
+                    string[] res = { val1, val2, val3, val4, val5 };
+                    entries.Add(res);
+                }
+
+                db.Close();
+            }
+
+            return entries[0];
         }
 
         public static List<string> GetByIDConfig(int id)

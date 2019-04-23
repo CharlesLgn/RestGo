@@ -306,13 +306,13 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <controls:Expander Header="Historique" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                    <controls:Expander Header="Historique" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="300">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ListView x:Name="ListViewHistory" SelectionMode="Single" SelectionChanged="ListViewHistory_SelectionChanged" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem">
                                         <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                                        <Setter Property="Margin" Value="0,0,0,5"/>
+                                        <Setter Property="Margin" Value="0,0,0,10"/>
                                     </Style>
                                 </ListView.ItemContainerStyle>
                             </ListView>
