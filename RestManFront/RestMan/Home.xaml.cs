@@ -33,6 +33,7 @@ namespace RestMan
     /// </summary>
     public sealed partial class Home : Page
     {
+        WebResponse response;
         private string[] customHeaders = { "Accept", "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Authorization", "Cache-Control", "Connection", "Content-Language", "Content-Type", "Cookie", "DNT", "Date", "DPR", "Early-Data", "Expect", "Forwarded", "From", "Host", "if-Match", "If-Modified-Since", "If-None-Match", "If-Range", "If-Unmodified-Since", "Keep-Alive", "Max-Forwards", "Origin", "Pragma", "Proxy-Authorization", "Range", "If-Unmodified-Since", "Referer", "Save-Data", "TE", "Trailer", "Transfer-Encoding", "Upgrade", "Upgrade-Insecure-Requests", "User-Agent", "Vary", "Via", "Viewport-Width", "Warning", "Width" };
         private string[] customValuesContentType = { "application/json", "application/x-www-form-urlencoded", "application/xhtml+xml", "application/xml", "multipart/form-data", "text/html", "text/plain", "text/xml" };
         private int iterateurCustomHeaders = 0;
@@ -62,6 +63,7 @@ namespace RestMan
             PopulateBasiqueListView();
             PopulateCustomListView();
             PopulateSaves();
+            populateHistory();
         }
 
         /// <summary>
@@ -111,6 +113,12 @@ namespace RestMan
                 string headers = string.Empty;
                 Loader.Visibility = Visibility.Visible;
                 WebResponse response = await ExecuteHttpWebRequest();
+                string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                string type = ((TextBlock)Methode.SelectedItem).Text;
+                string url = Query.Text;
+                string date = DateTime.Now.ToString();
+                DataAccess.AddData("HISTORY", type, url, date, statut);
+                populateHistory();
                 Response.Visibility = Visibility.Visible;
                 if (((System.Net.HttpWebResponse)response).StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -134,7 +142,6 @@ namespace RestMan
                 var res = dialog.ShowAsync();
             }
             Loader.Visibility = Visibility.Collapsed;
-
         }
 
         /// <summary>
@@ -147,8 +154,15 @@ namespace RestMan
                 string body = string.Empty;
                 string headers = string.Empty;
                 Loader.Visibility = Visibility.Visible;
-                WebResponse response = await ExecuteHttpWebRequest();
+
+                response = await ExecuteHttpWebRequest();
                 var stream = response.GetResponseStream();
+                string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
+                string type = ((TextBlock)Methode.SelectedItem).Text;
+                string url = Query.Text;
+                string date = DateTime.Now.ToString();
+                DataAccess.AddData("HISTORY", type, url, date, statut);
+                populateHistory();
                 using (StreamReader reader = new StreamReader(stream))
                 {
                     body = reader.ReadToEnd();
@@ -195,8 +209,6 @@ namespace RestMan
                 }
                 else if (contentype.Contains("html"))
                 {
-                    Uri url = response.ResponseUri;
-                    ResponseHTML.Navigate(url);
                     SpaceWeb.Height = 20;
                     SpaceWeb2.Height = 20;
                     receivedResponse += body;
@@ -396,7 +408,18 @@ namespace RestMan
 
         private void BrowseWeb_Click(object sender, RoutedEventArgs e)
         {
-            ResponseHTML.Visibility = Visibility.Visible;
+            try
+            {
+                Uri url = response.ResponseUri;
+                ResponseHTML.Navigate(url);
+                ResponseHTML.Visibility = Visibility.Visible;
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'affichage la page" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
         }
 
         private void getHeaders(string response)
@@ -1039,12 +1062,29 @@ namespace RestMan
         }
 
         /// <summary>
+        /// Affiche l'historique
+        /// </summary>
+        private void populateHistory()
+        {
+            ListViewHistory.Items.Clear();
+            List<string[]> data = DataAccess.GetData("HISTORY");
+            foreach (string[] item in data)
+            {
+                TextBlock tb = new TextBlock();
+                tb.Text = item[3] + "\n" + item[1] + " " + item[2];
+                tb.Tag = item[0];
+                ListViewHistory.Items.Add(tb);
+                //ListViewHistory.Items.Add(item[3] + "\n" + item[1] + " " + item[2]);
+            }
+        }
+
+        /// <summary>
         /// Récupère et écrit les valeurs sauvegardées
         /// </summary>
         private void PopulateBasiqueListView()
         {
             ListViewBasique.Items.Clear();
-            List<string> data = DataAccess.GetData("BASICTOKEN");
+            List<string[]> data = DataAccess.GetData("BASICTOKEN");
             if (data.Count == 0)
             {
                 DeleteBasiqueAuthentication.Visibility = Visibility.Collapsed;
@@ -1054,10 +1094,9 @@ namespace RestMan
                 DeleteBasiqueAuthentication.Visibility = Visibility.Visible;
             }
 
-            foreach (string item in data)
+            foreach (string[] item in data)
             {
-                var splitItem = item.Split('|');
-                ListViewBasique.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
+                ListViewBasique.Items.Add(item[0] + " Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3]);
             }
         }
 
@@ -1067,7 +1106,7 @@ namespace RestMan
         private void PopulateCustomListView()
         {
             ListViewCustom.Items.Clear();
-            List<string> data = DataAccess.GetData("CUSTOMTOKEN");
+            List<string[]> data = DataAccess.GetData("CUSTOMTOKEN");
             if (data.Count == 0)
             {
                 DeleteCustomAuthentication.Visibility = Visibility.Collapsed;
@@ -1077,10 +1116,9 @@ namespace RestMan
                 DeleteCustomAuthentication.Visibility = Visibility.Visible;
             }
 
-            foreach (string item in data)
+            foreach (string[] item in data)
             {
-                var splitItem = item.Split('|');
-                ListViewCustom.Items.Add(splitItem[0] + " Libellé : " + splitItem[4] + " | Identifiant : " + splitItem[1] + " | Date : " + splitItem[3]);
+                ListViewCustom.Items.Add(item[0] + " Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3]);
             }
         }
 
@@ -1092,15 +1130,14 @@ namespace RestMan
         private void PopulateSaves()
         {
             Configs.Children.Clear();
-            List<string> data = DataAccess.GetData("CONFIG");
-            foreach (string item in data)
+            List<string[]> data = DataAccess.GetData("CONFIG");
+            foreach (string[] item in data)
             {
-                var splitItem = item.Split('|');
-                string id = splitItem[0];
-                string type = splitItem[1];
-                string url = splitItem[2];
-                string body = splitItem[3];
-                string label = splitItem[4];
+                string id = item[0];
+                string type = item[1];
+                string url = item[2];
+                string body = item[3];
+                string label = item[4];
                 TextBlock hauteur = new TextBlock();
                 hauteur.Height = 10;
                 Button bt = new Button();
@@ -1169,7 +1206,6 @@ namespace RestMan
         /// <param name="e"></param>
         private async void SaveConfig_Click(object sender, RoutedEventArgs e)
         {
-            ListViewBasique.Items.Clear();
             try
             {
                 string libelle = await InputTextDialogAsync();
@@ -1316,6 +1352,17 @@ namespace RestMan
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Obtient l'item clické
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ListViewHistory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            TextBlock tb = (TextBlock)ListViewHistory.SelectedItem;
+            object foo = tb.Tag;
         }
     }
 }

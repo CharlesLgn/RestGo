@@ -306,8 +306,20 @@
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
+                    <controls:Expander Header="Historique" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                            <ListView x:Name="ListViewHistory" SelectionMode="Single" SelectionChanged="ListViewHistory_SelectionChanged" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                                        <Setter Property="Margin" Value="0,0,0,5"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                            </ListView>
+                        </ScrollViewer>
+                    </controls:Expander>
                 </StackPanel>
-                <StackPanel Name="Fifth" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,10" Padding="20,50,20,0">
+                <StackPanel Name="Fifth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10" Padding="20,50,20,0">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EdgeUIThemeTransition/>
@@ -412,7 +424,7 @@
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
                 </StackPanel>
-                <StackPanel Name="Seventh" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" Padding="20,51,20,20">
+                <StackPanel Name="Seventh" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,0" Padding="20,51,20,20">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EdgeUIThemeTransition/>
@@ -439,7 +451,7 @@
                         <TextBlock x:Name="lb_entetes" x:Uid="Entetes" Text="Entêtes" FontSize="18" FontFamily="Segoe UI"/>
                     </Border>
                     <TextBlock Height="20"/>
-                    <controls:DataGrid x:Name="ResponseGridView" Width="1200" Height="150" FontFamily="Segoe UI" FontSize="22"/>
+                    <controls:DataGrid x:Name="ResponseGridView" Width="1200" FontFamily="Segoe UI" FontSize="22"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>

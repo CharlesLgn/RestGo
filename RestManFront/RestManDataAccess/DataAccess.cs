@@ -13,23 +13,26 @@ namespace RestManDataAccess
             {
                 db.Open();
 
-                //string foo1 = "DROP TABLE BASICTOKEN;";
-                //string foo2 = "DROP TABLE CUSTOMTOKEN;";
+                //string foo1 = "DROP TABLE HISTORY;";
+
                 String tableCommandBasic = "CREATE TABLE IF NOT EXISTS BASICTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT)";
                 String tableCommandCustom = "CREATE TABLE IF NOT EXISTS CUSTOMTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT )";
                 String tableConfig = "CREATE TABLE IF NOT EXISTS CONFIG (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, BODY TEXT NOT NULL, LABEL TEXT NOT NULL)";
+                String tableHistory = "CREATE TABLE IF NOT EXISTS HISTORY (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, DATE TEXT NOT NULL, STATUT TEXT NOT NULL)";
 
                 //SqliteCommand foo1b1 = new SqliteCommand(foo1, db);
-                //SqliteCommand foo2b2 = new SqliteCommand(foo2, db);
+
                 SqliteCommand createTableBasic = new SqliteCommand(tableCommandBasic, db);
                 SqliteCommand createTableCustom = new SqliteCommand(tableCommandCustom, db);
                 SqliteCommand createTableConfig = new SqliteCommand(tableConfig, db);
+                SqliteCommand createTableHistory = new SqliteCommand(tableHistory, db);
 
                 //foo1b1.ExecuteReader();
-                //foo2b2.ExecuteReader();
+
                 createTableBasic.ExecuteReader();
                 createTableCustom.ExecuteReader();
                 createTableConfig.ExecuteReader();
+                createTableHistory.ExecuteReader();
             }
         }
 
@@ -54,9 +57,9 @@ namespace RestManDataAccess
             }
         }
 
-        public static List<string> GetData(string table)
+        public static List<string[]> GetData(string table)
         {
-            List<string> entries = new List<string>();
+            List<string[]> entries = new List<string[]>();
 
             using (SqliteConnection db =
                 new SqliteConnection("Filename=RestManDB.db"))
@@ -75,7 +78,7 @@ namespace RestManDataAccess
                     string password = query.GetString(2);
                     string date = query.GetString(3);
                     string label = query.GetString(4);
-                    string res = id + '|' + username + '|' + password + '|' + date + '|' + label;
+                    string[] res = { id, username, password, date, label };
                     entries.Add(res);
                 }
                 
