@@ -176,7 +176,7 @@ namespace RestManDataAccess
             return entries;
         }
 
-        public static void DeleteByID(string table, int id)
+        public static void DeleteByID(string table, string id)
         {
             //List<string> entries = new List<string>();
 

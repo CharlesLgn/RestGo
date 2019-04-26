@@ -42,7 +42,12 @@ namespace RestMan
             }
 
 
-            hideRec();
+            Accueil.Padding = new Thickness(0, 5, 0, 5);
+            Langue.Padding = new Thickness(5, 5, 0, 5);
+            Propos.Padding = new Thickness(5, 5, 0, 5);
+            RecAccueil.Visibility = Visibility.Visible;
+            RecLangue.Visibility = Visibility.Collapsed;
+            RecPropos.Visibility = Visibility.Collapsed;
         }
 
         private void hideRec()

@@ -1,4 +1,5 @@
 ﻿<Page
+    x:Name="Page"
     x:Class="RestMan.Home"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -9,7 +10,7 @@
     xmlns:data="using:RestMan.Objects"
     mc:Ignorable="d"
     Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI" GettingFocus="Page_GettingFocus" Loading="Page_Loading" SizeChanged="Page_SizeChanged">
-
+    
     <Grid Padding="0,0,0,0" Loaded="Grid_Loaded">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -113,9 +114,10 @@
                     <VisualState.Setters>
                         <Setter Target="Query.Width" Value="360"/>
                         <Setter Target="First.HorizontalAlignment" Value="Left"/>
+                        <Setter Target="Third.HorizontalAlignment" Value="Left"/>
                         <Setter Target="Fourth.HorizontalAlignment" Value="Left"/>
                         <Setter Target="Sixth.HorizontalAlignment" Value="Left"/>
-                        <Setter Target="Body.Width" Value="360"/>
+                        <Setter Target="Body.Width" Value="350"/>
                         <Setter Target="Response.Width" Value="360"/>
                         <Setter Target="First.(Grid.Row)" Value="0" />
                         <Setter Target="First.(Grid.Column)" Value="0" />
@@ -319,15 +321,15 @@
                         </ScrollViewer>
                     </controls:Expander>
                 </StackPanel>
-                <StackPanel Name="Fifth" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,0,0,10" Padding="20,50,20,0">
+                <StackPanel Name="Fifth" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,10" Padding="20,50,20,0">
                     <StackPanel.ChildrenTransitions>
                         <TransitionCollection>
                             <EdgeUIThemeTransition/>
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
-                    <Pivot x:Name="pivot" Width="1250" Height="400" SelectionChanged="Pivot_SelectionChanged">
-                        <PivotItem Name="PivotItemHeaders" Header="Entêtes">
-                            <StackPanel x:Name="multipleEntete" Orientation="Vertical" HorizontalAlignment="Left">
+                    <Pivot x:Name="pivot" Height="400" SelectionChanged="Pivot_SelectionChanged" HorizontalAlignment="Stretch">
+                        <PivotItem Name="PivotItemHeaders" Header="Entêtes" HorizontalAlignment="Stretch">
+                            <StackPanel x:Name="multipleEntete" Orientation="Vertical" HorizontalAlignment="Center">
                                 <TextBlock Height="10"/>
                                 <Button Name="AjouterHeader" Height="32" Width="150" HorizontalAlignment="Left" Margin="0,0,0,0" Click="AjouterHeader_Click" Visibility="Collapsed">
                                     <StackPanel Orientation="Vertical">
@@ -348,7 +350,7 @@
                         <PivotItem Name="PivotItemBody" Header="Corps">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Height="10"/>
-                                <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="325" Width="1200" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" TextWrapping="Wrap" Name="Body" Height="140" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                             </StackPanel>
                         </PivotItem>
                         <PivotItem Name="PivotItemAuthorization" Header="Autorisations">

@@ -158,7 +158,6 @@ namespace RestMan
 
                 response = await ExecuteHttpWebRequest();
                 var stream = response.GetResponseStream();
-                //string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
                 string bodySave = Body.Text;
                 string type = ((TextBlock)Methode.SelectedItem).Text;
                 string url = Query.Text;
@@ -931,6 +930,27 @@ namespace RestMan
         }
 
         /// <summary>
+        /// Une simple boite de dialogue pour confirmer un changement
+        /// </summary>
+        /// <returns></returns>
+        private async Task<bool> YesNoDialogAsync(string titre)
+        {
+            ContentDialog dialog = new ContentDialog();
+            dialog.Title = titre;
+            dialog.IsSecondaryButtonEnabled = true;
+            dialog.PrimaryButtonText = "Annuler";
+            dialog.SecondaryButtonText = "Oui";
+            if (await dialog.ShowAsync() == ContentDialogResult.Secondary)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Enregistre l'authentication basique
         /// </summary>
         /// <param name="sender"></param>
@@ -994,17 +1014,13 @@ namespace RestMan
 
         private void ListViewCustom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var item = ListViewCustom.SelectedItem;
-            if (!String.IsNullOrEmpty(item as string))
+            TextBlock item = (TextBlock)ListViewCustom.SelectedItem;
+            if (item != null)
             {
-                var splitItem = ((string)item).Split(' ');
-                string strID = splitItem[0];
-                int ID = Int32.Parse(splitItem[0]);
-                List<string> data = DataAccess.GetByIDAuthorization("CUSTOMTOKEN", ID);
-                string result = data[0];
-                var splitResult = result.Split('|');
-                CustomScheme.Text = splitResult[0];
-                CustomToken.Text = splitResult[1];
+                string id = (string)item.Tag;
+                string[] data = DataAccess.GetByID("CUSTOMTOKEN", id);
+                CustomScheme.Text = data[1];
+                CustomToken.Text = data[2];
             }
         }
 
@@ -1013,20 +1029,25 @@ namespace RestMan
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DeleteBasiqueAuthentication_Click(object sender, RoutedEventArgs e)
+        private async void DeleteBasiqueAuthentication_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var foo = ListViewBasique.SelectedItems;
-                foreach (var item in foo)
+                bool reponse = await YesNoDialogAsync("Supprimer les authentifications enregistrées ?");
+                if (reponse)
                 {
-                    var splitItem = ((string)item).Split(' ');
-                    string strID = splitItem[0];
-                    int ID = Int32.Parse(splitItem[0]);
-                    DataAccess.DeleteByID("BASICTOKEN", ID);
-                }
+                    var foo = ListViewBasique.SelectedItems;
+                    foreach (var item in foo)
+                    {
+                        if (item is TextBlock)
+                        {
+                            string id = (string)((TextBlock)item).Tag;
+                            DataAccess.DeleteByID("BASICTOKEN", id);
+                        }
+                    }
 
-                PopulateBasiqueListView();
+                    PopulateBasiqueListView();
+                }
             }
             catch (Exception ex)
             {
@@ -1036,20 +1057,25 @@ namespace RestMan
             }
         }
 
-        private void DeleteCustomAuthentication_Click(object sender, RoutedEventArgs e)
+        private async void DeleteCustomAuthentication_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                var foo = ListViewCustom.SelectedItems;
-                foreach (var item in foo)
+                bool reponse = await YesNoDialogAsync("Supprimer les authentifications enregistrées ?");
+                if (reponse)
                 {
-                    var splitItem = ((string)item).Split(' ');
-                    string strID = splitItem[0];
-                    int ID = Int32.Parse(splitItem[0]);
-                    DataAccess.DeleteByID("CUSTOMTOKEN", ID);
-                }
+                    var foo = ListViewCustom.SelectedItems;
+                    foreach (var item in foo)
+                    {
+                        if (item is TextBlock)
+                        {
+                            string id = (string)((TextBlock)item).Tag;
+                            DataAccess.DeleteByID("CUSTOMTOKEN", id);
+                        }
+                    }
 
-                PopulateCustomListView();
+                    PopulateCustomListView();
+                }
             }
             catch (Exception ex)
             {
@@ -1121,7 +1147,11 @@ namespace RestMan
 
             foreach (string[] item in data)
             {
-                ListViewCustom.Items.Add(item[0] + " Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3]);
+                TextBlock tb = new TextBlock();
+                tb.TextWrapping = TextWrapping.Wrap;
+                tb.Tag = item[0];
+                tb.Text = "Libellé : " + item[4] + " | Identifiant : " + item[1] + " | Date : " + item[3];
+                ListViewCustom.Items.Add(tb);
             }
         }
 
@@ -1167,10 +1197,19 @@ namespace RestMan
             }
         }
 
-        private void DeleteConfigData(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Supprime toutes les configurations enregistrées de l'utilisateur
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private async void DeleteConfigData(object sender, RoutedEventArgs e)
         {
-            DataAccess.DeleteAllData("CONFIG");
-            PopulateSaves();
+            bool response = await YesNoDialogAsync("Supprimer les enregistrements ?");
+            if (response)
+            {
+                DataAccess.DeleteAllData("CONFIG");
+                PopulateSaves();
+            }
         }
 
         /// <summary>
@@ -1229,10 +1268,13 @@ namespace RestMan
         /// <param name="e"></param>
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            pivot.Width = Body.Width;
+            //pivot.Width = Body.Width;
             double size = ((Frame)Window.Current.Content).ActualWidth;
             if (size > 1700)
             {
+                //expanderBasique.Width = 1200;
+                //expanderCustom.Width = 1200;
+                pivot.Width = 1300;
                 Second.Padding = new Thickness(0, 0, 0, 0);
                 BasiqueUserName.Width = 300;
                 BasiquePassword.Width = 300;
@@ -1252,11 +1294,11 @@ namespace RestMan
                             {
                                 if (((AutoSuggestBox)elmt).PlaceholderText == "Entête")
                                 {
-                                    ((AutoSuggestBox)elmt).Width = 300;
+                                    ((AutoSuggestBox)elmt).Width = 350;
                                 }
                                 else if (((AutoSuggestBox)elmt).PlaceholderText == "Valeur")
                                 {
-                                    ((AutoSuggestBox)elmt).Width = 700;
+                                    ((AutoSuggestBox)elmt).Width = 750;
                                 }
                             }
                             else if (elmt is Button)
@@ -1273,6 +1315,9 @@ namespace RestMan
             }
             else if (size < 1700 && size > 900)
             {
+                //expanderBasique.Width = 800;
+                //expanderCustom.Width = 800;
+                pivot.Width = 900;
                 Second.Padding = new Thickness(0, 25, 0, 0);
                 BasiqueUserName.Width = 200;
                 BasiquePassword.Width = 200;
@@ -1292,11 +1337,11 @@ namespace RestMan
                             {
                                 if (((AutoSuggestBox)elmt).PlaceholderText == "Entête")
                                 {
-                                    ((AutoSuggestBox)elmt).Width = 150;
+                                    ((AutoSuggestBox)elmt).Width = 225;
                                 }
                                 else if (((AutoSuggestBox)elmt).PlaceholderText == "Valeur")
                                 {
-                                    ((AutoSuggestBox)elmt).Width = 325;
+                                    ((AutoSuggestBox)elmt).Width = 500;
                                 }
                             }
                             else if (elmt is Button)
@@ -1313,6 +1358,9 @@ namespace RestMan
             }
             else if (size < 900)
             {
+                /*expanderBasique.Width = 350;
+                expanderCustom.Width = 350;*/
+                pivot.Width = Double.NaN;
                 Second.Padding = new Thickness(0, 25, 0, 0);
                 BasiqueUserName.Width = 150;
                 BasiquePassword.Width = 150;
