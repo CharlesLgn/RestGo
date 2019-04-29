@@ -13,27 +13,46 @@ namespace RestManDataAccess
             {
                 db.Open();
 
-                //string foo1 = "DROP TABLE HISTORY;";
-
                 String tableCommandBasic = "CREATE TABLE IF NOT EXISTS BASICTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT)";
                 String tableCommandCustom = "CREATE TABLE IF NOT EXISTS CUSTOMTOKEN (ID INTEGER PRIMARY KEY, USERNAME TEXT NOT NULL, PASSWORD TEXT NOT NULL, DATE TEXT, LABEL TEXT )";
                 String tableConfig = "CREATE TABLE IF NOT EXISTS CONFIG (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, BODY TEXT NOT NULL, LABEL TEXT NOT NULL)";
                 String tableHistory = "CREATE TABLE IF NOT EXISTS HISTORY (ID INTEGER PRIMARY KEY, TYPE TEXT NOT NULL, URL TEXT NOT NULL, DATE TEXT NOT NULL, BODY TEXT NOT NULL)";
-
-                //SqliteCommand foo1b1 = new SqliteCommand(foo1, db);
 
                 SqliteCommand createTableBasic = new SqliteCommand(tableCommandBasic, db);
                 SqliteCommand createTableCustom = new SqliteCommand(tableCommandCustom, db);
                 SqliteCommand createTableConfig = new SqliteCommand(tableConfig, db);
                 SqliteCommand createTableHistory = new SqliteCommand(tableHistory, db);
 
-                //foo1b1.ExecuteReader();
+                createTableBasic.ExecuteReader();
+                createTableCustom.ExecuteReader();
+                createTableConfig.ExecuteReader();
+                createTableHistory.ExecuteReader();
+            }
+        }
+
+        public static void DropDatabase()
+        {
+            using (SqliteConnection db =
+                new SqliteConnection("Filename=RestManDB.db"))
+            {
+                db.Open();
+
+                String tableCommandBasic = "DELETE FROM BASICTOKEN;";
+                String tableCommandCustom = "DELETE FROM CUSTOMTOKEN;";
+                String tableConfig = "DELETE FROM CONFIG;";
+                String tableHistory = "DELETE FROM HISTORY;";
+
+                SqliteCommand createTableBasic = new SqliteCommand(tableCommandBasic, db);
+                SqliteCommand createTableCustom = new SqliteCommand(tableCommandCustom, db);
+                SqliteCommand createTableConfig = new SqliteCommand(tableConfig, db);
+                SqliteCommand createTableHistory = new SqliteCommand(tableHistory, db);
 
                 createTableBasic.ExecuteReader();
                 createTableCustom.ExecuteReader();
                 createTableConfig.ExecuteReader();
                 createTableHistory.ExecuteReader();
             }
+
         }
 
         public static void AddData(string table, string username, string password, string date, string label)
@@ -81,7 +100,7 @@ namespace RestManDataAccess
                     string[] res = { id, username, password, date, label };
                     entries.Add(res);
                 }
-                
+
                 db.Close();
             }
 

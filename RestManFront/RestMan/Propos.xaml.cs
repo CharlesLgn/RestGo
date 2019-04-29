@@ -1,24 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Resources;
-using Windows.Data.Pdf;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Navigation;
+using RestManDataAccess;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -61,8 +46,6 @@ namespace RestMan
         {
             ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
             lb_propos.Text = resourceLoader.GetString("Propos");
-            lb_auteurs.Text = resourceLoader.GetString("Auteurs");
-            lb_projet.Text = resourceLoader.GetString("Projet");
             lb_titreSujet.Text = resourceLoader.GetString("TitreSujet");
             lb_IntroSujet.Text = resourceLoader.GetString("IntroSujet");
             lb_sujet.Text = resourceLoader.GetString("Sujet");
@@ -70,6 +53,26 @@ namespace RestMan
             lb_indication.Text = resourceLoader.GetString("Indication");
             lb_indicationcontenu.Text = resourceLoader.GetString("IndicationContenu");
             lb_livrable.Text = resourceLoader.GetString("Livrables");
+        }
+
+        /// <summary>
+        /// Supprime toutes les données de l'application
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteConfirmation_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DataAccess.DropDatabase();
+            }
+            catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'affichage la page" };
+                dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
+                var res = dialog.ShowAsync();
+            }
+
         }
     }
 }

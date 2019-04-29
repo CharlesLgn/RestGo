@@ -36,7 +36,6 @@ namespace RestMan
         WebResponse response;
         private string[] customHeaders = { "Accept", "Accept-Charset", "Accept-Encoding", "Accept-Language", "Access-Control-Request-Headers", "Access-Control-Request-Method", "Authorization", "Cache-Control", "Connection", "Content-Language", "Content-Type", "Cookie", "DNT", "Date", "DPR", "Early-Data", "Expect", "Forwarded", "From", "Host", "if-Match", "If-Modified-Since", "If-None-Match", "If-Range", "If-Unmodified-Since", "Keep-Alive", "Max-Forwards", "Origin", "Pragma", "Proxy-Authorization", "Range", "If-Unmodified-Since", "Referer", "Save-Data", "TE", "Trailer", "Transfer-Encoding", "Upgrade", "Upgrade-Insecure-Requests", "User-Agent", "Vary", "Via", "Viewport-Width", "Warning", "Width" };
         private string[] customValuesContentType = { "application/json", "application/x-www-form-urlencoded", "application/xhtml+xml", "application/xml", "multipart/form-data", "text/html", "text/plain", "text/xml" };
-        private int iterateurCustomHeaders = 0;
         private Dictionary<Button, Dictionary<StackPanel, TextBlock>> listCustomHeaders = new Dictionary<Button, Dictionary<StackPanel, TextBlock>>();
         private Dictionary<Dictionary<StackPanel, TextBlock>, bool> EtatCustomHeader = new Dictionary<Dictionary<StackPanel, TextBlock>, bool>();
         double actualPivotHeaderHeight = 200;
@@ -44,7 +43,6 @@ namespace RestMan
         ResourceLoader resourceLoader;
         private List<HeaderElement> HeaderElements = new List<HeaderElement>();
         private string receivedResponse = string.Empty;
-        private string receivedHeaders = string.Empty;
         private string contentype = string.Empty;
         enum sendMethods { POST, PATCH, PUT, GET };
 
@@ -74,7 +72,6 @@ namespace RestMan
             try
             {
                 contentype = string.Empty;
-                receivedHeaders = string.Empty;
                 receivedResponse = string.Empty;
                 ResponseImage.Source = null;
                 ResponseVideo.Source = null;
@@ -105,6 +102,9 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Méthode utilisée pour les requêtes autres que get
+        /// </summary>
         public async void QuerySender()
         {
             try
@@ -113,7 +113,6 @@ namespace RestMan
                 string headers = string.Empty;
                 Loader.Visibility = Visibility.Visible;
                 WebResponse response = await ExecuteHttpWebRequest();
-                //string statut = ((System.Net.HttpWebResponse)response).StatusDescription;
                 string bodySave = Body.Text;
                 string type = ((TextBlock)Methode.SelectedItem).Text;
                 string url = Query.Text;
@@ -245,79 +244,11 @@ namespace RestMan
             Loader.Visibility = Visibility.Collapsed;
         }
 
-        private async void deleteQuery()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.DeleteAsync(this.Query.Text);
-                HttpContent content = response.Content;
-                //getHeaders(response);
-                Response.Visibility = Visibility.Visible;
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    receivedResponse = "Echec";
-                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
-                }
-                else
-                {
-                    receivedResponse = "Succès";
-                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
-                }
-
-                Response.Text = receivedResponse;
-            }
-        }
-
-        private async void sendQuery(sendMethods Method)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                string json = Body.Text;
-                string selectedContentType = ((TextBlock)ContentType.SelectedItem).Text;
-                var content = new StringContent(json, Encoding.UTF8, selectedContentType);
-                HttpResponseMessage response = null;
-                HttpContent contentres = null;
-
-                switch (Method)
-                {
-                    case sendMethods.POST:
-                        response = await client.PostAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                    case sendMethods.PATCH:
-                        //response = await client.PatchAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                    case sendMethods.PUT:
-                        response = await client.PutAsync(this.Query.Text, content);
-                        try { contentres = response.Content; } catch { };
-                        break;
-                }
-
-                //getHeaders(response);
-                Response.Visibility = Visibility.Visible;
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                {
-                    receivedResponse = "Echec";
-                    Response.BorderBrush = new SolidColorBrush(Colors.Red);
-                }
-                else
-                {
-                    if (contentres != null)
-                    {
-                        receivedResponse = await contentres.ReadAsStringAsync();
-                    }
-                    else
-                    {
-                        receivedResponse = "Succès";
-                    }
-                    Response.BorderBrush = new SolidColorBrush(Colors.Green);
-                }
-
-                Response.Text = receivedResponse;
-            }
-        }
-
+        /// <summary>
+        /// Ajoute un enregistrement d'une authentification dans la base locale
+        /// </summary>
+        /// <param name="wc"></param>
+        /// <returns></returns>
         private WebHeaderCollection AddAuthorization(WebHeaderCollection wc)
         {
 
@@ -345,6 +276,11 @@ namespace RestMan
             return wc;
         }
 
+        /// <summary>
+        /// Ajoute les entêtes de l'utilisateur à l'objet entête
+        /// </summary>
+        /// <param name="whc"></param>
+        /// <returns></returns>
         private WebHeaderCollection BuildHeaderCollection(WebHeaderCollection whc)
         {
             foreach (KeyValuePair<Button, Dictionary<StackPanel, TextBlock>> entry in listCustomHeaders)
@@ -404,9 +340,16 @@ namespace RestMan
                     stream.Write(data, 0, data.Length);
                 }
             }
+
             return await webRequest.GetResponseAsync();
         }
 
+
+        /// <summary>
+        /// Affiche le navigateur web et navigue à l'adresse indiquée
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseWeb_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -423,12 +366,15 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Obtient les entêtes réponse de la requête
+        /// </summary>
+        /// <param name="response"></param>
         private void getHeaders(string response)
         {
             List<string> listdata = new List<string>();
             string entetes = response.ToString().Replace("{", string.Empty).Replace("}", string.Empty).Replace("\r", string.Empty);
             var splitentete = entetes.Split("\n");
-            //splitentete[0] = splitentete[0].Replace(":", string.Empty);
             foreach (var item in splitentete)
             {
                 if (!String.IsNullOrEmpty(item))
@@ -455,11 +401,15 @@ namespace RestMan
             ResponseGridView.ItemsSource = HeaderElements;
         }
 
+        /// <summary>
+        /// Applique des changements à l'interface en fonction du type de requête sélectionné
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Methode_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Response.Text = string.Empty;
             Response.ClearValue(TextBox.BorderBrushProperty);
-            receivedHeaders = string.Empty;
             receivedResponse = string.Empty;
             Response.Visibility = Visibility.Visible;
             ResponseImage.Visibility = Visibility.Collapsed;
@@ -483,150 +433,34 @@ namespace RestMan
             }
         }
 
-        private void allCateg(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/categories";
-            Lancer_Click(sender, e);
-        }
-
-        private void allArticles(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/articles";
-            Lancer_Click(sender, e);
-        }
-
-        private void TranslateLeet(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 1;
-            Query.Text = "http://localhost:8000/fun/trad/l33t";
-            Body.Text = "{ \"message\":\"coucou ca va ?\"}";
-        }
-
-        private void TranslateMorse(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 1;
-            Query.Text = "http://localhost:8000/fun/trad/morse";
-            Body.Text = "{ \"message\":\"coucou ca va ?\"}";
-        }
-
-        private void addCateg(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 1;
-            Query.Text = "http://localhost:8000/categorie";
-            Body.Text = "{ \"lib\":\"nomdelacatégorie\"}";
-        }
-
-        private void addArticle(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 1;
-            Query.Text = "http://localhost:8000/article";
-            Body.Text = "{\"lib\": \"nomArtcile\",\"price\": 4.99,\"idCateg\": 1}";
-        }
-
-        private void delCateg(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 4;
-            Query.Text = "http://localhost:8000/categorie/1";
-        }
-
-        private void delArticle(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 4;
-            Query.Text = "http://localhost:8000/article/1";
-        }
-
-        private void getVideo(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://fr.vid.web.acsta.net/nmedia/33/19/02/04/06//19581974_hd_013.mp4";
-            Lancer_Click(sender, e);
-        }
-
-        private void getImage(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/fun/lissa";
-            Lancer_Click(sender, e);
-        }
-
-        private void getReponse(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/fun/yes";
-            Lancer_Click(sender, e);
-        }
-
-        private void getCouleur(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/fun/color";
-            Lancer_Click(sender, e);
-        }
-
-        private void getWiki(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://localhost:8000/fun/wiki/Go_(programming_language)";
-            Lancer_Click(sender, e);
-        }
-
-
-        private void getWeb(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 0;
-            Query.Text = "http://php.net/";
-            Lancer_Click(sender, e);
-        }
-
-        private void updateCateg(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 2;
-            Query.Text = "http://localhost:8000/categorie/idCategAModifier";
-            Body.Text = "{\"lib\":\"nouveauNom\"}";
-        }
-
-        private void updateArticle(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 2;
-            Query.Text = "http://localhost:8000/article/idArticleAModifier";
-            Body.Text = "{\"lib\": \"nouveauNom\",\"price\": 4.99,\"idCateg\": 1}";
-        }
-
-        private void putCateg(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 3;
-            Query.Text = "http://localhost:8000/categorie/idCategARemplacer";
-            Body.Text = "{\"lib\":\"nouveauNom\"}";
-        }
-
-        private void putArticle(object sender, RoutedEventArgs e)
-        {
-            Methode.SelectedIndex = 3;
-            Query.Text = "http://localhost:8000/article/idArticleARemplacer";
-            Body.Text = "{\"lib\": \"nomArticle\",\"price\": 4.99,\"idCateg\": 1}";
-        }
-
+        /// <summary>
+        /// Colore le bouton pour indiquer son ouverture
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuerySampleOpened(object sender, object e)
         {
             QuerySample.Foreground = new SolidColorBrush(Colors.Red);
             QuerySampleRotate.Rotation = 90;
         }
 
+        /// <summary>
+        /// Réapplique la couleur par défaut
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void QuerySampleClosed(object sender, object e)
         {
             QuerySample.ClearValue(Button.ForegroundProperty);
             QuerySampleRotate.Rotation = 0;
         }
 
-        private void Page_GettingFocus(UIElement sender, Windows.UI.Xaml.Input.GettingFocusEventArgs args)
-        {
-            /*ResourceLoader resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
-            string foo = resourceLoader.GetString("LancerName");
-            lb_lancer.Text = foo;*/
-        }
-
+        /// <summary>
+        /// TODO : Faire la langue
+        /// Évènement lancé au chargement de la page, récupère les strings et change la langue en conséquence
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private void Page_Loading(FrameworkElement sender, object args)
         {
             resourceLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForCurrentView();
@@ -646,6 +480,9 @@ namespace RestMan
             addCustomHeader();
         }
 
+        /// <summary>
+        /// Méthode d'ajoute de controls dans l'affichage pour entrer des entêtes
+        /// </summary>
         private void addCustomHeader()
         {
             pivot.Height = pivot.Height + 40;
@@ -693,11 +530,9 @@ namespace RestMan
             EtatCustomHeader.Add(dicTempo, false);
         }
 
-        private void TbHeader_GotFocus(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>
+        /// Méthode de redimensionnement pour les tiroirs
+        /// </summary>
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //Windows.UI.Xaml.Controls.ItemCollection items = pivot.Items;
@@ -740,6 +575,11 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Requête Linq pour indiquer des suggestions
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private string[] GetSuggestions(string text)
         {
             return customHeaders.Where(x => x.ToLower().StartsWith(text.ToLower())).ToArray();
@@ -774,9 +614,11 @@ namespace RestMan
             return false;
         }
 
+        /// <summary>
+        /// Ajoute ou retire un bloc d'éléments graphiques pour entrer une requête
+        /// </summary>
         private void CustomHeadersManager(UIElement sender)
         {
-            StackPanel selectedStack = new StackPanel();
             bool isModified = false;
             ((AutoSuggestBox)sender).ItemsSource = this.GetSuggestions(((AutoSuggestBox)sender).Text);
             var parent = getParent(sender);
@@ -810,26 +652,45 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Évènement lié dans le code behind aux controls générés dynamiquement pour les entêtes à ajouter
+        /// Il est lié aux zone de texte ou entrer le nom de l'entête
+        /// </summary>
         private void AutoSuggestBox_TextChanged_Entete(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             CustomHeadersManager(sender);
         }
 
+        /// <summary>
+        /// Évènement lié dans le code behind aux controls générés dynamiquement pour les entêtes à ajouter
+        /// Il est lié aux zone de texte ou entrer la valeur de l'entête
+        /// </summary>
         private void AutoSuggestBox_TextChanged_Value(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             AutoSuggestBox_TextChanged_Entete(sender, args);
         }
 
+        /// <summary>
+        /// Associe à ce control un dictionnaire.
+        /// Ce dictionnaire contient les entêtes les plus populaires utilisées
+        /// </summary>
         private void AutoSuggestBox_GotFocus_Entete(object sender, RoutedEventArgs e)
         {
             ((AutoSuggestBox)sender).ItemsSource = customHeaders;
         }
 
+        /// <summary>
+        /// Obtient le control parent
+        /// </summary>
         private UIElement getParent(UIElement element)
         {
             return VisualTreeHelper.GetParent(element) as UIElement;
         }
 
+        /// <summary>
+        /// Associe à la zone de texte un dictionnaire si l'entête est Content-Type
+        /// Le dictionnaire contient les content-type les plus populaires
+        /// </summary>
         private void AutoSuggestBox_GotFocus_Valeur(object sender, RoutedEventArgs e)
         {
             var parent = getParent((AutoSuggestBox)sender);
@@ -846,6 +707,9 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Méthode de redimensionnement pour les tiroirs
+        /// </summary>
         private void CollapseExpander()
         {
             if (!expanderBasique.IsExpanded)
@@ -860,6 +724,9 @@ namespace RestMan
             expanderBasique.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// Méthode de redimensionnement pour les tiroirs
+        /// </summary>
         private void ExpandExpander()
         {
             if (expanderBasique.IsExpanded)
@@ -892,20 +759,6 @@ namespace RestMan
         private void ExpanderCustom_Collapsed(object sender, EventArgs e)
         {
             CollapseExpander();
-        }
-
-        /// <summary>
-        /// Charge les authentications précédentes
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Grid_Loaded(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void buildSavedAuthenticationButton()
-        {
-
         }
 
         /// <summary>
@@ -992,14 +845,10 @@ namespace RestMan
             }
         }
 
-        private void ExpanderBasique_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
-
-        private void ListViewBasique_ItemClick(object sender, ItemClickEventArgs e)
-        {
-        }
-
+        /// <summary>
+        /// Récupère dans la base locale l'authentification sélectionnée et remplie les zones de texte
+        /// Pour l'authentification basique
+        /// </summary>
         private void ListViewBasique_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TextBlock item = (TextBlock)ListViewBasique.SelectedItem;
@@ -1012,6 +861,10 @@ namespace RestMan
             }
         }
 
+        /// <summary>
+        /// Récupère dans la base locale l'authentification sélectionnée et remplie les zones de texte
+        /// Pour l'authentification par token
+        /// </summary>
         private void ListViewCustom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             TextBlock item = (TextBlock)ListViewCustom.SelectedItem;
@@ -1025,10 +878,9 @@ namespace RestMan
         }
 
         /// <summary>
-        /// supprime les objets sélectionnés de la base
+        /// Supprime les objets sélectionnés de la base
+        /// pour l'authentification basique
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private async void DeleteBasiqueAuthentication_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1051,12 +903,16 @@ namespace RestMan
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de la suppression" };
                 dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
                 var res = dialog.ShowAsync();
             }
         }
 
+        /// <summary>
+        /// Supprime les objets sélectionnés de la base
+        /// pour l'authentification par token
+        /// </summary>
         private async void DeleteCustomAuthentication_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1079,14 +935,14 @@ namespace RestMan
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de l'enregistrement" };
+                var dialog = new MessageDialog("Intitulé de l'erreur : \n" + ex.Message) { Title = "Erreur lors de la suppression" };
                 dialog.Commands.Add(new UICommand { Label = "Ok", Id = 0 });
                 var res = dialog.ShowAsync();
             }
         }
 
         /// <summary>
-        /// Affiche l'historique
+        /// Affiche l'historique des requêtes
         /// </summary>
         private void populateHistory()
         {
@@ -1262,7 +1118,7 @@ namespace RestMan
         }
 
         /// <summary>
-        /// Adaptation de la taille
+        /// Adaptation de la taille de la fenêtre
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1272,8 +1128,6 @@ namespace RestMan
             double size = ((Frame)Window.Current.Content).ActualWidth;
             if (size > 1700)
             {
-                //expanderBasique.Width = 1200;
-                //expanderCustom.Width = 1200;
                 pivot.Width = 1300;
                 Second.Padding = new Thickness(0, 0, 0, 0);
                 BasiqueUserName.Width = 300;
@@ -1315,8 +1169,6 @@ namespace RestMan
             }
             else if (size < 1700 && size > 900)
             {
-                //expanderBasique.Width = 800;
-                //expanderCustom.Width = 800;
                 pivot.Width = 900;
                 Second.Padding = new Thickness(0, 25, 0, 0);
                 BasiqueUserName.Width = 200;
@@ -1358,8 +1210,6 @@ namespace RestMan
             }
             else if (size < 900)
             {
-                /*expanderBasique.Width = 350;
-                expanderCustom.Width = 350;*/
                 pivot.Width = Double.NaN;
                 Second.Padding = new Thickness(0, 25, 0, 0);
                 BasiqueUserName.Width = 150;
@@ -1402,7 +1252,7 @@ namespace RestMan
         }
 
         /// <summary>
-        /// Obtient l'item clické
+        /// Remplie les champs à partir de la requête cliquée dans l'historique
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

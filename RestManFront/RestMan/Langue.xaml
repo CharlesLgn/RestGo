@@ -69,7 +69,7 @@
                     </Button>
                 </StackPanel>
                 <StackPanel Name="Second" Grid.Row="1" Margin="0,200,0,0" Padding="0,0,0,50" Width="400" Height="300">
-                    <Button Name="EnglImage" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="250" PointerEntered="EnglImage_PointerEntered" PointerExited="EnglImage_PointerExited" Click="EnglImage_Click">
+                    <Button Name="EnglImage" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Top" Width="400" Height="250" PointerEntered="EnglImage_PointerEntered" PointerExited="EnglImage_PointerExited" Click="EnglImage_Click">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Image Source="Assets/uk.png" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Height="253" Margin="0,0,0,0" Width="379.5"/>
                             <TextBlock HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="0,0,0,0" Margin="0,0,0,0">English</TextBlock>

@@ -81,9 +81,6 @@
                         <Image Source="https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/University_of_Lorraine_%28logo%29.png/200px-University_of_Lorraine_%28logo%29.png" Width="100" Height="100"/>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock x:Name="lb_projet" x:Uid="Projet" Text="Projet réalisé en licence professionnelle." />
-                        <TextBlock x:Name="lb_auteurs" x:Uid="Auteurs" Text="Auteurs :" HorizontalAlignment="Stretch" />
-                        <TextBlock Width="20"></TextBlock>
                         <Button x:Name="bt_Cyril" HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="200" Click="Bt_Cyril_Click">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <TextBlock>CHALLOUATTE Cyril</TextBlock>
@@ -98,6 +95,18 @@
                                 <TextBlock Width="10"></TextBlock>
                                 <Image Source="https://img.icons8.com/color/48/000000/linkedin.png" Width="20"/>
                             </StackPanel>
+                        </Button>
+                        <TextBlock Height="20"/>
+                        <Button Content="Réinitialiser l'application" HorizontalAlignment="Center" Grid.Row="1" Width="200" Margin="0,50,0,0" VerticalAlignment="Top">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Toutes les données de l'application vont être supprimées." Margin="0,0,0,12" />
+                                        <TextBlock Style="{ThemeResource BaseTextBlockStyle}" Text="Voulez-vous continuer ?" Margin="0,0,0,12" />
+                                        <Button Click="DeleteConfirmation_Click" Content="Oui, Supprimer toutes les données." />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
                         </Button>
                     </StackPanel>
                 </StackPanel>

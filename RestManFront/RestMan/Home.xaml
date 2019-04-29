@@ -9,9 +9,9 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:data="using:RestMan.Objects"
     mc:Ignorable="d"
-    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI" GettingFocus="Page_GettingFocus" Loading="Page_Loading" SizeChanged="Page_SizeChanged">
+    Background="{ThemeResource AppBarBackgroundThemeBrush}" Loaded="Page_Loaded" FontFamily="Segoe UI" Loading="Page_Loading" SizeChanged="Page_SizeChanged">
     
-    <Grid Padding="0,0,0,0" Loaded="Grid_Loaded">
+    <Grid Padding="0,0,0,0">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
                 <VisualState x:Name="Wide">
@@ -81,7 +81,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="Query.Width" Value="400"/>
-                        <Setter Target="Body.Width" Value="360"/>
+                        <Setter Target="Body.Width" Value="350"/>
                         <Setter Target="Response.Width" Value="360"/>
                         <Setter Target="First.(Grid.Row)" Value="0" />
                         <Setter Target="First.(Grid.Column)" Value="0" />
@@ -356,7 +356,7 @@
                         <PivotItem Name="PivotItemAuthorization" Header="Autorisations">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock Height="10"/>
-                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" SizeChanged="ExpanderBasique_SizeChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <controls:Expander Header="Basique" x:Name="expanderBasique"  Expanded="ExpanderBasique_Expanded" Collapsed="ExpanderBasique_Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                     <ScrollViewer Margin="0,0,0,60" x:Name="BasiqueScrollViewer" VerticalScrollBarVisibility="Hidden">
                                         <StackPanel x:Name="expanderBasiqueStack" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,20">
                                             <StackPanel x:Name="expanderBasiqueStackFormulaire" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
