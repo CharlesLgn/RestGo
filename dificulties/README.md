@@ -19,6 +19,26 @@ It use the Framework Front Flutter developped by Google
 	
 ***
 ### _Dificulties in the Front :_
+#### What is UWP ?
+UWP stands for Universal Windows platform and is an api created by microsoft specially for the Windows 10 release.
+This api allows the developper to build native application using [xaml](https://fr.wikipedia.org/wiki/XAML) language for the graphical user interface and use any supported language for the logical part of the application.
+Microsoft created this api to allow developpers to create a single application that can work on multiple devices like Windows for desktop, windows for mobile, Xbox and hololens.
+
+#### Connecting to the back
+The language used for the logical part of the application is C# which is a high level language therefore the language has a pretty big amount of features including classes to call http enpoints so it's pretty easy to call all featured endpoints of the webservices included in this project or even any url from the internet.
+
+#### User preferences 
+The application allows the user to save some elements locally. 
+It is done by saving data to a local database using sqlite which is not possible out of the box. 
+The project uses the Microsoft.Data.Sqlite nuget package to implement the local database process.
+
+#### Making a dynamic user interface
+It is important to make fluid user interfaces for the end user. 
+In this application, the user interface has to adapt itself to user actions which is done by using techniques involved both from the code for the front (xaml) and from the code behind (C#)
+
+##### Responsivity
+in the 
+
 
 ***
 ### _Dificulties in the Back :_
