@@ -1,2 +1,3 @@
 *.exe
-!*restGoBack.exe
+!*restGoBack-docker.exe
+!*restGoBack-gui.exe

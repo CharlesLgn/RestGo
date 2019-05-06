@@ -41,12 +41,15 @@ but if you make some change, here is the process to rebuild it
      
  - build all :
      * be on RestGoBack : `cd ./RestMan/RestGoBack`
-     * `go build -ldflags="-H windowsgui" -o ./out/RestGoBack.exe ./src/main`
+     * `go build -ldflags="-H windowsgui" -o ./out/RestGoBack.exe ./src/main-docker`
  - run project :
     * `./out/RestGoBack.exe`
 
 ___NB___: you will need internet until the application is not build 
 
+### Run without Build
+ - go into RestGoBack/out
+ - double click on `RestGoBack-gui.exe`
 ***
 ### _API :_
 [![Api](https://img.shields.io/badge/ReadMe-Api%20Back-important.svg)](https://github.com/CharlesLgn/RestGo/blob/master/RestGoBack/Api.md)
