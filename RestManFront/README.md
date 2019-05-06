@@ -16,12 +16,22 @@ Frontend part of a project made for Licence Pro GL (_3rd year University_)
 ***
 
 ### _Prerequisites:_
- - Windows 10 : Fall Creators Update (Build 16299) or higher
+ - Windows 10 : version 1809 (Build 17763) or higher
  
 ***
 
 
 ### _Build the project:_
+
+  - Clone the project :
+      * `git clone https://github.com/CharlesLgn/RestGo.git`
+
+  - Go to RestManFront/RestMan_1.0.0.0 folder
+  - Launch the MSIXBUNDLE file RestMan_1.0.0.0_x86
+    * Click on install
+    * Launch the app like any other windows application
+    
+### OR
  
  - Enable Developers mode
     * Right click on the windows logo, select settings
