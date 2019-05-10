@@ -7,4 +7,6 @@ special-vendored-path/* linguist-vendored
 *.js linguist-vendored=false
 *.css linguist-vendored=false
 *.html linguist-vendored=false
-*.ps linguist-vendored=false
+*.ps1 linguist-vendored=false
+*.psd1 linguist-vendored=false
+*.appx linguist-vendored=false
