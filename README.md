@@ -38,4 +38,4 @@ ___Specification:___
 
 ***
 
-Score:   ![?/20](https://img.shields.io/badge/%3f-20-00A100.svg)
+Score:   ![16/20](https://img.shields.io/badge/16-20-00A100.svg)
